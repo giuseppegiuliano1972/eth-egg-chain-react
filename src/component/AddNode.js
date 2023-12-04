@@ -14,7 +14,7 @@ class AddNode extends Component {
 
    nodeOptions = [
     {key: 1, value: 1, text:"farmer"},
-    {key: 2, value: 2, text:"distributor"},
+    {key: 2, value: 2, text:"delivery"},
     {key: 3, value: 3, text:"food factory"},
     {key: 4, value: 4, text:"market"},
     {key: 5, value: 5, text:"consumer"}
