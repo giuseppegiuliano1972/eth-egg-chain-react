@@ -17,6 +17,16 @@ constructor() {
         _addFarmer(msg.sender);
 }
 
+
+modifier onlyFarmer(){
+        require(isFarmer(msg.sender), 'Not a Farmer');
+        _;
+}
+
+function isFarmer(address account) public view returns(bool){
+        return Farmer.has(account);
+}
+
 function addFarmer(address account) public{
         _addFarmer(account);
 }

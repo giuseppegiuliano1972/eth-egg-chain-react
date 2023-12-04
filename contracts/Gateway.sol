@@ -3,13 +3,10 @@
 pragma solidity ^0.8.21;
 
 
-import "./Farmer.sol";
-import "./Deliver.sol";
-import "./Consumer.sol";
-import "./FoodFactory.sol";
-import "./Market.sol";
+import "./ManageEgg.sol";
 
-contract Gateway is Farmer,Deliver, Consumer,FoodFactory, Market{
+
+contract Gateway is ManageEgg {
   constructor()  payable{
 
   }
