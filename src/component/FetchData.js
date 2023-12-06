@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "semantic-ui-css/semantic.min.css";
-import { Button, Form, Input, Message, Select } from "semantic-ui-react";
+import { Button, Form, Input, Message, Card } from "semantic-ui-react";
 
 import web3 from "../gate/web3";
 import gateway from "../gate/gateway";
@@ -43,16 +43,16 @@ class FetchData extends Component {
 render() {
   return (
     <div>
-        <h3>Add</h3>
+        <h3>Fetch data</h3>
         <Form
           onSubmit={(event) => this.onSubmit(event)}
           error={!!this.state.errMsg}
         >
           <Form.Field>
-            <label>Address</label>
+            <label>Id nr.:</label>
             <Input
               focus
-              icon="ID product"
+              icon="IDproduct"
               iconPosition="left"
               placeholder="ID product..."
               value={this.state.id}
