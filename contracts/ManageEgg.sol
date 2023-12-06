@@ -30,7 +30,7 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         State eggState;
         address deliveryAddr;
         address marketAddr;
-        address payable foddFactoryAddr;
+        address payable foodFactoryAddr;
         address payable consumerAddr;
     }
 
@@ -64,7 +64,7 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
             eggState: State.Packed,
             deliveryAddr: address(0),
             marketAddr: address(0),
-            foddFactoryAddr: payable(address(0)),
+            foodFactoryAddr: payable(address(0)),
             consumerAddr: payable(address(0))
         });
 
@@ -72,4 +72,53 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         emit Packed(idEgg);
     }
 
+    function fetchData(uint idEgg) public view returns 
+        (
+         uint id,
+         address ownerID, 
+         address farmerAddr,
+         string  memory farm,
+         string  memory note,
+         uint    price,
+         uint    totalEggsInPackage,
+         State   eggState,
+         address deliveryAddr,
+         address marketAddr,
+         address foodFactoryAddr,
+         address consumerAddr
+        ){
+
+        EggProduct memory egg = eggProduct[idEgg];
+
+        id = egg.id;
+        ownerID = egg.ownerID;
+        farmerAddr = egg.farmerAddr;
+        farm = egg.farm;
+        note = egg.note;
+        price = egg.price;
+        totalEggsInPackage = egg.totalEggsInPackage;
+        eggState = egg.eggState;
+        deliveryAddr = egg.deliveryAddr;
+        marketAddr = egg.marketAddr;
+        foodFactoryAddr = egg.foodFactoryAddr;
+        consumerAddr = egg.consumerAddr;
+
+        return 
+            (
+            id,
+            ownerID, 
+            farmerAddr,
+            farm,
+            note,
+            price,
+            totalEggsInPackage,
+            eggState,
+            deliveryAddr,
+            marketAddr,
+            foodFactoryAddr,
+            consumerAddr
+            );
+        
+        
+    }
 }

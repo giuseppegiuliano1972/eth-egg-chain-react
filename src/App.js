@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Web3 from 'web3'
 import AddNode from './component/AddNode'
 import './App.css'
+import FetchData from './component/FetchData'
 
 class App extends Component {
   componentWillMount() {
@@ -22,7 +23,10 @@ class App extends Component {
   render() {
     return (
       <div className="container">
+        <FetchData />
+
         <AddNode />
+        
         <p>Your account: {this.state.account}</p>
       </div>
     );
