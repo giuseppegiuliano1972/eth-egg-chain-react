@@ -8,7 +8,7 @@ import gateway from "../gate/gateway";
 class FetchData extends Component {
   state = {
     id: "",
-    eggDetails: {},
+    details: {},
     errMsg: "",
     loading: false,
   };
@@ -31,6 +31,8 @@ class FetchData extends Component {
 
       this.setState({details: eggDetails });
       console.log(eggDetails);
+
+      console.log(eggDetails.farmerAddr);
 
     } catch (err) {
       this.setState({ errMsg: err.message });
@@ -75,12 +77,12 @@ render() {
             header={`Product nr. ${this.state.id}`}
             textAlign="center"
           />
-          <Card.Content description={`Owner ID: ${this.state.eggDetails.ownerID}`} />
-          <Card.Content description={`Farmer address: ${this.state.eggDetails.farmerAddr}`} />
-          <Card.Content description={`Notes: ${this.state.eggDetails.note}`} />
-          <Card.Content description={`Price: ${this.state.eggDetails.price}`} />
-          <Card.Content description={`Total nr. of Eggs: ${this.state.eggDetails.totalEggsInPackage}`} />
-          <Card.Content description={`State: ${this.state.eggDetails.eggState}`} />
+          <Card.Content description={`Owner ID: ${this.state.details.ownerID}`} />
+          <Card.Content description={`Farmer address: ${this.state.details.farmerAddr}`} />
+          <Card.Content description={`Notes: ${this.state.details.note}`} />
+          <Card.Content description={`Price: ${this.state.details.price}`} />
+          <Card.Content description={`Total nr. of Eggs: ${this.state.details.totalEggsInPackage}`} />
+          <Card.Content description={`State: ${this.state.details.eggState}`} />
          
         </Card>
       </div>
