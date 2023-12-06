@@ -8,28 +8,13 @@ import gateway from "../gate/gateway";
 class FetchData extends Component {
   state = {
     id: "",
+    eggDetails: {},
     errMsg: "",
     loading: false,
   };
 
-   nodeOptions = [
-    {key: 1, value: 1, text:"farmer"},
-    {key: 2, value: 2, text:"delivery"},
-    {key: 3, value: 3, text:"food factory"},
-    {key: 4, value: 4, text:"market"},
-    {key: 5, value: 5, text:"consumer"}
-   ]
-
-   handleChange = (event, data) => {
-    console.log(data.value);
-    this.setState({
-      [data.name]: data.value
-    });
-   }
-
   async onSubmit(event) {
     event.preventDefault();
-   
 
     this.setState({ errMsg: "", loading: true });
     try {
@@ -40,9 +25,13 @@ class FetchData extends Component {
       //da Gateway.json che deriva dagli altri contratti. Derivando 
       //gli altri contratti importa all'interno del proprio JSON tutte le funzioni
       //dichiarate nei vari contratti
-      await gateway.methods['fetchData'](this.state.id).call({
+      const eggDetails = await gateway.methods['fetchData'](this.state.id).call({
         from: accounts[0],
       });
+
+      this.setState({details: eggDetails });
+      console.log(eggDetails);
+
     } catch (err) {
       this.setState({ errMsg: err.message });
     }
@@ -53,7 +42,6 @@ class FetchData extends Component {
 
 render() {
   return (
-
     <div>
         <h3>Add</h3>
         <Form
@@ -82,6 +70,19 @@ render() {
             Fetch data
           </Button>
         </Form>
+        <Card>
+          <Card.Content
+            header={`Product nr. ${this.state.id}`}
+            textAlign="center"
+          />
+          <Card.Content description={`Owner ID: ${this.state.eggDetails.ownerID}`} />
+          <Card.Content description={`Farmer address: ${this.state.eggDetails.farmerAddr}`} />
+          <Card.Content description={`Notes: ${this.state.eggDetails.note}`} />
+          <Card.Content description={`Price: ${this.state.eggDetails.price}`} />
+          <Card.Content description={`Total nr. of Eggs: ${this.state.eggDetails.totalEggsInPackage}`} />
+          <Card.Content description={`State: ${this.state.eggDetails.eggState}`} />
+         
+        </Card>
       </div>
    
    );
