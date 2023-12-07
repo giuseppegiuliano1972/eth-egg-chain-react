@@ -51,15 +51,14 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         id = 1;
     }
 
-
-    function getAndPackEggs(uint idEgg, address farmerEggAddr, string memory farmFrom, uint totEggs) public onlyFarmer{
+    function getAndPackEggs(uint idEgg, address farmerEggAddr, string memory farmFrom, string memory strNote, uint eggPrice, uint totEggs) public onlyFarmer{
         eggProduct[idEgg] = EggProduct({
             id : idEgg,
             ownerID: payable(msg.sender),
             farmerAddr: farmerEggAddr,
             farm: farmFrom,
-            note: "",
-            price: 0,
+            note: strNote,
+            price: eggPrice,
             totalEggsInPackage: totEggs,
             eggState: State.Packed,
             deliveryAddr: address(0),
@@ -74,7 +73,7 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
 
     function fetchData(uint idEgg) public view returns 
         (
-         uint id,
+         uint _id,
          address ownerID, 
          address farmerAddr,
          string  memory farm,
@@ -90,7 +89,7 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
 
         EggProduct memory egg = eggProduct[idEgg];
 
-        id = egg.id;
+        _id = egg.id;
         ownerID = egg.ownerID;
         farmerAddr = egg.farmerAddr;
         farm = egg.farm;
@@ -105,7 +104,7 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
 
         return 
             (
-            id,
+            _id,
             ownerID, 
             farmerAddr,
             farm,

@@ -58,6 +58,10 @@ class AddNode extends Component {
             nodeEvent = "addConsumer";
             console.log('Type:  ', roleChoosen, ' process: "Add addConsumer"');
             break;
+      default:
+            this.setState({ errMsg: "Role not permitted" });
+            console.log('Type:  ', roleChoosen, ' Error Role not permitted');
+            break;
     }
 
     this.setState({ errMsg: "", loading: true });
