@@ -28,7 +28,7 @@ class PackEggs extends Component {
       console.log(id);
 
       await gateway.methods
-        .getAndPackEggs(id, farmer, farm,totalNumber )
+        .getAndPackEggs(id, farmer, farm,note, price , totalNumber )
         .send({ from: accounts[0] });
     } catch (error) {
       this.setState({ errMsg: error.message });
