@@ -20,7 +20,6 @@ class FetchData extends Component {
     try {
       const accounts = await web3.eth.getAccounts();
 
-      console.log(this.state.address);
       //nodeEvent corrisponde alla funzione del contratto. Viene recuperata 
       //da Gateway.json che deriva dagli altri contratti. Derivando 
       //gli altri contratti importa all'interno del proprio JSON tutte le funzioni
@@ -29,8 +28,8 @@ class FetchData extends Component {
         from: accounts[0],
       });
 
-      this.setState({details: eggDetails });
       console.log(eggDetails);
+      this.setState({details: eggDetails });
 
       console.log(eggDetails.farmerAddr);
 
