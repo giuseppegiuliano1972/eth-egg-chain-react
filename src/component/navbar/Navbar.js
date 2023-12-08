@@ -66,6 +66,15 @@ function Navbar() {
               Pack eggs
             </Link>
           </li>
+          <li className='nav-item'>
+            <Link
+              to='/transfer'
+              className='nav-links'
+              onClick={closeMobileMenu}
+            >
+              Transfer Eggs
+            </Link>
+          </li>
         </ul>
       </nav>
     </>

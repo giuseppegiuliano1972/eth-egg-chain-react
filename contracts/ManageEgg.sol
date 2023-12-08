@@ -51,7 +51,21 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         id = 1;
     }
 
-    function getAndPackEggs(uint idEgg, address farmerEggAddr, string memory farmFrom, string memory strNote, uint eggPrice, uint totEggs) public onlyFarmer{
+    function getAndPackEggs
+        (
+        uint idEgg,
+        address farmerEggAddr,
+        string memory farmFrom,
+        string memory strNote,
+        uint eggPrice,
+        uint totEggs
+        ) public onlyFarmer {
+        
+        // Check if farmer is the owner
+        require(msg.sender == farmerEggAddr);
+        // Could be costly, maybe use has
+        require(isFarmer(farmerEggAddr));
+
         eggProduct[idEgg] = EggProduct({
             id : idEgg,
             ownerID: payable(msg.sender),
@@ -69,6 +83,25 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
 
         id  = id + 1;
         emit Packed(idEgg);
+    }
+
+    function toDistributor(uint idEgg, address deliveryAddr) public onlyFarmer() {
+        EggProduct storage egg = eggProduct[idEgg];
+
+        // requirement: egg needs to be packed
+        require(egg.eggState == State.Packed, "Egg has to be packed first");
+
+        // add distributor address to egg details
+        egg.deliveryAddr = deliveryAddr;
+
+        // update egg status
+        egg.eggState = State.Delivered;
+
+        // add event to history
+        eggHistory[idEgg].push("Taken by Distributor");
+
+        // emit Delivered event
+        emit Delivered(idEgg);
     }
 
     function deliverToMarket(uint idEgg, address marketAddr) public onlyDeliver {

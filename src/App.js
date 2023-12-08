@@ -5,6 +5,7 @@ import AddNode from './component/AddNode'
 import './App.css'
 import FetchData from './component/FetchData'
 import PackEggs from './component/PackEggs';
+import TransferEggs from './component/TransferEggs';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -34,6 +35,7 @@ class App extends Component {
         <Route path='/fetch' element={<FetchData />} />
         <Route path='/addaddr' element={<AddNode />} />
         <Route path='/pack' element={<PackEggs />} />
+        <Route path='/transfer' element={<TransferEggs />} />
       </Routes>
     </Router>
     );
