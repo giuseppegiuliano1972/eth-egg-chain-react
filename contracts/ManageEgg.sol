@@ -71,6 +71,23 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         emit Packed(idEgg);
     }
 
+    function deliverToMarket(uint idEgg, address marketAddr) public onlyDeliver {
+        EggProduct storage egg = eggProduct[idEgg];
+        
+        // requirement: eggState has to be equal to Delivered State
+        require(egg.eggState == State.Delivered, "Egg has to be delivered first");
+
+        // update the eggMarket address and change the state to marketArrived
+        egg.marketAddr = marketAddr;
+        egg.eggState = State.MarketArrived;
+        
+        // Update eggHistory of the eggProduct
+        eggHistory[idEgg].push("Delivered to Market");
+
+        // Let's emit the event to save it on chain
+        emit MarketArrived(idEgg);
+}
+
     function fetchData(uint idEgg) public view returns 
         (
          uint _id,

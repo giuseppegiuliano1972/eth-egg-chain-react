@@ -21,6 +21,14 @@ function addDeliver(address account) public{
         _addDeliver(account);
 }
 
+modifier onlyDeliver(){
+        require(isDeliver(msg.sender), 'Not a Deliver');
+        _;
+}
+
+function isDeliver(address account) public view returns(bool){
+        return Deliver.has(account);
+}
 
 function _addDeliver(address account) internal{
     Deliver.add(account);

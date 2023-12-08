@@ -21,6 +21,15 @@ function addMarket(address account) public{
         _addMarket(account);
 }
 
+modifier onlyMarket(){
+        require(isMarket(msg.sender), 'Not a Market');
+        _;
+}
+
+function isMarket(address account) public view returns(bool){
+        return Market.has(account);
+}
+
 
 function _addMarket(address account) internal{
     Market.add(account);
