@@ -61,10 +61,10 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         uint totEggs
         ) public onlyFarmer {
         
-        // Check if farmer is the owner
-        require(msg.sender == farmerEggAddr);
+        // Check if the owner is the same farmer in the written address
+        require(msg.sender == farmerEggAddr, "The owner address should be equal to the farmer address");
         // Could be costly, maybe use has
-        require(isFarmer(farmerEggAddr));
+        require(isFarmer(farmerEggAddr), "The farmerAddress should be an existing farmer address");
 
         eggProduct[idEgg] = EggProduct({
             id : idEgg,
@@ -86,7 +86,13 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
     }
 
     function toDistributor(uint idEgg, address deliveryAddr) public onlyFarmer() {
+        // Could be costly, maybe use has
+        require(isDeliver(deliveryAddr), "The deliveryAddress should be an existing delivery address");
+
         EggProduct storage egg = eggProduct[idEgg];
+
+        // Check if the owner is the farmer for this egg
+        require(msg.sender == egg.farmerAddr, "The owner should be the farmer of this egg");
 
         // requirement: egg needs to be packed
         require(egg.eggState == State.Packed, "Egg has to be packed first");
@@ -105,7 +111,13 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
     }
 
     function deliverToMarket(uint idEgg, address marketAddr) public onlyDeliver {
+        // Could be costly, maybe use has
+        require(isMarket(marketAddr), "The marketAddress should be an existing market address");
+
         EggProduct storage egg = eggProduct[idEgg];
+
+        // Check if the owner is the distributor for this egg
+        require(msg.sender == egg.deliveryAddr, "The owner should be the distributor for this egg");
         
         // requirement: eggState has to be equal to Delivered State
         require(egg.eggState == State.Delivered, "Egg has to be delivered first");
