@@ -12,7 +12,6 @@ class TransferEggs extends Component {
     receiver: "",
     senderAddr: "",
     receiverAddr: "",
-    details: {},
     errMsg: "",
     loading: false
   };
@@ -55,13 +54,11 @@ class TransferEggs extends Component {
         default:
       }
 
-      console.log("To call is: ", tocall);
-
-      const result = await gateway.methods[tocall](this.state.id, this.state.receiverAddr).call({
+      await gateway.methods[tocall](this.state.id, this.state.receiverAddr).send({
         from: accounts[0],
       });
 
-      console.log("Egg Transfered");
+      console.log("Egg Transfered from: ", senderAddr, " to: ", receiverAddr);
 
     } catch (err) {
       this.setState({ errMsg: err.message });
@@ -85,7 +82,6 @@ renderDetails(){
 }
 
 renderReceiver(){
-  console.log("Sender is: ", this.state.sender);
   switch(this.state.sender) {
     case "farmer":
       return (
@@ -149,10 +145,8 @@ render() {
               placeholder='Select...' 
               name='selSender'
               options={this.nodeSender}
-              onChange={(event) => {
-                console.log("Questo è l'evento: ", event);
-                this.setState({ sender: event.target.textContent });
-              }
+              onChange={(event) => 
+                this.setState({ sender: event.target.textContent })
               } 
               />
             <label>Sender Address</label>
