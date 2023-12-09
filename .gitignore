@@ -24,3 +24,14 @@ yarn-error.log*
 package-lock.json
 src/abi/
 src/gate/gateway.js
+src/abi/Roles.json
+src/abi/Roles.json
+src/abi/Migrations.json
+src/abi/Market.json
+src/abi/ManageEgg.json
+src/abi/Gateway.json
+src/abi/FoodFactory.json
+src/abi/Farmer.json
+src/abi/Deliver.json
+src/abi/Consumer.json
+src/gate/gateway.js
