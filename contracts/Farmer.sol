@@ -11,7 +11,7 @@ using Roles for Roles.Role;
 
 event FarmerAdded (address indexed account);
 
-Roles.Role private Farmer;
+Roles.Role private ChickenFarmer;
 
 constructor() {
         _addFarmer(msg.sender);
@@ -24,7 +24,7 @@ modifier onlyFarmer(){
 }
 
 function isFarmer(address account) public view returns(bool){
-        return Farmer.has(account);
+        return ChickenFarmer.has(account);
 }
 
 function addFarmer(address account) public{
@@ -33,7 +33,7 @@ function addFarmer(address account) public{
 
 
 function _addFarmer(address account) internal{
-    Farmer.add(account);
+    ChickenFarmer.add(account);
     emit FarmerAdded(account);
 }
 }

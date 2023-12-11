@@ -58,7 +58,41 @@ contract('ManageEgg', (accounts) => {
         assert.equal(egg.marketAddr, accounts[1], "Egg marketAddress should be a correct market address");
 
     });
+    it('test Food Factory Buy Eggs', async () => {
+      // add farmer for this test
+      await manageEggInstance.addFarmer(accounts[1], { from: accounts[0] }); 
+      // add deliver for this test
+      await manageEggInstance.addDeliver(accounts[2], { from: accounts[0] });
+      // add food factory for this test
+      await manageEggInstance.addFoodFactory(accounts[3], { from: accounts[0] }); 
 
+      // package eggs first
+      await manageEggInstance.getAndPackEggs(1, accounts[1], "Farm A", "Note A", web3.utils.toWei('0.01', 'ether'), 56, { from: accounts[1] });
+      
+      await manageEggInstance.toDistributor(1, accounts[2], { from: accounts[1] });
+      let egg = await manageEggInstance.fetchData(1);
+
+      console.log(egg.eggState.toString()); // 1 = Delivered
+
+      assert.equal(egg.eggState, 1, "Egg should be in Delivered State first");
+      assert.equal(egg.deliveryAddr, accounts[2], "The delivery address should be a correct delivery address");
+
+      let balance = await web3.eth.getBalance(accounts[3]);
+      console.log("Balance:" , balance);
+      console.log(egg.farmerAddr.toString());
+
+      await manageEggInstance.buyEggsFoodFactory(1, web3.utils.toWei('0.01', 'ether'), { from: accounts[3] });
+      egg = await manageEggInstance.fetchData(1); // egg.state = 3
+
+      console.log(egg.eggState.toString()); // 2 = 
+
+      //assert.equal(egg.eggState, 2, "Egg state should be FoodFactoryBought");
+      //console.log(egg.foodFactoryAddr.toString());
+      //console.log(accounts[3].toString());
+      assert.equal(egg.foodFactoryAddr, accounts[3], "Egg FoodFactory Address should be a correct FoodFactory address");
+
+  });
   // Add more describe blocks for different functionalities
   });
+
 });

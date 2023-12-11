@@ -75,6 +75,15 @@ function Navbar() {
               Transfer Eggs
             </Link>
           </li>
+          <li className='nav-item'>
+            <Link
+              to='/buyeggsff'
+              className='nav-links'
+              onClick={closeMobileMenu}
+            >
+              Buy Eggs (Food Factory)
+            </Link>
+          </li>
         </ul>
       </nav>
     </>

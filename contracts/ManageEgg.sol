@@ -1,4 +1,6 @@
+// SPDX-License-Identifier: TFT-1.0.0
 
+pragma solidity ^0.8.21;
 
 import "./Farmer.sol";
 import "./Deliver.sol";
@@ -12,17 +14,17 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
      uint id;
     
      enum State{
-        Packed,
-        Delivered,
-        FactoryBought,
-        MarketArrived,
-        ConsumerBought
+        Packed, //0
+        Delivered, //1
+        FactoryBought, //2
+        MarketArrived, //3
+        ConsumerBought //4
      }
 
     struct EggProduct  {
         uint id;
         address payable ownerID; 
-        address farmerAddr;
+        address payable farmerAddr;
         string farm;
         string note;
         uint price;
@@ -51,6 +53,39 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         id = 1;
     }
 
+    // Verifies the paid amount is sufficient to cover the price
+    modifier enoughFunds(uint eggPrice){
+        require(msg.value >= eggPrice, 'Insufficient amount for egg price!');
+        _;
+    }
+
+    // check what has been paied and refund
+    modifier checkAmountPaid(uint _id){
+        //uint _price = eggProduct[_id].price;
+        //uint refund = msg.sender.balance - _price;
+        //(bool sent, bytes memory data) = eggProduct[_id].foodFactoryAddr.call{value: refund}("");
+        //require(sent, "checkAmountPaid Failed to send Ether");
+        //eggProduct[_id].foodFactoryAddr.transfer(refund);
+        _;
+        uint _price = eggProduct[_id].price;
+        uint amountToReturn = _price - msg.value;
+        //msg.sender.transfer(amountToReturn);
+        (bool sent, bytes memory data) = msg.sender.call{value: amountToReturn}("");
+        require(sent, "checkAmountPaid Failed to send Ether");
+    }
+
+    // Checks id  is packed
+    modifier packed(uint _id){
+        require(eggProduct[_id].eggState == State.Packed, 'Egg state is still not packed');
+        _;
+    }
+
+    // Checks id  is delivered
+    modifier isDelivered(uint _id){
+        require(eggProduct[_id].eggState == State.Delivered, 'Egg state is still not delivered');
+        _;
+    }
+
     function getAndPackEggs
         (
         uint idEgg,
@@ -69,7 +104,7 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         eggProduct[idEgg] = EggProduct({
             id : idEgg,
             ownerID: payable(msg.sender),
-            farmerAddr: farmerEggAddr,
+            farmerAddr: payable(farmerEggAddr),
             farm: farmFrom,
             note: strNote,
             price: eggPrice,
@@ -85,7 +120,7 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         emit Packed(idEgg);
     }
 
-    function toDistributor(uint idEgg, address deliveryAddr) public onlyFarmer() {
+    function toDistributor(uint idEgg, address deliveryAddr) public packed(idEgg) onlyFarmer() {
         // Could be costly, maybe use has
         require(isDeliver(deliveryAddr), "The deliveryAddress should be an existing delivery address");
 
@@ -131,7 +166,35 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
 
         // Let's emit the event to save it on chain
         emit MarketArrived(idEgg);
-}
+    }
+
+    function buyEggsFoodFactory(uint idEgg, uint price) public payable 
+        onlyFoodFactory 
+        isDelivered(idEgg) 
+        enoughFunds(price) 
+        //checkAmountPaid(idEgg)  
+        {
+
+        EggProduct storage egg = eggProduct[idEgg];
+
+        
+        // update the foodFactory address and change the state to FactoryBought
+        egg.foodFactoryAddr = payable(msg.sender);
+        
+        egg.ownerID = payable(msg.sender);
+        egg.eggState = State.FactoryBought;
+         (bool sent, bytes memory data) = egg.farmerAddr.call{value: price}("");
+        require(sent, "Failed to send Ether");
+        //egg.farmerAddr.transfer(price);
+
+        // Update eggHistory of the eggProduct
+        eggHistory[idEgg].push("Bought by a Food Factory");
+
+        // Let's emit the event to save it on chain
+        emit FactoryBought(idEgg);
+    }
+
+
 
     function fetchData(uint idEgg) public view returns 
         (

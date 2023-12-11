@@ -58,7 +58,7 @@ class TransferEggs extends Component {
         from: accounts[0],
       });
 
-      console.log("Egg Transfered from: ", senderAddr, " to: ", receiverAddr);
+      console.log("Egg Transfered from: ", this.state.senderAddr, " to: ", this.state.receiverAddr);
 
     } catch (err) {
       this.setState({ errMsg: err.message });

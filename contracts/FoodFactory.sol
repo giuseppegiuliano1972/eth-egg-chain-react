@@ -11,10 +11,19 @@ using Roles for Roles.Role;
 
 event FoodFactoryAdded (address indexed account);
 
-Roles.Role private FoodFactory;
+Roles.Role private FoodFactoryRole;
 
 constructor() {
         _addFoodFactory(msg.sender);
+}
+
+modifier onlyFoodFactory(){
+        require(isFoodFactory(msg.sender), 'Not a Food Factory');
+        _;
+}
+
+function isFoodFactory(address account) public view returns(bool){
+        return FoodFactoryRole.has(account);
 }
 
 function addFoodFactory(address account) public{
@@ -23,7 +32,7 @@ function addFoodFactory(address account) public{
 
 
 function _addFoodFactory(address account) internal{
-    FoodFactory.add(account);
+    FoodFactoryRole.add(account);
     emit FoodFactoryAdded(account);
 }
 }

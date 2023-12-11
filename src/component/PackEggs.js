@@ -24,11 +24,11 @@ class PackEggs extends Component {
     try {
       const { id, farmer, farm, note, price, totalNumber } = this.state;
       const accounts = await web3.eth.getAccounts();
-
-      console.log(id);
+      const _price = web3.utils.toWei(this.state.price, "ether");
+      console.log(id,farmer, farm,note, _price , totalNumber);
 
       await gateway.methods
-        .getAndPackEggs(id, farmer, farm,note, price , totalNumber )
+        .getAndPackEggs(id, farmer, farm,note, _price , totalNumber )
         .send({ from: accounts[0] });
     } catch (error) {
       this.setState({ errMsg: error.message });

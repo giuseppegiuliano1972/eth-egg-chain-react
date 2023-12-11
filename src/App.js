@@ -6,8 +6,10 @@ import './App.css'
 import FetchData from './component/FetchData'
 import PackEggs from './component/PackEggs';
 import TransferEggs from './component/TransferEggs';
+import BuyEggFoodFactory from './component/BuyEggFoodFactory';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar2 from './component/navbar/NavBar2';
 
 class App extends Component {
   componentWillMount() {
@@ -36,6 +38,7 @@ class App extends Component {
         <Route path='/addaddr' element={<AddNode />} />
         <Route path='/pack' element={<PackEggs />} />
         <Route path='/transfer' element={<TransferEggs />} />
+        <Route path='/buyeggsff' element={<BuyEggFoodFactory />} />
       </Routes>
     </Router>
     );
