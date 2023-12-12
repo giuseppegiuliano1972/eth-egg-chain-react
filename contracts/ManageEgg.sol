@@ -66,7 +66,7 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         uint _price = eggProduct[_id].price;
         if (eggprice > _price) { //paid more than the real price - refund
             uint amountToReturn = eggprice - _price;
-            (bool sent, bytes memory data) = eggProduct[_id].foodFactoryAddr.call{value: amountToReturn}("");
+            bool sent = eggProduct[_id].foodFactoryAddr.send(amountToReturn);
             require(sent, "checkAmountPaid Failed to send Ether");
         }
     }
