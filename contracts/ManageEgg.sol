@@ -180,7 +180,7 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         
         egg.ownerID = payable(msg.sender);
         egg.eggState = State.FactoryBought;
-         (bool sent, ) = egg.farmerAddr.call{value: price}("");
+        bool sent = egg.farmerAddr.send(price);
         require(sent, "Failed to send Ether");
         //egg.farmerAddr.transfer(price);
 
