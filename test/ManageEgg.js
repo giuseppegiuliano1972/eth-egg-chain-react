@@ -71,6 +71,7 @@ contract('ManageEgg', (accounts) => {
       
       await manageEggInstance.toDistributor(1, accounts[2], { from: accounts[1] });
       let egg = await manageEggInstance.fetchData(1);
+      console.log(egg);
 
       console.log(egg.eggState.toString()); // 1 = Delivered
 
@@ -81,7 +82,7 @@ contract('ManageEgg', (accounts) => {
       console.log("Balance:" , balance);
       console.log(egg.farmerAddr.toString());
 
-      await manageEggInstance.buyEggsFoodFactory(1, web3.utils.toWei('0.01', 'ether'), { from: accounts[3] });
+      await manageEggInstance.buyEggsFoodFactory(1, web3.utils.toWei('0.01', 'ether'), { from: accounts[3], value:  web3.utils.toWei('0.01', 'ether'), gas: 1000000});
       egg = await manageEggInstance.fetchData(1); // egg.state = 3
 
       console.log(egg.eggState.toString()); // 2 = 

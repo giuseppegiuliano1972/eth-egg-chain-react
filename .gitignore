@@ -35,3 +35,7 @@ src/abi/Farmer.json
 src/abi/Deliver.json
 src/abi/Consumer.json
 src/gate/gateway.js
+.vscode/launch.json
+contracts/artifacts/build-info/025a36e8c98119b2804f510984c68c75.json
+contracts/artifacts/ManageEgg.json
+contracts/artifacts/ManageEgg_metadata.json

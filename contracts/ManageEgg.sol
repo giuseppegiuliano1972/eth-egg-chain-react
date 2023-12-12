@@ -54,24 +54,21 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
     }
 
     // Verifies the paid amount is sufficient to cover the price
-    modifier enoughFunds(uint eggPrice){
-        require(msg.value >= eggPrice, 'Insufficient amount for egg price!');
+    modifier enoughFunds(uint _id, uint eggPrice){
+        uint _price = eggProduct[_id].price;
+        require(eggPrice >= _price, 'Insufficient amount for egg price!');
         _;
     }
 
     // check what has been paied and refund
-    modifier checkAmountPaid(uint _id){
-        //uint _price = eggProduct[_id].price;
-        //uint refund = msg.sender.balance - _price;
-        //(bool sent, bytes memory data) = eggProduct[_id].foodFactoryAddr.call{value: refund}("");
-        //require(sent, "checkAmountPaid Failed to send Ether");
-        //eggProduct[_id].foodFactoryAddr.transfer(refund);
+    modifier checkAmountPaid(uint _id, uint eggprice){
         _;
         uint _price = eggProduct[_id].price;
-        uint amountToReturn = _price - msg.value;
-        //msg.sender.transfer(amountToReturn);
-        (bool sent, bytes memory data) = msg.sender.call{value: amountToReturn}("");
-        require(sent, "checkAmountPaid Failed to send Ether");
+        if (eggprice > _price) { //paid more than the real price - refund
+            uint amountToReturn = eggprice - _price;
+            (bool sent, bytes memory data) = eggProduct[_id].foodFactoryAddr.call{value: amountToReturn}("");
+            require(sent, "checkAmountPaid Failed to send Ether");
+        }
     }
 
     // Checks id  is packed
@@ -171,8 +168,8 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
     function buyEggsFoodFactory(uint idEgg, uint price) public payable 
         onlyFoodFactory 
         isDelivered(idEgg) 
-        enoughFunds(price) 
-        //checkAmountPaid(idEgg)  
+        enoughFunds(idEgg, price) 
+        checkAmountPaid(idEgg, price)  
         {
 
         EggProduct storage egg = eggProduct[idEgg];
@@ -183,7 +180,7 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         
         egg.ownerID = payable(msg.sender);
         egg.eggState = State.FactoryBought;
-         (bool sent, bytes memory data) = egg.farmerAddr.call{value: price}("");
+         (bool sent, ) = egg.farmerAddr.call{value: price}("");
         require(sent, "Failed to send Ether");
         //egg.farmerAddr.transfer(price);
 
