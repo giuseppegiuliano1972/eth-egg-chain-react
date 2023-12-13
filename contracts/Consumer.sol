@@ -11,11 +11,21 @@ using Roles for Roles.Role;
 
 event ConsumerAdded (address indexed account);
 
-Roles.Role private Consumer;
+Roles.Role private ConsumerRole;
 
 constructor() {
         _addConsumer(msg.sender);
 }
+
+modifier onlyConsumer(){
+        require(isConsumer(msg.sender), 'Not a Consumer');
+        _;
+}
+
+function isConsumer(address account) public view returns(bool){
+        return ConsumerRole.has(account);
+}
+
 
 function addConsumer(address account) public{
         _addConsumer(account);
@@ -23,7 +33,7 @@ function addConsumer(address account) public{
 
 
 function _addConsumer(address account) internal{
-    Consumer.add(account);
+    ConsumerRole.add(account);
     emit ConsumerAdded(account);
 }
 }

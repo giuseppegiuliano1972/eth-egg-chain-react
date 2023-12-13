@@ -11,7 +11,7 @@ using Roles for Roles.Role;
 
 event MarketAdded (address indexed account);
 
-Roles.Role private Market;
+Roles.Role private MarketRole;
 
 constructor() {
         _addMarket(msg.sender);
@@ -27,12 +27,12 @@ modifier onlyMarket(){
 }
 
 function isMarket(address account) public view returns(bool){
-        return Market.has(account);
+        return MarketRole.has(account);
 }
 
 
 function _addMarket(address account) internal{
-    Market.add(account);
+    MarketRole.add(account);
     emit MarketAdded(account);
 }
 }

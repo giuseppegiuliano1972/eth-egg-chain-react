@@ -18,7 +18,9 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         Delivered, //1
         FactoryBought, //2
         MarketArrived, //3
-        ConsumerBought //4
+        FoodFactoryArrived, //4
+        MarketForSale, //5
+        ConsumerBought //6
      }
 
     struct EggProduct  {
@@ -28,10 +30,12 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         string farm;
         string note;
         uint price;
+        uint marketPrice;
         uint totalEggsInPackage;
+        uint totalEggsInMarketPackage;
         State eggState;
         address deliveryAddr;
-        address marketAddr;
+        address payable marketAddr;
         address payable foodFactoryAddr;
         address payable consumerAddr;
     }
@@ -45,6 +49,8 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
     event Delivered(uint id);
     event FactoryBought(uint id);
     event MarketArrived(uint id);
+    event MarketForSale(uint id);
+    event FoodFactoryArrived(uint id);
     event ConsumerBought(uint id);
     
 
@@ -66,7 +72,7 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         uint _price = eggProduct[_id].price;
         if (eggprice > _price) { //paid more than the real price - refund
             uint amountToReturn = eggprice - _price;
-            bool sent = eggProduct[_id].foodFactoryAddr.send(amountToReturn);
+            bool sent = payable(msg.sender).send(amountToReturn);
             require(sent, "checkAmountPaid Failed to send Ether");
         }
     }
@@ -77,12 +83,26 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         _;
     }
 
+    modifier isFoodFactoryArrived(uint _id){
+        require(eggProduct[_id].eggState == State.FoodFactoryArrived, 'Egg state is still not arrived to Food Factory');
+        _;
+    }
+
+    modifier isMarketForSale(uint _id){
+        require(eggProduct[_id].eggState == State.MarketForSale, 'Egg state is still not Market For Sale');
+        _;
+    }
+
     // Checks id  is delivered
     modifier isDelivered(uint _id){
         require(eggProduct[_id].eggState == State.Delivered, 'Egg state is still not delivered');
         _;
     }
 
+    modifier isMarketArrived(uint _id){
+        require(eggProduct[_id].eggState == State.MarketArrived, 'Egg state is still not market arrived');
+        _;
+    }
     function getAndPackEggs
         (
         uint idEgg,
@@ -90,7 +110,9 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         string memory farmFrom,
         string memory strNote,
         uint eggPrice,
-        uint totEggs
+        uint eggMarketPrice,
+        uint totEggs,
+        uint totMarketEggs
         ) public onlyFarmer {
         
         // Check if the owner is the same farmer in the written address
@@ -105,10 +127,12 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
             farm: farmFrom,
             note: strNote,
             price: eggPrice,
+            marketPrice:  eggMarketPrice,
             totalEggsInPackage: totEggs,
+            totalEggsInMarketPackage: totMarketEggs,
             eggState: State.Packed,
             deliveryAddr: address(0),
-            marketAddr: address(0),
+            marketAddr: payable(address(0)),
             foodFactoryAddr: payable(address(0)),
             consumerAddr: payable(address(0))
         });
@@ -155,7 +179,7 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         require(egg.eggState == State.Delivered, "Egg has to be delivered first");
 
         // update the eggMarket address and change the state to marketArrived
-        egg.marketAddr = marketAddr;
+        egg.marketAddr = payable(marketAddr);
         egg.eggState = State.MarketArrived;
         
         // Update eggHistory of the eggProduct
@@ -165,9 +189,61 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         emit MarketArrived(idEgg);
     }
 
+        function marketForSale
+        (
+        uint idEgg,
+        address marketAddr,
+        uint eggMarketPrice,
+        uint totMarketEggs
+        ) public onlyMarket
+                 isMarketArrived(idEgg) {
+        
+        // Check if the owner is the same farmer in the written address
+        require(msg.sender == marketAddr, "The owner address should be equal to the market address");
+        // Could be costly, maybe use has
+        require(isMarket(marketAddr), "The market Address should be an existing market address");
+
+        EggProduct storage egg = eggProduct[idEgg];
+        
+        egg.marketAddr = payable(marketAddr);
+        egg.eggState = State.MarketForSale;
+        egg.totalEggsInMarketPackage = totMarketEggs;
+        egg.marketPrice = eggMarketPrice;
+
+        // Update eggHistory of the eggProduct
+        eggHistory[idEgg].push("Market is selling eggs");
+
+        emit MarketForSale(idEgg);
+    }
+
+    function deliverToFoodFactory(uint idEgg, address foodFactoryAddress) public 
+        onlyDeliver 
+        isDelivered(idEgg) {
+        // Could be costly, maybe use has
+        require(isFoodFactory(foodFactoryAddress), "The food Factory Address should be an existing address");
+
+        EggProduct storage egg = eggProduct[idEgg];
+
+        // Check if the owner is the distributor for this egg
+        require(msg.sender == egg.deliveryAddr, "The owner should be the distributor for this egg");
+        
+        // requirement: eggState has to be equal to Delivered State
+        require(egg.eggState == State.Delivered, "Egg has to be delivered first");
+
+        // update the eggMarket address and change the state to FoodFactoryArrived
+        egg.foodFactoryAddr = payable(foodFactoryAddress);
+        egg.eggState = State.FoodFactoryArrived;
+        
+        // Update eggHistory of the eggProduct
+        eggHistory[idEgg].push("Delivered to Food Factory");
+
+        // Let's emit the event to save it on chain
+        emit FoodFactoryArrived(idEgg);
+    }
+
     function buyEggsFoodFactory(uint idEgg, uint price) public payable 
         onlyFoodFactory 
-        isDelivered(idEgg) 
+        isFoodFactoryArrived(idEgg) 
         enoughFunds(idEgg, price) 
         checkAmountPaid(idEgg, price)  
         {
@@ -182,7 +258,6 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         egg.eggState = State.FactoryBought;
         bool sent = egg.farmerAddr.send(price);
         require(sent, "Failed to send Ether");
-        //egg.farmerAddr.transfer(price);
 
         // Update eggHistory of the eggProduct
         eggHistory[idEgg].push("Bought by a Food Factory");
@@ -191,6 +266,29 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         emit FactoryBought(idEgg);
     }
 
+   function buyConsumer(uint idEgg, uint price) public payable 
+        onlyConsumer 
+        isMarketForSale(idEgg) 
+        enoughFunds(idEgg, price) 
+        checkAmountPaid(idEgg, price)  
+        {
+
+        EggProduct storage egg = eggProduct[idEgg];
+        
+        // update the foodFactory address and change the state to FactoryBought
+        egg.consumerAddr = payable(msg.sender);
+        
+        egg.ownerID = payable(msg.sender);
+        egg.eggState = State.ConsumerBought;
+        bool sent = egg.marketAddr.send(price);
+        require(sent, "Failed to send Ether");
+
+        // Update eggHistory of the eggProduct
+        eggHistory[idEgg].push("Bought by a Food Factory");
+
+        // Let's emit the event to save it on chain
+        emit ConsumerBought(idEgg);
+    }
 
 
     function fetchData(uint idEgg) public view returns 
@@ -201,7 +299,9 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
          string  memory farm,
          string  memory note,
          uint    price,
+         uint    marketPrice,
          uint    totalEggsInPackage,
+         uint    totalEggsInMarketPackage,
          State   eggState,
          address deliveryAddr,
          address marketAddr,
@@ -217,14 +317,16 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         farm = egg.farm;
         note = egg.note;
         price = egg.price;
+        marketPrice = egg.marketPrice;
         totalEggsInPackage = egg.totalEggsInPackage;
+        totalEggsInMarketPackage = egg.totalEggsInMarketPackage;
         eggState = egg.eggState;
         deliveryAddr = egg.deliveryAddr;
         marketAddr = egg.marketAddr;
         foodFactoryAddr = egg.foodFactoryAddr;
         consumerAddr = egg.consumerAddr;
 
-        return 
+       return 
             (
             _id,
             ownerID, 
@@ -232,7 +334,9 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
             farm,
             note,
             price,
+            marketPrice,
             totalEggsInPackage,
+            totalEggsInMarketPackage,
             eggState,
             deliveryAddr,
             marketAddr,
