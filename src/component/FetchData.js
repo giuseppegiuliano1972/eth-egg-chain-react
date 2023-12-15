@@ -43,7 +43,7 @@ class FetchData extends Component {
 
 render() {
   return (
-    <div>
+    <div className='main-container'>
         <h3>Fetch data</h3>
         <Form
           onSubmit={(event) => this.onSubmit(event)}
@@ -81,8 +81,11 @@ render() {
           <Card.Content description={`Notes: ${this.state.details.note}`} />
           <Card.Content description={`Price: ${this.state.details.price}`} />
           <Card.Content description={`Total nr. of Eggs: ${this.state.details.totalEggsInPackage}`} />
+          <Card.Content description={`Market address: ${this.state.details.marketAddr}`} />
+          <Card.Content description={`Delivery address: ${this.state.details.deliveryAddr}`} />
+          <Card.Content description={`Food Factory address: ${this.state.details.foodFactoryAddr}`} />
+          <Card.Content description={`Consumer address: ${this.state.details.consumerAddr}`} />
           <Card.Content description={`State: ${this.state.details.eggState}`} />
-         
         </Card>
       </div>
    

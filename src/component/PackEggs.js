@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "semantic-ui-css/semantic.min.css";
-import { Button, Form, Input, Message } from "semantic-ui-react";
+import { Button, Form, Input, Message, Select } from "semantic-ui-react";
 
 import web3 from "../gate/web3";
 import gateway from "../gate/gateway";
@@ -8,8 +8,8 @@ import gateway from "../gate/gateway";
 class PackEggs extends Component {
   state = {
     id: "",
-    farmer: "",
-    farm: "",
+    address: "",
+    seller: "",
     note: "",
     price: "",
     totalNumber: 0,
@@ -17,19 +17,45 @@ class PackEggs extends Component {
     loading: false,
   };
 
+  nodeSeller = [
+    {key: 1, value: 1, text:"Farmer"},
+    {key: 2, value: 2, text:"Market"}
+  ]
+
+  handleChange = (event, data) => {
+    console.log(data.value);
+    this.setState({
+      seller: data.value
+    });
+   }
 
   async onSubmit(event) {
     event.preventDefault();
     this.setState({ loading: true, errMsg: "" });
     try {
-      const { id, farmer, farm, note, price, totalNumber } = this.state;
-      const accounts = await web3.eth.getAccounts();
-      const _price = web3.utils.toWei(this.state.price, "ether");
-      console.log(id,farmer, farm,note, _price , totalNumber);
+      const { id, seller,  note, price, totalNumber } = this.state;
 
-      await gateway.methods
-        .getAndPackEggs(id, farmer, farm,note, _price , totalNumber )
-        .send({ from: accounts[0] });
+      const accounts = await web3.eth.getAccounts();
+
+      const _price = web3.utils.toWei(this.state.price, "ether");
+      
+      switch (this.state.seller){
+        case 1: //Farmer
+          console.log(this.state.id, this.state.address, note, _price, this.state.totalNumber);
+          await gateway.methods.getAndPackEggs(this.state.id, this.state.address, note, _price, this.state.totalNumber)
+                                .send({from: accounts[0]});
+          break;
+        case 2: //Market
+          await gateway.methods.marketForSale(this.state.id, this.state.address, _price, this.state.totalNumber)
+                                        .send({from: accounts[0]});
+          break;
+        default:
+      }
+      //console.log(id,seller, note, _price , totalNumber);
+
+    //  await gateway.methods
+    //    .getAndPackEggs(id, farmer, farm,note, _price , totalNumber )
+    //    .send({ from: accounts[0] });
     } catch (error) {
       this.setState({ errMsg: error.message });
     }
@@ -42,8 +68,8 @@ class PackEggs extends Component {
 render() {
   return (
 
-    <div>
-        <h3>Packaging</h3>
+    <div  className='main-container'>
+        <h3>Pack and sell</h3>
         <Form
           onSubmit={(event) => this.onSubmit(event)}
           error={!!this.state.errMsg}
@@ -55,15 +81,26 @@ render() {
             onChange={(event) => this.setState({ id: event.target.value })}
           />
         </Form.Field>
-        <Form.Field>
-          <label>Farmer ID</label>
-          <Input
-            value={this.state.farmer}
-            onChange={(event) =>
-              this.setState({ farmer: event.target.value })
-            }
-          />
-        </Form.Field>
+         <Form.Field>
+            <label>Address</label>
+            <Select
+              placeholder='Select...' 
+              name='selNode'
+              options={this.nodeSeller}
+              onChange={this.handleChange} 
+              />
+            <Input
+              focus
+              icon="address card"
+              iconPosition="left"
+              placeholder="Address..."
+              value={this.state.address}
+              onChange={(event) =>
+                this.setState({ address: event.target.value })
+              }
+            />
+
+          </Form.Field>
         <Form.Field>
           <label>Price</label>
           <Input

@@ -122,7 +122,7 @@ renderReceiver(){
 render() {
 
   return (
-    <div>
+    <div  className='main-container'>
         <h3>Transfer Eggs</h3>
         <Form
           onSubmit={(event) => this.transferEgg(event)}

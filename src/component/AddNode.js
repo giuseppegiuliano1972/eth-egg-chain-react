@@ -87,7 +87,7 @@ class AddNode extends Component {
 render() {
   return (
 
-    <div>
+    <div  className='main-container'>
         <h3>Add</h3>
         <Form
           onSubmit={(event) => this.onSubmit(event)}

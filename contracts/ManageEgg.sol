@@ -27,7 +27,6 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         uint id;
         address payable ownerID; 
         address payable farmerAddr;
-        string farm;
         string note;
         uint price;
         uint marketPrice;
@@ -107,12 +106,9 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         (
         uint idEgg,
         address farmerEggAddr,
-        string memory farmFrom,
         string memory strNote,
         uint eggPrice,
-        uint eggMarketPrice,
-        uint totEggs,
-        uint totMarketEggs
+        uint totEggs
         ) public onlyFarmer {
         
         // Check if the owner is the same farmer in the written address
@@ -124,12 +120,11 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
             id : idEgg,
             ownerID: payable(msg.sender),
             farmerAddr: payable(farmerEggAddr),
-            farm: farmFrom,
             note: strNote,
             price: eggPrice,
-            marketPrice:  eggMarketPrice,
+            marketPrice: 0,
             totalEggsInPackage: totEggs,
-            totalEggsInMarketPackage: totMarketEggs,
+            totalEggsInMarketPackage: 0,
             eggState: State.Packed,
             deliveryAddr: address(0),
             marketAddr: payable(address(0)),
@@ -207,7 +202,8 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         
         egg.marketAddr = payable(marketAddr);
         egg.eggState = State.MarketForSale;
-        egg.totalEggsInMarketPackage = totMarketEggs;
+        //egg.totalEggsInMarketPackage = totMarketEggs;
+        egg.totalEggsInPackage = totMarketEggs;
         egg.marketPrice = eggMarketPrice;
 
         // Update eggHistory of the eggProduct
@@ -241,7 +237,7 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         emit FoodFactoryArrived(idEgg);
     }
 
-    function buyEggsFoodFactory(uint idEgg, uint price) public payable 
+    function buyFoodFactory(uint idEgg, uint price) public payable 
         onlyFoodFactory 
         isFoodFactoryArrived(idEgg) 
         enoughFunds(idEgg, price) 
@@ -296,7 +292,6 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
          uint _id,
          address ownerID, 
          address farmerAddr,
-         string  memory farm,
          string  memory note,
          uint    price,
          uint    marketPrice,
@@ -314,7 +309,7 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         _id = egg.id;
         ownerID = egg.ownerID;
         farmerAddr = egg.farmerAddr;
-        farm = egg.farm;
+       // farm = ""; //egg.farm;
         note = egg.note;
         price = egg.price;
         marketPrice = egg.marketPrice;
@@ -331,7 +326,6 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
             _id,
             ownerID, 
             farmerAddr,
-            farm,
             note,
             price,
             marketPrice,

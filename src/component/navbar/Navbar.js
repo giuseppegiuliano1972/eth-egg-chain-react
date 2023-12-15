@@ -81,7 +81,7 @@ function Navbar() {
               className='nav-links'
               onClick={closeMobileMenu}
             >
-              Buy Eggs (Food Factory)
+              Buy Eggs
             </Link>
           </li>
         </ul>
