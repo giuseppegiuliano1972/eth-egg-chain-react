@@ -59,11 +59,20 @@ function Navbar() {
           </li>
           <li className='nav-item'>
             <Link
-              to='/pack'
+              to='/farmerpack'
               className='nav-links'
               onClick={closeMobileMenu}
             >
-              Pack eggs
+              Pack eggs Farmer
+            </Link>
+          </li>
+          <li className='nav-item'>
+            <Link
+              to='/marketpack'
+              className='nav-links'
+              onClick={closeMobileMenu}
+            >
+              Pack eggs Market
             </Link>
           </li>
           <li className='nav-item'>

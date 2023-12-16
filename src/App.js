@@ -4,7 +4,8 @@ import Web3 from 'web3'
 import AddNode from './component/AddNode'
 import './App.css'
 import FetchData from './component/FetchData'
-import PackEggs from './component/PackEggs';
+import FarmerPackEggs from './component/FarmerPackEggs';
+import MarketPackEggs from './component/MarketPackEggs';
 import TransferEggs from './component/TransferEggs';
 import BuyEggs from './component/BuyEggs';
 
@@ -36,7 +37,8 @@ class App extends Component {
         
         <Route path='/fetch' element={<FetchData />} />
         <Route path='/addaddr' element={<AddNode />} />
-        <Route path='/pack' element={<PackEggs />} />
+        <Route path='/farmerpack' element={<FarmerPackEggs />} />
+        <Route path='/marketpack' element={<MarketPackEggs />} />
         <Route path='/transfer' element={<TransferEggs />} />
         <Route path='/buyeggsff' element={<BuyEggs />} />
       </Routes>

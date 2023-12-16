@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "semantic-ui-css/semantic.min.css";
 import { Button, Form, Input, Message, Select} from "semantic-ui-react";
+import { useParams } from "react-router-dom";
 
 import web3 from "../gate/web3";
 import gateway from "../gate/gateway";
@@ -29,6 +30,7 @@ class BuyEggs extends Component {
     {key: 2, value: 2, text:"Market"}
   ]
 
+  lastPart = window.location.href.split("/").pop();
 
   async onSubmit(event) {
     event.preventDefault();
@@ -40,7 +42,6 @@ class BuyEggs extends Component {
       const accounts = await web3.eth.getAccounts();
 
       console.log("Chi compra: ", this.state.buyer, "Address: " , this.state.buyerAddr);
-
       switch (this.state.buyer){
         case 1: //Food Factory
           await gateway.methods.buyFoodFactory(this.state.id, price).send({
@@ -52,7 +53,6 @@ class BuyEggs extends Component {
           break;
         default:
       }
-
     } catch (err) {
       this.setState({ errMsg: err.message });
     }
@@ -66,9 +66,13 @@ class BuyEggs extends Component {
     })
   }
 
+  renderMarket(){
+
+  }
 
 render() {
 
+ 
   return (
     <div  className='main-container'>
     <Form

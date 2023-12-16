@@ -5,11 +5,10 @@ import { Button, Form, Input, Message, Select } from "semantic-ui-react";
 import web3 from "../gate/web3";
 import gateway from "../gate/gateway";
 
-class PackEggs extends Component {
+class MarketPackEggs extends Component {
   state = {
     id: "",
     address: "",
-    seller: "",
     note: "",
     price: "",
     totalNumber: 0,
@@ -17,23 +16,12 @@ class PackEggs extends Component {
     loading: false,
   };
 
-  nodeSeller = [
-    {key: 1, value: 1, text:"Farmer"},
-    {key: 2, value: 2, text:"Market"}
-  ]
-
-  handleChange = (event, data) => {
-    console.log(data.value);
-    this.setState({
-      seller: data.value
-    });
-   }
 
   async onSubmit(event) {
     event.preventDefault();
     this.setState({ loading: true, errMsg: "" });
     try {
-      const { id, seller,  note, price, totalNumber } = this.state;
+      const { id, address,  note, price, totalNumber } = this.state;
 
       console.log(note === "");
 
@@ -41,23 +29,8 @@ class PackEggs extends Component {
 
       const _price = web3.utils.toWei(this.state.price, "ether");
       
-      switch (this.state.seller){
-        case 1: //Farmer
-          console.log(this.state.id, this.state.address, note, _price, this.state.totalNumber);
-          await gateway.methods.getAndPackEggs(this.state.id, this.state.address, note, _price, this.state.totalNumber)
-                                .send({from: accounts[0]});
-          break;
-        case 2: //Market
-          await gateway.methods.marketForSale(this.state.id, this.state.address, _price, this.state.totalNumber)
+      await gateway.methods.marketForSale(this.state.id, this.state.address, _price, this.state.totalNumber)
                                         .send({from: accounts[0]});
-          break;
-        default:
-      }
-      //console.log(id,seller, note, _price , totalNumber);
-
-    //  await gateway.methods
-    //    .getAndPackEggs(id, farmer, farm,note, _price , totalNumber )
-    //    .send({ from: accounts[0] });
     } catch (error) {
       this.setState({ errMsg: error.message });
     }
@@ -68,10 +41,11 @@ class PackEggs extends Component {
 
 
 render() {
+
   return (
 
     <div  className='main-container'>
-        <h3>Pack and sell</h3>
+        <h3>Pack Eggs</h3>
         <Form
           onSubmit={(event) => this.onSubmit(event)}
           error={!!this.state.errMsg}
@@ -84,13 +58,7 @@ render() {
           />
         </Form.Field>
          <Form.Field>
-            <label>Address</label>
-            <Select
-              placeholder='Select...' 
-              name='selNode'
-              options={this.nodeSeller}
-              onChange={this.handleChange} 
-              />
+            <label>Market Address</label>
             <Input
               focus
               icon="address card"
@@ -145,4 +113,4 @@ render() {
   }
 }
 
-export default PackEggs;
+export default MarketPackEggs;
