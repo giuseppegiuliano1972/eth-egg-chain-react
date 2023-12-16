@@ -35,6 +35,8 @@ class PackEggs extends Component {
     try {
       const { id, seller,  note, price, totalNumber } = this.state;
 
+      console.log(note === "");
+
       const accounts = await web3.eth.getAccounts();
 
       const _price = web3.utils.toWei(this.state.price, "ether");

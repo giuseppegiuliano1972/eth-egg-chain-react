@@ -24,6 +24,7 @@ class FetchData extends Component {
       //da Gateway.json che deriva dagli altri contratti. Derivando 
       //gli altri contratti importa all'interno del proprio JSON tutte le funzioni
       //dichiarate nei vari contratti
+      console.log(this.state.id);
       const eggDetails = await gateway.methods['fetchData'](this.state.id).call({
         from: accounts[0],
       });

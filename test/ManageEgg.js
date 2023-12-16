@@ -8,6 +8,36 @@ contract('ManageEgg', (accounts) => {
   });
 
   describe('Egg lifecycle', () => {
+    it.only("test on fetchData()", async () => {
+      // account 0 should pack egg product with id 1 with notes left empty and price equal to a number
+      // for the purpose of this test: account 0 is the farmer and he packages his own eggs
+      id = 1
+      note = "";
+      price = 25;
+      tot_eggs = 20;
+      
+      await manageEggInstance.getAndPackEggs(id, accounts[0],  note, price, tot_eggs, { from: accounts[0] });
+
+      let egg = await manageEggInstance.fetchData(1);
+
+      console.log(egg.price.toNumber());
+      console.log(egg.totalEggsInPackage.toNumber());
+
+      //console.log(JSON.stringify(egg));
+
+      
+      
+      
+      assert.equal(egg._id.toNumber(), id, 'Egg ID should be recorded correctly');
+      assert.equal(egg.ownerID, accounts[0], 'Owner should be recorded correctly');
+      assert.equal(egg.farmerAddr, accounts[0], 'FarmerAddress should be recorded correctly');
+      assert.equal(egg.note, note, 'Egg notes should be equal to note value');
+      assert.equal(egg.price.toNumber(), price, 'Egg price should be recorded correctly');
+      assert.equal(egg.totalEggsInPackage.toNumber(), tot_eggs, 'Total number of eggs should be recorded correctly');
+
+
+
+  });
     it("should allow account 1 to be a farmer", async () => {
         await manageEggInstance.addFarmer(accounts[1], { from: accounts[0] });
     
