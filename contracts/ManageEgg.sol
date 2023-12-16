@@ -77,7 +77,7 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
     }
 
     // Checks id  is packed
-    modifier packed(uint _id){
+    modifier isPacked(uint _id){
         require(eggProduct[_id].eggState == State.Packed, 'Egg state is still not packed');
         _;
     }
@@ -136,7 +136,7 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         emit Packed(idEgg);
     }
 
-    function toDistributor(uint idEgg, address deliveryAddr) public packed(idEgg) onlyFarmer() {
+    function toDistributor(uint idEgg, address deliveryAddr) public isPacked(idEgg) onlyFarmer() {
         // Could be costly, maybe use has
         require(isDeliver(deliveryAddr), "The deliveryAddress should be an existing delivery address");
 
@@ -161,7 +161,7 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         emit Delivered(idEgg);
     }
 
-    function deliverToMarket(uint idEgg, address marketAddr) public onlyDeliver {
+    function deliverToMarket(uint idEgg, address marketAddr) public onlyDeliver isDelivered(idEgg){
         // Could be costly, maybe use has
         require(isMarket(marketAddr), "The marketAddress should be an existing market address");
 
@@ -214,7 +214,8 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
 
     function deliverToFoodFactory(uint idEgg, address foodFactoryAddress) public 
         onlyDeliver 
-        isDelivered(idEgg) {
+        isDelivered(idEgg) 
+        {
         // Could be costly, maybe use has
         require(isFoodFactory(foodFactoryAddress), "The food Factory Address should be an existing address");
 
