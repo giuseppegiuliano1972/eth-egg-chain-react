@@ -43,13 +43,17 @@ class TransferEggs extends Component {
       //dichiarate nei vari contratti
       
       var tocall = '';
+
+      console.log(`Sender: ${this.state.sender}`);
+      console.log(`Receiver: ${this.state.receiver}`);
+      console.log(`ReceiverAddr: ${this.state.receiverAddr}`);
       
       switch (this.state.sender){
         case "farmer":
           tocall = 'toDistributor';
           break;
         case "delivery":
-          tocall = 'deliverToMarket';
+          tocall = this.state.receiver === "food factory" ? 'deliverToFoodFactory': 'deliverToMarket'
           break;
         default:
       }
@@ -100,8 +104,10 @@ renderReceiver(){
               placeholder='Select...' 
               name='selReceiver'
               options={this.nodeDeliver}
-              onChange={(event) =>
-                this.setState({ receiverAddr: event.target.value })
+              onChange={(event, data) =>
+                this.setState({ 
+                  receiver: this.nodeDeliver.find(option => option.value === data.value).text
+                })
               }
               />
       );

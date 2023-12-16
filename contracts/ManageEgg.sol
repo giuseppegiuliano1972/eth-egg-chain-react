@@ -110,7 +110,13 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         uint eggPrice,
         uint totEggs
         ) public onlyFarmer {
-        
+
+        // Check if the egg is already in the ledger
+        require(eggProduct[idEgg].ownerID == address(0), "This eggProduct already exists!");
+        // Check if the price is <= 0
+        require(eggPrice > 0, "EggPrice should be a positive number major than 0");
+        // Check if the number of eggs is <= 0
+        require(totEggs > 0, "The number of eggs should be a positive number major than 0");
         // Check if the owner is the same farmer in the written address
         require(msg.sender == farmerEggAddr, "The owner address should be equal to the farmer address");
         // Could be costly, maybe use has
