@@ -25,12 +25,42 @@ class App extends Component {
 
   constructor(props) {
     super(props)
-    this.state = { account: '' }
+    this.state = { account: '' , metamask: ''}
+  }
+
+  componentDidMount() {
+    // do thing
+    if(window.ethereum) {
+      window.ethereum.on("accountsChanged", (accounts) => {
+        this.setState({ metamask: accounts[0]});
+        //window.location.reload();
+      });
+    }
+  }
+  
+  componentDidUpdate() {
+    // do thing
+    if(window.ethereum) {
+      window.ethereum.on("accountsChanged", (accounts) => {
+        this.setState({ metamask: accounts[0]});
+        //window.location.reload();
+      });
+    }
+  }
+  
+  renderaccount(){
+
+    return (
+      <>
+        <p>Active accounts is: {this.state.metamask}</p>
+      </>
+    );
   }
 
   render() {
     return (
 
+      <>
       <Router>
       <Navbar />
       <Routes>
@@ -43,6 +73,9 @@ class App extends Component {
         <Route path='/buyeggsff' element={<BuyEggs />} />
       </Routes>
     </Router>
+
+    {this.renderaccount()}
+    </>
     );
   }
 }
