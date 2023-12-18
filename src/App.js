@@ -28,8 +28,8 @@ class App extends Component {
     this.state = { account: '' , metamask: ''}
   }
 
+  // hook to detect account change and update state accordingly
   componentDidMount() {
-    // do thing
     if(window.ethereum) {
       window.ethereum.on("accountsChanged", (accounts) => {
         this.setState({ metamask: accounts[0]});
@@ -38,8 +38,8 @@ class App extends Component {
     }
   }
   
+  // hook to detect account change and update state accordingly
   componentDidUpdate() {
-    // do thing
     if(window.ethereum) {
       window.ethereum.on("accountsChanged", (accounts) => {
         this.setState({ metamask: accounts[0]});
@@ -48,6 +48,7 @@ class App extends Component {
     }
   }
   
+  // function to render connected account information
   renderaccount(){
 
     return (
@@ -61,6 +62,9 @@ class App extends Component {
     return (
 
       <>
+
+      {this.renderaccount()}
+
       <Router>
       <Navbar />
       <Routes>
@@ -74,7 +78,6 @@ class App extends Component {
       </Routes>
     </Router>
 
-    {this.renderaccount()}
     </>
     );
   }
