@@ -1,102 +1,29 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import './Navbar.css';
-import Dropdown from './Dropdown';
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import NavDropdown from 'react-bootstrap/NavDropdown';
 
-function Navbar() {
-  const [click, setClick] = useState(false);
-  const [dropdown, setDropdown] = useState(false);
-
-  const handleClick = () => setClick(!click);
-  const closeMobileMenu = () => setClick(false);
-
-  const onMouseEnter = () => {
-    if (window.innerWidth < 960) {
-      setDropdown(false);
-    } else {
-      setDropdown(true);
-    }
-  };
-
-  const onMouseLeave = () => {
-    if (window.innerWidth < 960) {
-      setDropdown(false);
-    } else {
-      setDropdown(false);
-    }
-  };
-
+function navigationbar() {
   return (
-    <>
-      <nav className='navbar'>
-        <div className='menu-icon' onClick={handleClick}>
-          <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
-        </div>
-        <ul className={click ? 'nav-menu active' : 'nav-menu'}>
-          <li
-            className='nav-item'
-            onMouseEnter={onMouseEnter}
-            onMouseLeave={onMouseLeave}
-          >
-            <Link
-              to='/fetch'
-              className='nav-links'
-              onClick={closeMobileMenu}
-            >
-              Fetch data <i className='fas fa-caret-down' />
-            </Link>
-           
-          </li>
-          <li className='nav-item'>
-            <Link
-              to='/addaddr'
-              className='nav-links'
-              onClick={closeMobileMenu}
-            >
-              Link address
-            </Link>
-            {dropdown && <Dropdown />}
-          </li>
-          <li className='nav-item'>
-            <Link
-              to='/farmerpack'
-              className='nav-links'
-              onClick={closeMobileMenu}
-            >
-              Pack eggs Farmer
-            </Link>
-          </li>
-          <li className='nav-item'>
-            <Link
-              to='/marketpack'
-              className='nav-links'
-              onClick={closeMobileMenu}
-            >
-              Pack eggs Market
-            </Link>
-          </li>
-          <li className='nav-item'>
-            <Link
-              to='/transfer'
-              className='nav-links'
-              onClick={closeMobileMenu}
-            >
-              Transfer Eggs
-            </Link>
-          </li>
-          <li className='nav-item'>
-            <Link
-              to='/buyeggsff'
-              className='nav-links'
-              onClick={closeMobileMenu}
-            >
-              Buy Eggs
-            </Link>
-          </li>
-        </ul>
-      </nav>
-    </>
+    <Navbar bg="primary" data-bs-theme="dark">
+      <Container>
+        <Navbar.Brand href="/">EggChain</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
+            <Nav.Link className='nav-links' href="fetch">Fetch Data</Nav.Link>
+            <Nav.Link className='nav-links' href="addaddr">Link Address</Nav.Link>
+            <NavDropdown className='nav-item' title="Pack eggs" id="basic-nav-dropdown">
+              <NavDropdown.Item className='nav-links' href="farmerpack">Farmer pack Eggs</NavDropdown.Item>
+              <NavDropdown.Item className='nav-links' href="marketpack">Market pack Eggs</NavDropdown.Item>
+            </NavDropdown>
+            <Nav.Link className='nav-links' href="transfer">Transfer eggs</Nav.Link>
+            <Nav.Link className='nav-links' href="buyeggsff">Buy eggs</Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 }
 
-export default Navbar;
+export default navigationbar;

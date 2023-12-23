@@ -10,7 +10,6 @@ import TransferEggs from './component/TransferEggs';
 import BuyEggs from './component/BuyEggs';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar2 from './component/navbar/NavBar2';
 
 class App extends Component {
   componentWillMount() {
