@@ -37,6 +37,7 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         address payable marketAddr;
         address payable foodFactoryAddr;
         address payable consumerAddr;
+        string heliaID;
     }
 
     //  mapping egg product
@@ -108,7 +109,8 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         address farmerEggAddr,
         string memory strNote,
         uint eggPrice,
-        uint totEggs
+        uint totEggs,
+        string memory _heliaID
         ) public onlyFarmer {
 
         // Check if the egg is already in the ledger
@@ -135,11 +137,22 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
             deliveryAddr: address(0),
             marketAddr: payable(address(0)),
             foodFactoryAddr: payable(address(0)),
-            consumerAddr: payable(address(0))
+            consumerAddr: payable(address(0)),
+            heliaID: _heliaID
         });
 
         id  = id + 1;
         emit Packed(idEgg);
+    }
+
+    // Event emitted after the initial packaging of the egg
+    event eggPacked(address indexed _owner, string indexed _hash);
+
+    // Wrapper Function that emits event eggPacked
+    // Could add keywords to save gas
+    // Add modifiers to verify correctness
+    function packEgg(address _owner, string calldata _hash) public {
+        emit eggPacked(_owner, _hash);
     }
 
     function toDistributor(uint idEgg, address deliveryAddr) public isPacked(idEgg) onlyFarmer() {

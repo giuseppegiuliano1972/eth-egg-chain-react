@@ -5,6 +5,10 @@ import { Button, Form, Input, Message, Select } from "semantic-ui-react";
 import web3 from "../gate/web3";
 import gateway from "../gate/gateway";
 
+// Helia support
+import { useCommitEgg } from '../hooks/useCommitEgg'
+import { useHelia } from '../hooks/useHelia'
+
 class FarmerPackEggs extends Component {
   state = {
     id: "",
@@ -15,6 +19,9 @@ class FarmerPackEggs extends Component {
     errMsg: "",
     loading: false,
   };
+
+  //committer = useCommitEgg();
+  //helia = useHelia();
 
   nodeSeller = [
     {key: 1, value: 1, text:"Farmer"},
@@ -40,8 +47,20 @@ class FarmerPackEggs extends Component {
 
       const _price = web3.utils.toWei(this.state.price, "ether");
       
-      console.log(this.state.id, this.state.address, note, _price, this.state.totalNumber);
-      await gateway.methods.getAndPackEggs(this.state.id, this.state.address, note, _price, this.state.totalNumber)
+      // add egg to Helia, then store hash on chain
+      const egg = { id : this.state.id,
+        ownerAddr: "none",
+        farmerAddr: this.state.address,
+        price: _price,
+        eggsInPackage: this.state.totalNumber,
+        state: "packed" };
+      //await this.committer.commitEgg(note);
+      //const eggID = this.committer.cidString;
+      const eggID = "this";
+      
+      console.log(this.state.id, this.state.address, note, _price, this.state.totalNumber, eggID);
+
+      await gateway.methods.getAndPackEggs(this.state.id, this.state.address, note, _price, this.state.totalNumber, eggID)
                                 .send({from: accounts[0]});
     } catch (error) {
       this.setState({ errMsg: error.message });
@@ -55,7 +74,6 @@ class FarmerPackEggs extends Component {
 render() {
 
   return (
-
     <div  className='main-container'>
         <h3>Pack Eggs</h3>
         <Form
@@ -120,7 +138,6 @@ render() {
         </Button>
       </Form>
       </div>
-   
    );
   }
 }

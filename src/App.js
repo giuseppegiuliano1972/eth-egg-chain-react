@@ -3,8 +3,8 @@ import Navbar from './component/navbar/Navbar';
 import Web3 from 'web3'
 import AddNode from './component/AddNode'
 import './App.css'
-import FetchData from './component/FetchData'
-import FarmerPackEggs from './component/FarmerPackEggs';
+import FunctionalFetchData from './component/FunctionalFetchData'
+import FunctionalFarmerPackEggs from './component/FunctionalFarmerPackEggs';
 import MarketPackEggs from './component/MarketPackEggs';
 import TransferEggs from './component/TransferEggs';
 import BuyEggs from './component/BuyEggs';
@@ -64,20 +64,17 @@ class App extends Component {
       <>
 
       {this.renderaccount()}
-
-      <Router>
-      <Navbar />
-      <Routes>
-        
-        <Route path='/fetch' element={<FetchData />} />
-        <Route path='/addaddr' element={<AddNode />} />
-        <Route path='/farmerpack' element={<FarmerPackEggs />} />
-        <Route path='/marketpack' element={<MarketPackEggs />} />
-        <Route path='/transfer' element={<TransferEggs />} />
-        <Route path='/buyeggsff' element={<BuyEggs />} />
-      </Routes>
-    </Router>
-
+        <Router>
+        <Navbar />
+        <Routes>
+          <Route path='/fetch' element={<FunctionalFetchData />} />
+          <Route path='/addaddr' element={<AddNode />} />
+          <Route path='/farmerpack' element={<FunctionalFarmerPackEggs />} />
+          <Route path='/marketpack' element={<MarketPackEggs />} />
+          <Route path='/transfer' element={<TransferEggs />} />
+          <Route path='/buyeggsff' element={<BuyEggs />} />
+        </Routes>
+        </Router>
     </>
     );
   }

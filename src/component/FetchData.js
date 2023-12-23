@@ -5,6 +5,8 @@ import { Button, Form, Input, Message, Card } from "semantic-ui-react";
 import web3 from "../gate/web3";
 import gateway from "../gate/gateway";
 
+// Helia support: TODO
+
 class FetchData extends Component {
   state = {
     id: "",
@@ -33,6 +35,16 @@ class FetchData extends Component {
       this.setState({details: eggDetails });
 
       console.log(eggDetails.farmerAddr);
+
+      // Create Helia node
+      //const helia = await createHelia();
+
+      // For retrieving a dagjson
+      //const d = dagJson(helia);
+
+      // fetch from helia instead:
+      //const getegg = await d.get(this.state.id);
+      //console.log(getegg);
 
     } catch (err) {
       this.setState({ errMsg: err.message });
