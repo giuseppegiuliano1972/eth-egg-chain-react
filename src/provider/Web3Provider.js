@@ -52,7 +52,7 @@ export const Web3Provider = ({ children }) => {
         const createGateway = (async (web3) => {
           return new web3.eth.Contract(
             Gateway.abi,
-            '0xf2354f178181eC8bFBf8743A2883E02b77B0748e'
+            '0x9a57Df1A3769Ed3A38f2dE2fD219Efb904fc26A6'
           )
         })
         const _web3 = await createWeb3()

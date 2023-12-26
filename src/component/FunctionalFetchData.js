@@ -2,13 +2,13 @@ import { React } from 'react'
 import "semantic-ui-css/semantic.min.css";
 import { Button, Card, Form, Input, Message } from "semantic-ui-react";
 
-// Helia support
+// Kubo support
 import { useCommitEgg } from '../hooks/useCommitEgg'
-import { useHelia } from '../hooks/useHelia'
+import { useKubo } from '../hooks/useKubo'
 
 function FunctionalFetchData() {
     // state variables
-    const { error, starting } = useHelia()
+    const { error, starting } = useKubo()
     const {
         cidString,
         setCidString,
@@ -21,7 +21,7 @@ function FunctionalFetchData() {
             <h3>Fetch Egg Data from Chain 1902</h3>
             <Form
                 onSubmit={() => fetchCommittedEgg()}                         // Creates object egg before committing
-                error={error}               // Uses error as helias error
+                error={error}               // Uses error as kubos error
             >
                 <Form.Field>
                     <label>ID</label>
@@ -33,7 +33,7 @@ function FunctionalFetchData() {
                 <Message
                     error
                     header="There are error/s with your submission"
-                    content={"Helia encountered an unknown error"} // Might want to change
+                    content={"Kubo encountered an unknown error"} // Might want to change
                 />
                 <Button color="teal" loading={starting}>
                     Fetch

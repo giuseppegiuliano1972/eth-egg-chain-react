@@ -2,9 +2,9 @@ import { React, useState } from 'react'
 import "semantic-ui-css/semantic.min.css";
 import { Button, Form, Input, Message } from "semantic-ui-react";
 
-// Helia and Web3 support
+// Kubo and Web3 support
 import { useCommitEgg } from '../hooks/useCommitEgg'
-import { useHelia } from '../hooks/useHelia'
+import { useKubo } from '../hooks/useKubo'
 import { useWeb3 } from '../hooks/useWeb3'
 
 function FunctionalFarmerPackEggs() {
@@ -15,7 +15,7 @@ function FunctionalFarmerPackEggs() {
     const [notes, setNotes] = useState('')
 
     // inherited variables
-    const { heliaError, heliaStarting } = useHelia()
+    const { kuboError, kuboStarting } = useKubo()
     const { web3Error, web3Starting} = useWeb3()
     const {
         cidString,  // don't delete, in future will use to show id of the egg that was just added
@@ -24,7 +24,7 @@ function FunctionalFarmerPackEggs() {
 
     return (
         <div className="main-container">
-            <h3>Pack Eggs 1757</h3>
+            <h3>Pack Eggs</h3>
             <Form
                 onSubmit={() => commitEgg({
                     address: address,
@@ -33,7 +33,7 @@ function FunctionalFarmerPackEggs() {
                     notes: notes,
                     state: "packed"
                 })}                         // Creates object egg before committing
-                error={heliaError}               // Set error as helia's error
+                error={kuboError}               // Set error as kubo's error
             >
                 <Form.Field>
                     <label>Farmer Address</label>
@@ -68,9 +68,9 @@ function FunctionalFarmerPackEggs() {
                 <Message
                     error
                     header="There are error/s with your submission"
-                    content={"Helia encountered an unknown error"} // Might want to add handling for web3 errors
+                    content={"Kubo encountered an unknown error"} // Might want to add handling for web3 errors
                 />
-                <Button color="teal" loading={heliaStarting}>
+                <Button color="teal" loading={kuboStarting||web3Starting}>
                     Pack
                 </Button>
             </Form>
