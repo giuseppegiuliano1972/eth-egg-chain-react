@@ -18,7 +18,7 @@ function FunctionalFetchData() {
 
     return (
         <div className="main-container">
-            <h3>Fetch Egg Data from Chain 1902</h3>
+            <h3>Fetch Egg Data from Chain</h3>
             <Form
                 onSubmit={() => fetchCommittedEgg()}                         // Creates object egg before committing
                 error={error}               // Uses error as kubos error

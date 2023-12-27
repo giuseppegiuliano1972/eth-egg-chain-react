@@ -44,10 +44,12 @@ export const KuboProvider = ({ children }) => {
         setError(true)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
     startKubo()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

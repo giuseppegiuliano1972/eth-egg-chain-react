@@ -29,7 +29,6 @@ export const Web3Provider = ({ children }) => {
   const [error, setError] = useState(null)
 
   const startWeb3 = useCallback(async () => {
-    console.log("called")
     if (web3) {
       console.info('web3 already started')
     // CAN BE IMPROVED BY PUTTING THE FUNCTIONS OUTSIDE
@@ -49,14 +48,20 @@ export const Web3Provider = ({ children }) => {
         const createWeb3 = (async () => {
           return new Web3(Web3.givenProvider || "http://localhost:8545")
         })
+        
         const createGateway = (async (web3) => {
+          const index = Object.keys(Gateway.networks).reduce((a,b) => a > b ? a : b);
+          const contract_address = Gateway.networks[index].address;
+
           return new web3.eth.Contract(
             Gateway.abi,
-            '0x9a57Df1A3769Ed3A38f2dE2fD219Efb904fc26A6'
-          )
+            contract_address
+          );
         })
         const _web3 = await createWeb3()
+        //const _gateway = await createGateway(_web3)
         const _gateway = await createGateway(_web3)
+        
         setWeb3(_web3)
         setAccounts(await _web3.eth.getAccounts())
         setGateway(_gateway)
@@ -66,10 +71,12 @@ export const Web3Provider = ({ children }) => {
         setError(true)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
     startWeb3()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

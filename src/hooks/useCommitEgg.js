@@ -2,13 +2,14 @@
 
 import { useState, useCallback } from 'react'
 import { useKubo } from './useKubo'
-import { useWeb3 } from '../hooks/useWeb3'
+import { useWeb3 } from './useWeb3'
 // In progress: adding web3
 
 import { CID } from 'kubo-rpc-client'
 
 export const useCommitEgg = () => {
   const { kubo, kuboError, kuboStarting } = useKubo()
+  // eslint-disable-next-line no-unused-vars
   const { web3, accounts, gateway, web3Error, web3Starting } = useWeb3()
   const [cidString, setCidString] = useState('')
   const [committedEgg, setCommittedEgg] = useState({})
@@ -16,6 +17,8 @@ export const useCommitEgg = () => {
   const commitEgg = useCallback(async (json) => {
     if (!kuboError && !kuboStarting && !web3Error && !web3Starting) {
       try {
+        // Add checks for correctness
+
         // add egg as a dag json to ipfs
         const cid = await kubo.dag.put(json);
 
@@ -41,10 +44,9 @@ export const useCommitEgg = () => {
     } else {
       console.log('please wait for kubo and web3 to start')
     }
-  }, [kuboError, kuboStarting, kubo])
+  }, [gateway, web3Error, web3Starting, kuboError, kuboStarting, kubo])
 
   const fetchCommittedEgg = useCallback(async () => {
-    let json = {}
     if (!kuboError && !kuboStarting && !web3Error && !web3Starting) {
       try {
         console.log('Fetching: ', cidString)
@@ -79,7 +81,7 @@ export const useCommitEgg = () => {
     } else {
       console.log('please wait for kubo and web3 to start')
     }
-  }, [kuboError, kuboStarting, cidString])
+  }, [gateway, web3Error, web3Starting, kubo, kuboError, kuboStarting, cidString])
   
   return { cidString, setCidString, committedEgg, commitEgg, fetchCommittedEgg }
 }

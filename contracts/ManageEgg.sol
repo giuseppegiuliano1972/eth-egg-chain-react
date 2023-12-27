@@ -149,9 +149,12 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
     event eggPacked(address indexed _owner, string indexed _hash);
 
     // Wrapper Function that emits event eggPacked
-    // Could add keywords to save gas
-    // Add modifiers to verify correctness
     function packEgg(address _owner, string calldata _hash) public {
+        // Check if the caller is the same farmer as the one declared
+        require(msg.sender == _owner, "The Farmer Address should be equal to the user address");
+        // Could be costly, maybe use has
+        require(isFarmer(_owner), "The Farmer Address should be an existing farmer address");
+
         emit eggPacked(_owner, _hash);
     }
 
