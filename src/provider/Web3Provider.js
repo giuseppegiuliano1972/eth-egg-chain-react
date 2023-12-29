@@ -16,6 +16,8 @@ import Gateway from "../abi/Gateway.json";
 export const Web3Context = createContext({
   web3: null,
   accounts: null,
+  selected: null,
+  setSelected: null,
   gateway: null,
   error: false,
   starting: true
@@ -24,6 +26,8 @@ export const Web3Context = createContext({
 export const Web3Provider = ({ children }) => {
   const [web3, setWeb3] = useState(null)
   const [accounts, setAccounts] = useState(null)
+  // eslint-disable-next-line no-unused-vars
+  const [selected, setSelected] = useState(null)
   const [gateway, setGateway] = useState(null)
   const [starting, setStarting] = useState(true)
   const [error, setError] = useState(null)
@@ -59,7 +63,6 @@ export const Web3Provider = ({ children }) => {
           );
         })
         const _web3 = await createWeb3()
-        //const _gateway = await createGateway(_web3)
         const _gateway = await createGateway(_web3)
         
         setWeb3(_web3)
@@ -84,6 +87,8 @@ export const Web3Provider = ({ children }) => {
       value={{
         web3,
         accounts,
+        selected,
+        setSelected,
         gateway,
         error,
         starting

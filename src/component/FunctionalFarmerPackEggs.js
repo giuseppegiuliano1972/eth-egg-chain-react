@@ -18,6 +18,7 @@ function FunctionalFarmerPackEggs() {
     const { kuboError, kuboStarting } = useKubo()
     const { web3Error, web3Starting} = useWeb3()
     const {
+        loading,
         cidString,  // don't delete, in future will use to show id of the egg that was just added
         commitEgg,
     } = useCommitEgg()
@@ -68,11 +69,16 @@ function FunctionalFarmerPackEggs() {
                 <Message
                     error
                     header="There are error/s with your submission"
-                    content={"Kubo encountered an unknown error"} // Might want to add handling for web3 errors
+                    content={`Kubo: ${kuboError} Web3: ${web3Error}`}
                 />
-                <Button color="teal" loading={kuboStarting||web3Starting}>
+                <Button color="teal" loading={kuboStarting||web3Starting||loading}>
                     Pack
                 </Button>
+                {(cidString !== '') ? <Message
+                    positive
+                    header="You got a new egg!"
+                    content={`CID: ${cidString}`}
+                /> : null}
             </Form>
         </div>
     )

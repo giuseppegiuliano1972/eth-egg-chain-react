@@ -3,18 +3,25 @@ import "semantic-ui-css/semantic.min.css";
 import { Button, Card, Form, Input, Message } from "semantic-ui-react";
 
 // Kubo support
-import { useCommitEgg } from '../hooks/useCommitEgg'
 import { useKubo } from '../hooks/useKubo'
+import { useCommitEgg } from '../hooks/useCommitEgg'
+import { useHistoryEgg} from '../hooks/useHistoryEgg'
 
 function FunctionalFetchData() {
     // state variables
     const { error, starting } = useKubo()
     const {
+        loading,
         cidString,
         setCidString,
         fetchCommittedEgg,
         committedEgg,
     } = useCommitEgg()
+    const {
+        loadingHistory,
+        historyEgg,
+    } = useHistoryEgg()
+        
 
     return (
         <div className="main-container">
@@ -35,7 +42,7 @@ function FunctionalFetchData() {
                     header="There are error/s with your submission"
                     content={"Kubo encountered an unknown error"} // Might want to change
                 />
-                <Button color="teal" loading={starting}>
+                <Button color="teal" loading={starting||loading}>
                     Fetch
                 </Button>
             </Form>
@@ -49,6 +56,17 @@ function FunctionalFetchData() {
                 <Card.Content description={`Eggs in Package: ${committedEgg.quantity}`} />
                 <Card.Content description={`Notes: ${committedEgg.notes}`} />
             </Card>
+
+            <h3>Your Eggs:</h3>
+            {
+                historyEgg.map((cid)=>{
+                    return <Card style={{ width: '128rem' }} loading={loadingHistory} key={`${cid}`}>
+                        <Card.Content
+                        header={`Product CID: ${cid}`}
+                        />
+                    </Card>
+                })
+            }
         </div>
     )
 }

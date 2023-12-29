@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Navbar from './component/navbar/Navbar';
+import Account from './component/Account';
 import Web3 from 'web3'
 import AddNode from './component/AddNode'
 import './App.css'
@@ -24,37 +25,7 @@ class App extends Component {
 
   constructor(props) {
     super(props)
-    this.state = { account: '' , metamask: ''}
-  }
-
-  // hook to detect account change and update state accordingly
-  componentDidMount() {
-    if(window.ethereum) {
-      window.ethereum.on("accountsChanged", (accounts) => {
-        this.setState({ metamask: accounts[0]});
-        //window.location.reload();
-      });
-    }
-  }
-  
-  // hook to detect account change and update state accordingly
-  componentDidUpdate() {
-    if(window.ethereum) {
-      window.ethereum.on("accountsChanged", (accounts) => {
-        this.setState({ metamask: accounts[0]});
-        //window.location.reload();
-      });
-    }
-  }
-  
-  // function to render connected account information
-  renderaccount(){
-
-    return (
-      <>
-        <p>Active accounts is: {this.state.metamask}</p>
-      </>
-    );
+    this.state = { account: ''}
   }
 
   render() {
@@ -62,7 +33,7 @@ class App extends Component {
 
       <>
 
-      {this.renderaccount()}
+        <Account />
         <Router>
         <Navbar />
         <Routes>
