@@ -30,7 +30,7 @@ function Account() {
         value={selected}
         loading={starting}
         error={error}
-        onChange={(event) => {setSelected(event.target.textContent)}}
+        onChange={(event, data) => setSelected(data.value)}
       /></h3>
     </div>
   )

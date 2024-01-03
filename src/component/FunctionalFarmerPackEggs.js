@@ -8,18 +8,21 @@ import { useKubo } from '../hooks/useKubo'
 import { useWeb3 } from '../hooks/useWeb3'
 
 function FunctionalFarmerPackEggs() {
-    // state variables, maybe add variables for web3
+    // state variables
     const [address, setAddress] = useState('')
     const [price, setPrice] = useState(0)
     const [quantity, setQuantity] = useState(0)
     const [notes, setNotes] = useState('')
+    
+    // personal error
+    const [error, setError] = useState(null)
 
     // inherited variables
     const { kuboError, kuboStarting } = useKubo()
     const { web3Error, web3Starting} = useWeb3()
     const {
         loading,
-        cidString,  // don't delete, in future will use to show id of the egg that was just added
+        cidString,
         commitEgg,
     } = useCommitEgg()
 
@@ -27,14 +30,16 @@ function FunctionalFarmerPackEggs() {
         <div className="main-container">
             <h3>Pack Eggs</h3>
             <Form
-                onSubmit={() => commitEgg({
-                    address: address,
-                    price: price,
-                    quantity: quantity,
-                    notes: notes,
-                    state: "packed"
-                })}                         // Creates object egg before committing
-                error={kuboError}               // Set error as kubo's error
+                onSubmit={() => {
+                    setError(null);
+                    commitEgg({
+                        address: address,
+                        price: price,
+                        quantity: quantity,
+                        notes: notes
+                    }).catch((error) => setError(error))
+                }}                                                // Creates object egg before committing
+                error={kuboError||web3Error||error}               // Set error
             >
                 <Form.Field>
                     <label>Farmer Address</label>
@@ -69,12 +74,12 @@ function FunctionalFarmerPackEggs() {
                 <Message
                     error
                     header="There are error/s with your submission"
-                    content={`Kubo: ${kuboError} Web3: ${web3Error}`}
+                    content={`${error}`}
                 />
                 <Button color="teal" loading={kuboStarting||web3Starting||loading}>
                     Pack
                 </Button>
-                {(cidString !== '') ? <Message
+                {(cidString !== '' && error === null) ? <Message
                     positive
                     header="You got a new egg!"
                     content={`CID: ${cidString}`}

@@ -146,30 +146,36 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
     }
 
     // Event emitted after the initial packaging of the egg
-    event eggPacked(address indexed _owner, bytes32 indexed _hash);
+    event eggPacked(address indexed owner, bytes32 indexed _hash);
 
     // Wrapper Function that emits event eggPacked
-    function packEgg(address _owner, bytes32 _hash) public {
+    function packEgg(address owner, bytes32 _hash) public {
         // Check if the caller is the same farmer as the one declared
-        require(msg.sender == _owner, "The Farmer Address should be equal to the user address");
+        require(msg.sender == owner, "The Farmer Address should be equal to the user address");
         // Could be costly, maybe use has
-        require(isFarmer(_owner), "The Farmer Address should be an existing farmer address");
+        require(isFarmer(owner), "The Farmer Address should be an existing farmer address");
 
-        emit eggPacked(_owner, _hash);
+        emit eggPacked(owner, _hash);
     }
 
-    // Event emitted after egg moves to another node
-    event eggTransfer(address indexed _from, address indexed _to, bytes32 indexed _hash);
+    // Events emitted after egg moves to another node
+    // Split into two because we can read at most three arguments in event log
+    event eggTransfer(bytes32 indexed transfer, bytes32 indexed _hash, State indexed state);
+    event eggTransaction(address indexed sender, address indexed receiver, bytes32 indexed transfer);
 
     // Wrapper Function that emits event eggTransfer
     // Can work for any transfer since data is stored in ipfs
-    function transferEgg(address _from, address _to, bytes32 _hash) public {
-        // Require sender is the current owner
-        require(msg.sender == _from, "The sender should be the transaction caller");
+    function transferEgg(address sender, address receiver, bytes32 transfer, bytes32 _hash) public {
+        // Require sender is the caller
+        require(msg.sender == sender, "The sender should be the transaction caller");
+        // TODO: Require sender is current owner
+        // TODO: Change following line depending on sender and receiver role
+        State state = State.Packed;
         // Add other checks as you deem opportune
         // ...
 
-        emit eggTransfer(_from, _to, _hash);
+        emit eggTransfer(transfer, _hash, state);
+        emit eggTransaction(sender, receiver, transfer);
     }
 
     function toDistributor(uint idEgg, address deliveryAddr) public isPacked(idEgg) onlyFarmer() {

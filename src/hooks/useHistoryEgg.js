@@ -13,18 +13,18 @@ export const useHistoryEgg = () => {
   // Function to show all eggs of the account
   const fetchHistory = useCallback(async () => {
     if (!web3Error && !web3Starting && accounts !== null) {
+      var history = []
       try {
         setLoading(true)
 
         await gateway.getPastEvents('eggPacked', {
-          filter: {_owner: selected},
+          filter: {owner: selected},
           fromBlock: 0,
           toBlock: 'latest'
         }, function(error, events) {
           console.error(error);
           console.log(events);
         }).then(async function(events){
-          let history = []
           for (const event of events) {
             // compress following into a function
             const bytes = web3.utils.hexToBytes((event.topics[2]).toString());
@@ -36,13 +36,12 @@ export const useHistoryEgg = () => {
           }
 
           if(history.length < 1) history.push("This account hasn't packed any eggs. Select another account from the top.")
-
-          setHistoryEgg(history)
         })
-
-        setLoading(false)
       } catch (e) {
         console.error(e)
+      } finally {
+        setHistoryEgg([...new Set(history)])
+        setLoading(false)
       }
     } else {
       console.log('please wait for kubo and web3 to start')
@@ -52,7 +51,7 @@ export const useHistoryEgg = () => {
 
   useEffect(() => {
     fetchHistory()
-  }, [fetchHistory])
+  }, [fetchHistory, selected])
   
   return { loading, historyEgg, fetchHistory }
 }

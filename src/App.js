@@ -7,7 +7,7 @@ import './App.css'
 import FunctionalFetchData from './component/FunctionalFetchData'
 import FunctionalFarmerPackEggs from './component/FunctionalFarmerPackEggs';
 import MarketPackEggs from './component/MarketPackEggs';
-import TransferEggs from './component/TransferEggs';
+import FunctionalTransferEggs from './component/FunctionalTransferEggs';
 import BuyEggs from './component/BuyEggs';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -41,7 +41,7 @@ class App extends Component {
           <Route path='/addaddr' element={<AddNode />} />
           <Route path='/farmerpack' element={<FunctionalFarmerPackEggs />} />
           <Route path='/marketpack' element={<MarketPackEggs />} />
-          <Route path='/transfer' element={<TransferEggs />} />
+          <Route path='/transfer' element={<FunctionalTransferEggs />} />
           <Route path='/buyeggsff' element={<BuyEggs />} />
         </Routes>
         </Router>

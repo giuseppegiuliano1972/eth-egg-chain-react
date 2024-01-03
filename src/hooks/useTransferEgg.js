@@ -4,42 +4,39 @@ import { useWeb3 } from './useWeb3'
 
 import { CID } from 'kubo-rpc-client'
 
-export const useCommitEgg = () => {
+export const useTransferEgg = () => {
   const { kubo, kuboError, kuboStarting } = useKubo()
   // eslint-disable-next-line no-unused-vars
   const { web3, accounts, gateway, web3Error, web3Starting } = useWeb3()
   // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(false)
-  const [cidString, setCidString] = useState('')
-  const [committedEgg, setCommittedEgg] = useState({})
+  const [transferCID, setTransferCID] = useState('')
+  const [transferedEgg, setTransferedEgg] = useState({})
 
-  const commitEgg = useCallback(async (json) => {
+  const transferEgg = useCallback(async (json) => {
     if (!kuboError && !kuboStarting && !web3Error && !web3Starting) {
       try {
         setLoading(true);
 
         // TODO: Add input validation
 
-        // add egg as a dag json to ipfs
+        // add transfer as a dag json to ipfs
         const cid = await kubo.dag.put(json);
 
-        // convert to string and set cid
-        setCidString(cid.toString())
+        // convert eggid to appropiate format
+        const egglink = CID.parse(json.egglink)
 
-        // register egg and handle outcome
-        console.log(cid)
-        await gateway.methods.packEgg(json.address, web3.utils.bytesToHex(cid.multihash.digest))
-                                .send({from: json.address})
+        // register transfer and handle outcome
+        await gateway.methods.transferEgg(json.sender, json.receiver, web3.utils.bytesToHex(cid.multihash.digest), web3.utils.bytesToHex(egglink.multihash.digest))
+                                .send({from: json.sender})
                                 .on('confirmation', function(confirmation, receipt){
-                                  // Put here any feedback on transaction result
-                                  console.log("Transaction confirmed!");
+                                  // convert to string and set cid
+                                  setTransferCID(cid.toString())
                                 })
                                 .on('error', function(error, receipt){
+                                  setTransferCID('')
                                   console.error(error);
                                 });
-
-        // Handle outcome, for now a simple log
-        console.log('Added egg with CID:', cid.toString())
       } finally {
         setLoading(false)
       }
@@ -49,18 +46,18 @@ export const useCommitEgg = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gateway, web3Error, web3Starting, kuboError, kuboStarting, kubo])
 
-  const fetchCommittedEgg = useCallback(async () => {
+  const fetchTransferedEgg = useCallback(async () => {
     if (!kuboError && !kuboStarting && !web3Error && !web3Starting) {
       try {
         setLoading(true)
 
-        console.log('Fetching: ', cidString)
-        const _cid = CID.parse(cidString);
+        console.log('Fetching: ', transferCID)
+        const _cid = CID.parse(transferCID);
 
         // Get all events involving the egg
         // eventually handle multiple results
-        await gateway.getPastEvents('eggPacked', {
-          filter: {_hash: web3.utils.bytesToHex(_cid.multihash.digest)},
+        await gateway.getPastEvents('eggTransfer', {
+          filter: {transfer: web3.utils.bytesToHex(_cid.multihash.digest)},
           fromBlock: 0,
           toBlock: 'latest'
         }, function(error, events) {
@@ -68,19 +65,25 @@ export const useCommitEgg = () => {
           console.log(events);
         }).then(function(events){
           for (const event of events) {
-            const address = web3.eth.abi.decodeParameter('address', event.topics[1])
-            console.log('Owner: ', address);
+            // compress following into a function
+            const bytes = web3.utils.hexToBytes((event.topics[1]).toString());
+            const digest = new Uint8Array(34);
+            digest.set([18, 32])
+            digest.set(bytes, 2)
+            const egglink = CID.create(1, 0x71, {bytes: digest })
+
+            console.log('EggCID: ', egglink);
           }
         })
 
         // convert from string to CID format
-        const cid = CID.parse(cidString)
+        const cid = CID.parse(transferCID)
 
-        // query ipfs for the json of the egg
+        // query ipfs for the json of the transfer
         const json = await kubo.dag.get(cid);
 
         // set field with returned values
-        setCommittedEgg(json.value);
+        setTransferedEgg(json.value);
       } finally {
         setLoading(false)
       }
@@ -88,7 +91,7 @@ export const useCommitEgg = () => {
       console.log('please wait for kubo and web3 to start')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gateway, web3Error, web3Starting, kubo, kuboError, kuboStarting, cidString])
+  }, [gateway, web3Error, web3Starting, kubo, kuboError, kuboStarting, transferCID])
   
-  return { loading, cidString, setCidString, committedEgg, commitEgg, fetchCommittedEgg }
+  return { loading, transferCID, setTransferCID, transferedEgg, transferEgg, fetchTransferedEgg }
 }

@@ -1,4 +1,4 @@
-import { React } from 'react'
+import { React, useState } from 'react'
 import "semantic-ui-css/semantic.min.css";
 import { Button, Card, Form, Input, Message } from "semantic-ui-react";
 
@@ -9,7 +9,7 @@ import { useHistoryEgg} from '../hooks/useHistoryEgg'
 
 function FunctionalFetchData() {
     // state variables
-    const { error, starting } = useKubo()
+    const { kuboError, kuboStarting } = useKubo()
     const {
         loading,
         cidString,
@@ -21,14 +21,19 @@ function FunctionalFetchData() {
         loadingHistory,
         historyEgg,
     } = useHistoryEgg()
-        
+    
+    // personal error
+    const [error, setError] = useState(null)
 
     return (
         <div className="main-container">
             <h3>Fetch Egg Data from Chain</h3>
             <Form
-                onSubmit={() => fetchCommittedEgg()}                         // Creates object egg before committing
-                error={error}               // Uses error as kubos error
+                onSubmit={() => {
+                    setError(null);
+                    fetchCommittedEgg().catch((error) => setError(error))
+                }}                         // Creates object egg before committing
+                error={kuboError||error}               // Uses error as kubos error
             >
                 <Form.Field>
                     <label>ID</label>
@@ -40,9 +45,9 @@ function FunctionalFetchData() {
                 <Message
                     error
                     header="There are error/s with your submission"
-                    content={"Kubo encountered an unknown error"} // Might want to change
+                    content={`${error}`} // Might want to change
                 />
-                <Button color="teal" loading={starting||loading}>
+                <Button color="teal" loading={kuboStarting||loading}>
                     Fetch
                 </Button>
             </Form>
