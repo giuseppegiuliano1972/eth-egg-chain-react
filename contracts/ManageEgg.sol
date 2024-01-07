@@ -14,13 +14,14 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
      uint id;
     
      enum State{
-        Packed, //0
-        Delivered, //1
-        FactoryBought, //2
-        MarketArrived, //3
-        FoodFactoryArrived, //4
-        MarketForSale, //5
-        ConsumerBought //6
+        Default, //0
+        Packed, //1
+        Delivered, //2
+        FactoryBought, //3
+        MarketArrived, //4
+        FoodFactoryArrived, //5
+        MarketForSale, //6
+        ConsumerBought //7
      }
 
     struct EggProduct  {
@@ -44,6 +45,11 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
     mapping(uint => EggProduct) eggProduct;
     // mapping for history eggs
     mapping(uint => string[]) eggHistory;
+
+    // mapping for current egg states
+    mapping(bytes32 => State) eggState;
+    // mapping for current egg owner
+    mapping(bytes32 => address) eggOwner;
 
     event Packed(uint id);
     event Delivered(uint id);
@@ -152,8 +158,14 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
     function packEgg(address owner, bytes32 _hash) public {
         // Check if the caller is the same farmer as the one declared
         require(msg.sender == owner, "The Farmer Address should be equal to the user address");
-        // Could be costly, maybe use has
+        // Check if caller is a farmer
         require(isFarmer(owner), "The Farmer Address should be an existing farmer address");
+        // Check if egg is already in the ledger
+        require(eggState[_hash] == State.Default, "The egg already exists!");
+        // Change state to packed
+        eggState[_hash] = State.Packed;
+        // Change owner to caller
+        eggOwner[_hash] = owner;
 
         emit eggPacked(owner, _hash);
     }
@@ -168,12 +180,44 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
     function transferEgg(address sender, address receiver, bytes32 transfer, bytes32 _hash) public {
         // Require sender is the caller
         require(msg.sender == sender, "The sender should be the transaction caller");
-        // TODO: Require sender is current owner
-        // TODO: Change following line depending on sender and receiver role
-        State state = State.Packed;
-        // Add other checks as you deem opportune
-        // ...
+        // Require that egg exists
+        require(eggState[_hash] != State.Default, "Egg is not on the chain");
+        // Require sender is current owner
+        require(sender == eggOwner[_hash], "Sender should own the egg");
 
+        State state = State.Default;
+        // Act depending on egg state
+        if(eggState[_hash] == State.Packed) {
+            // Require sender and receiver to be correct
+            require(isFarmer(sender), "Sender should be farmer");
+            require(isDeliver(receiver), "Receiver should be deliverer");
+            // Change egg state
+            state = State.Delivered;
+        }
+        if(eggState[_hash] == State.Delivered) {
+            // Require sender and receiver to be correct
+            require(isDeliver(sender), "Sender should be deliverer!");
+            require(isFoodFactory(receiver)||isMarket(receiver), "Receiver should be either food factory or market");
+            // Change egg state in case of factory
+            if(isFoodFactory(receiver)) state = State.FoodFactoryArrived;
+            // Change egg state in case of market
+            if(isMarket(receiver)) state = State.MarketArrived;
+        }
+        if(eggState[_hash] == State.MarketForSale) {
+            // Require sender and receiver to be correct
+            require(isMarket(sender), "Sender should be market");
+            require(isConsumer(receiver), "Receiver should be consumer");
+            // Change egg state
+            state = State.ConsumerBought;
+        }
+        
+        // Require change of state and set new state
+        require(state != State.Default, "Sender and Receiver roles are not compatible for a transfer");
+        eggState[_hash] = state;
+        // Set new owner
+        eggOwner[_hash] = receiver;
+
+        // emit the events to retrieve transactions
         emit eggTransfer(transfer, _hash, state);
         emit eggTransaction(sender, receiver, transfer);
     }
@@ -340,7 +384,7 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
          uint    marketPrice,
          uint    totalEggsInPackage,
          uint    totalEggsInMarketPackage,
-         State   eggState,
+         State   eggstate,
          address deliveryAddr,
          address marketAddr,
          address foodFactoryAddr,
@@ -358,7 +402,7 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         marketPrice = egg.marketPrice;
         totalEggsInPackage = egg.totalEggsInPackage;
         totalEggsInMarketPackage = egg.totalEggsInMarketPackage;
-        eggState = egg.eggState;
+        eggstate = egg.eggState;
         deliveryAddr = egg.deliveryAddr;
         marketAddr = egg.marketAddr;
         foodFactoryAddr = egg.foodFactoryAddr;
@@ -374,7 +418,7 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
             marketPrice,
             totalEggsInPackage,
             totalEggsInMarketPackage,
-            eggState,
+            eggstate,
             deliveryAddr,
             marketAddr,
             foodFactoryAddr,
