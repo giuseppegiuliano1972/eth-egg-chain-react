@@ -170,6 +170,24 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         emit eggPacked(owner, _hash);
     }
 
+    // Wrapper Function that emits event eggPacked
+    function packMarketEgg(address owner, bytes32 _hash) public {
+        
+        // Check if the owner is the same farmer in the written address
+        require(msg.sender == owner, "The Market Address should be equal to the user address");
+        // Could be costly, maybe use has
+        require(isMarket(owner), "The Market Address should be an existing market address");
+        // Check state of egg to be market arrived
+        require(eggState[_hash] == State.MarketArrived);
+        
+        // Change state to market for sale
+        eggState[_hash] = State.MarketForSale;
+        // Change owner to caller
+        eggOwner[_hash] = owner;
+
+        emit eggPacked(owner, _hash);
+    }
+
     // Events emitted after egg moves to another node
     // Split into two because we can read at most three arguments in event log
     event eggTransfer(bytes32 indexed transfer, bytes32 indexed _hash, State indexed state);
@@ -289,6 +307,7 @@ contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
         egg.marketAddr = payable(marketAddr);
         egg.eggState = State.MarketForSale;
         //egg.totalEggsInMarketPackage = totMarketEggs;
+        // TODO queste vanno aggiornate in ipfs
         egg.totalEggsInPackage = totMarketEggs;
         egg.marketPrice = eggMarketPrice;
 
