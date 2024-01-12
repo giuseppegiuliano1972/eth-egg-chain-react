@@ -9,6 +9,7 @@ import FunctionalFarmerPackEggs from './component/FunctionalFarmerPackEggs';
 import MarketPackEggs from './component/MarketPackEggs';
 import FunctionalTransferEggs from './component/FunctionalTransferEggs';
 import BuyEggs from './component/BuyEggs';
+import Admin from './component/Admin'
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -43,6 +44,7 @@ class App extends Component {
           <Route path='/marketpack' element={<MarketPackEggs />} />
           <Route path='/transfer' element={<FunctionalTransferEggs />} />
           <Route path='/buyeggsff' element={<BuyEggs />} />
+          <Route path='/admin' element={<Admin />} />
         </Routes>
         </Router>
     </>

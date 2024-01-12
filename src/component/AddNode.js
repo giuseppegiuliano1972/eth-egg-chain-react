@@ -73,8 +73,12 @@ class AddNode extends Component {
       //da Gateway.json che deriva dagli altri contratti. Derivando 
       //gli altri contratti importa all'interno del proprio JSON tutte le funzioni
       //dichiarate nei vari contratti
-      await gateway.methods[nodeEvent](this.state.address).send({
+      /*await gateway.methods[nodeEvent](this.state.address).send({
         from: accounts[0],
+      });*/
+
+      await gateway.methods['requestAdd'](this.state.address, roleChoosen).send({
+        from: this.state.address,
       });
     } catch (err) {
       this.setState({ errMsg: err.message });

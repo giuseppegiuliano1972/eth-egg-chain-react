@@ -19,6 +19,7 @@ function navigationbar() {
             </NavDropdown>
             <Nav.Link className='nav-links' href="transfer">Transfer eggs</Nav.Link>
             <Nav.Link className='nav-links' href="buyeggsff">Buy eggs</Nav.Link>
+            <Nav.Link className='nav-links' href="admin">Administration</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
