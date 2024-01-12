@@ -61,7 +61,7 @@ export const useAdmin = () => {
   }, [accounts, gateway, web3Error, web3Starting])
 
   const approveRequest = useCallback(async (account, role) => {
-    if (!web3Error && !web3Starting && gateway!=null) {
+    if (!web3Error && !web3Starting && gateway!=null && accounts!=null) {
       try {
         setLoading(true)
 
