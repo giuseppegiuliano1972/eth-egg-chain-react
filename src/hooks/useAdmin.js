@@ -75,7 +75,7 @@ export const useAdmin = () => {
         ]
 
         if(role != 0) await gateway.methods[roles[role]](account).send({
-          from: account,
+          from: accounts[0],
         }).on('confirmation', function(confirmation, receipt){
           // Put here any feedback on transaction result
           console.log("Transaction confirmed!");
