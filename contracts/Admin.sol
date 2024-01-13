@@ -1,13 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.21;
 
+import "./Farmer.sol";
+import "./Deliver.sol";
+import "./Consumer.sol";
+import "./FoodFactory.sol";
+import "./Market.sol";
+
 /**
  * @title Admin
- * @dev Library for managing requests for adding nodes
+ * @dev Contract for managing requests for adding nodes
  */
-contract Admin {
+contract Admin is Farmer, Deliver, FoodFactory, Market, Consumer{
   // Roles contract
-  address owner;
+  address admin;
   // Possible roles
   enum Role {
     None, //0
@@ -20,14 +26,9 @@ contract Admin {
   // Map addresses to roles
   mapping(address => Role) currentRole;
 
-  // set owner when the contract is created
-  /*constructor(address _owner) {
-    owner = _owner;
-  }*/
-
-  modifier onlyRoles() {
-    require(msg.sender == owner, "Only Roles contract can call this function");
-    _;
+  // Set admin at creation
+  constructor() {
+    admin = msg.sender;
   }
 
   // Request event with the address of the requester and the desired role
@@ -56,9 +57,33 @@ contract Admin {
   // Event emitted when a request was approved
   event approveRequest(address indexed requester, Role indexed role);
 
-  function requestApprove(address requester, Role role) external onlyRoles {
+  error InvalidCaller(address caller);
+
+  function requestApprove(address requester, Role role) public {
+    if (admin!=msg.sender) revert InvalidCaller({
+      caller: requester
+    });
+    // verify that sender is admin
+    require(admin==msg.sender);
     // just add role to mapping
     currentRole[requester] = role;
+
+    // Might be able do it faster if instead of role we get the contract
+    if (role==Role.Farmer) {
+      addFarmer(requester);
+    }
+    else if (role==Role.Deliver) {
+      addDeliver(requester);
+    }
+    else if (role==Role.FoodFactory) {
+      addFoodFactory(requester);
+    }
+    else if (role==Role.Market) {
+      addMarket(requester);
+    }
+    else if (role==Role.Consumer) {
+      addConsumer(requester);
+    }
 
     // emit event
     emit approveRequest(requester, role);

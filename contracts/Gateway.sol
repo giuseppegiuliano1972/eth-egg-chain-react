@@ -4,10 +4,9 @@ pragma solidity ^0.8.21;
 
 
 import "./ManageEgg.sol";
-import "./Admin.sol";
 
 
-contract Gateway is ManageEgg(), Admin() {
+contract Gateway is ManageEgg {
   constructor()  payable{
 
   }

@@ -13,10 +13,12 @@ export const useAdmin = () => {
     if (!web3Error && !web3Starting && gateway!=null) {
       var _requests = []
       var _approved = []
+      var promise1;
+      var promise2;
       try {
         setLoading(true)
 
-        await gateway.getPastEvents('addRequest', {
+        promise1 = await gateway.getPastEvents('addRequest', {
           fromBlock: 0,
           toBlock: 'latest'
         }, function(error, events) {
@@ -29,11 +31,9 @@ export const useAdmin = () => {
             const role = web3.eth.abi.decodeParameter('uint8', event.topics[2])
             _requests.push([account, role])
           }
-
-        if(_requests.length < 1) { _requests.push(["There are no requests.", ""]); }
         })
 
-        await gateway.getPastEvents('approveRequest', {
+        promise2 = await gateway.getPastEvents('approveRequest', {
           fromBlock: 0,
           toBlock: 'latest'
         }, function(error, events) {
@@ -50,8 +50,11 @@ export const useAdmin = () => {
       } catch (e) {
         console.error(e)
       } finally {
-        const difference = _requests.filter(r => !_approved.includes(r))
-        setRequests([...new Set(difference)])
+        await Promise.all([promise1, promise2]).then(() => {
+          const difference = _requests.filter(r => !_approved.some(a => r[0]===a[0]))
+          if(difference.length < 1) { difference.add(["There are no new requests.", ""]); }
+          setRequests([...new Set(difference)])
+        })
         setLoading(false)
       }
     } else {
@@ -65,16 +68,7 @@ export const useAdmin = () => {
       try {
         setLoading(true)
 
-        const roles = [
-          '',
-          'addFarmer',
-          'addDeliver',
-          'addFoodFactory',
-          'addMarket',
-          'addConsumer'
-        ]
-
-        if(role != 0) await gateway.methods[roles[role]](account).send({
+        if(role !== 0) await gateway.methods['requestApprove'](account, role).send({
           from: accounts[0],
         }).on('confirmation', function(confirmation, receipt){
           // Put here any feedback on transaction result
@@ -96,6 +90,7 @@ export const useAdmin = () => {
 
   useEffect(() => {
     fetchRequests()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gateway])
   
   return { loading, requests, approveRequest }

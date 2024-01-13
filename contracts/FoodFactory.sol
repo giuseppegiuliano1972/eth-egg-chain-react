@@ -14,7 +14,7 @@ event FoodFactoryAdded (address indexed account);
 Roles.Role private FoodFactoryRole;
 
 constructor() {
-        _addFoodFactory(msg.sender);
+        addFoodFactory(msg.sender);
 }
 
 modifier onlyFoodFactory(){
@@ -26,12 +26,7 @@ function isFoodFactory(address account) public view returns(bool){
         return FoodFactoryRole.has(account);
 }
 
-function addFoodFactory(address account) public{
-        _addFoodFactory(account);
-}
-
-
-function _addFoodFactory(address account) internal{
+function addFoodFactory(address account) internal{
     FoodFactoryRole.add(account);
     emit FoodFactoryAdded(account);
 }

@@ -14,7 +14,7 @@ event FarmerAdded (address indexed account);
 Roles.Role private ChickenFarmer;
 
 constructor() {
-        _addFarmer(msg.sender);
+        addFarmer(msg.sender);
 }
 
 
@@ -27,12 +27,7 @@ function isFarmer(address account) public view returns(bool){
         return ChickenFarmer.has(account);
 }
 
-function addFarmer(address account) public{
-        _addFarmer(account);
-}
-
-
-function _addFarmer(address account) internal{
+function addFarmer(address account) internal{
     ChickenFarmer.add(account);
     emit FarmerAdded(account);
 }

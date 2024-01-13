@@ -2,13 +2,9 @@
 
 pragma solidity ^0.8.21;
 
-import "./Farmer.sol";
-import "./Deliver.sol";
-import "./Consumer.sol";
-import "./FoodFactory.sol";
-import "./Market.sol";
+import "./Admin.sol";
 
-contract ManageEgg is Farmer, Deliver, FoodFactory, Market, Consumer{
+contract ManageEgg is Admin{
     address chickenOwner;
 
      uint id;

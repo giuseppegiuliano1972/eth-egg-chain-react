@@ -14,7 +14,7 @@ event ConsumerAdded (address indexed account);
 Roles.Role private ConsumerRole;
 
 constructor() {
-        _addConsumer(msg.sender);
+        addConsumer(msg.sender);
 }
 
 modifier onlyConsumer(){
@@ -26,13 +26,7 @@ function isConsumer(address account) public view returns(bool){
         return ConsumerRole.has(account);
 }
 
-
-function addConsumer(address account) public{
-        _addConsumer(account);
-}
-
-
-function _addConsumer(address account) internal{
+function addConsumer(address account) internal{
     ConsumerRole.add(account);
     emit ConsumerAdded(account);
 }

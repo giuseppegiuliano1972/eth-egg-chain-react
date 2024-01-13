@@ -14,11 +14,7 @@ event DeliverAdded (address indexed account);
 Roles.Role private DeliverRole;
 
 constructor() {
-        _addDeliver(msg.sender);
-}
-
-function addDeliver(address account) public{
-        _addDeliver(account);
+        addDeliver(msg.sender);
 }
 
 modifier onlyDeliver(){
@@ -30,7 +26,7 @@ function isDeliver(address account) public view returns(bool){
         return DeliverRole.has(account);
 }
 
-function _addDeliver(address account) internal{
+function addDeliver(address account) internal{
     DeliverRole.add(account);
     emit DeliverAdded(account);
 }
