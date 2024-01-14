@@ -236,7 +236,7 @@ contract ManageEgg is Admin{
         emit eggTransaction(sender, receiver, transfer);
     }
 
-       function buyEgg(address payable seller, address buyer, uint price, bytes32 transfer, bytes32 _hash) public {
+       function buyEgg(address payable seller, address buyer, uint price, bytes32 transfer, bytes32 _hash) public payable {
         // Require sender is the caller
         require(msg.sender == seller, "The seller should be the transaction caller");
         // Require that egg exists
