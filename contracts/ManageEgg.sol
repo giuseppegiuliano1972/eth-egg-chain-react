@@ -236,6 +236,46 @@ contract ManageEgg is Admin{
         emit eggTransaction(sender, receiver, transfer);
     }
 
+       function buyEgg(address seller, address buyer, bytes32 transfer, bytes32 _hash) public {
+        // Require sender is the caller
+        require(msg.sender == seller, "The seller should be the transaction caller");
+        // Require that egg exists
+        require(eggState[_hash] != State.Default, "Egg is not on the chain");
+        
+
+        State state = State.Default;
+        // Act depending on egg state
+      
+        if(eggState[_hash] == State.MarketForSale) {
+            // Require Seller is current owner
+            require(seller == eggOwner[_hash], "Seller should own the egg");
+
+            // Require sender and receiver to be correct
+            require(isMarket(seller), "Seller should be market");
+            require(isConsumer(buyer), "Buyer should be consumer");
+            // Change egg state
+            state = State.ConsumerBought;
+        }
+
+        if(eggState[_hash] == State.FoodFactoryArrived) {
+            // Require sender and receiver to be correct
+            require(isFarmer(seller), "seller should be Farmer");
+            require(isFoodFactory(buyer), "buyer should be Food Factory");
+            // Change egg state
+            state = State.FactoryBought;
+        }
+        
+        // Require change of state and set new state
+        require(state != State.Default, "Seller and Buyer roles are not compatible for a transfer");
+        eggState[_hash] = state;
+        // Set new owner
+        eggOwner[_hash] = buyer;
+
+        // emit the events to retrieve transactions
+        emit eggTransfer(transfer, _hash, state);
+        emit eggTransaction(seller, buyer, transfer);
+    }
+
     function toDistributor(uint idEgg, address deliveryAddr) public isPacked(idEgg) onlyFarmer() {
         // Could be costly, maybe use has
         require(isDeliver(deliveryAddr), "The deliveryAddress should be an existing delivery address");
