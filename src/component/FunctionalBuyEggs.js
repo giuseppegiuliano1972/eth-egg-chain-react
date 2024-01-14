@@ -12,6 +12,7 @@ function FunctionalBuyEggs() {
     const [eggCID, setEggCID] = useState('')
     const [seller, setSeller] = useState('')
     const [buyer, setBuyer] = useState('')
+    const [price, setPrice] = useState('')
     const [sellerRole, setSellerRole] = useState('')
     const [buyerRole, setBuyerRole] = useState('')
 
@@ -71,9 +72,11 @@ function FunctionalBuyEggs() {
             <Form
                 onSubmit={() => {
                   setError(null); 
+                  const priceWei = web3.utils.toWei(price, "ether");
                   buyEgg({
                       seller: seller,
                       buyer: buyer,
+                      price: priceWei,
                       notes: notes,
                       egglink: eggCID
                   }).catch((error) => setError(error));
@@ -104,6 +107,15 @@ function FunctionalBuyEggs() {
                         value={buyer}
                         onChange={(event) => setBuyer(event.target.value)}
                     />
+                </Form.Field>
+                <Form.Field>
+                    <label>Price</label>
+                    <Input
+                        label="ETH"
+                        labelPosition="right"
+                        value={price}
+                        onChange={(event) => setPrice(event.target.value)}
+                      />
                 </Form.Field>
                 <Form.Field>
                     <label>Write any additional notes here</label>

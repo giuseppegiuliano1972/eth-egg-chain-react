@@ -236,7 +236,7 @@ contract ManageEgg is Admin{
         emit eggTransaction(sender, receiver, transfer);
     }
 
-       function buyEgg(address seller, address buyer, bytes32 transfer, bytes32 _hash) public {
+       function buyEgg(address payable seller, address buyer, uint price, bytes32 transfer, bytes32 _hash) public {
         // Require sender is the caller
         require(msg.sender == seller, "The seller should be the transaction caller");
         // Require that egg exists
@@ -263,6 +263,7 @@ contract ManageEgg is Admin{
             require(isFoodFactory(buyer), "buyer should be Food Factory");
             // Change egg state
             state = State.FactoryBought;
+
         }
         
         // Require change of state and set new state
@@ -270,6 +271,9 @@ contract ManageEgg is Admin{
         eggState[_hash] = state;
         // Set new owner
         eggOwner[_hash] = buyer;
+
+        bool sent = payable(seller).send(price);
+        require(sent, "Failed to send Ether");
 
         // emit the events to retrieve transactions
         emit eggTransfer(transfer, _hash, state);
