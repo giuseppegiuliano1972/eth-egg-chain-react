@@ -56,7 +56,7 @@ export const Web3Provider = ({ children }) => {
         })
         const _web3 = await createWeb3()
         const _gateway = await createGateway(_web3)
-        const _accounts = await _web3.eth.getAccounts()
+        const _accounts = await _web3.eth.requestAccounts()
 
         setWeb3(_web3)
         setAccounts(_accounts)
@@ -86,7 +86,7 @@ export const Web3Provider = ({ children }) => {
         const _gateway = await createGateway(_web3)
         
         setWeb3(_web3)
-        setAccounts(await _web3.eth.getAccounts())
+        setAccounts(await _web3.eth.requestAccounts())
         setGateway(_gateway)
         setStarting(false)
       } catch (e) {

@@ -17,8 +17,9 @@ function Account() {
   }, [accounts])
 
   useEffect(() => {
-    if(accounts !== null)
-      setSelected(accounts[0])
+      if(accounts !== null )
+        setSelected(accounts[0])
+      console.log(accounts)
       // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accounts])
 
