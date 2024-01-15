@@ -187,7 +187,7 @@ contract ManageEgg is Admin{
     // Events emitted after egg moves to another node
     // Split into two because we can read at most three arguments in event log
     event eggTransfer(bytes32 indexed transfer, bytes32 indexed _hash, State indexed state);
-    event eggTransaction(address indexed sender, address indexed receiver, bytes32 indexed transfer);
+    event eggTransaction(address indexed seller, address indexed buyer, bytes32 indexed transfer);
 
     // Wrapper Function that emits event eggTransfer
     // Can work for any transfer since data is stored in ipfs
@@ -236,9 +236,9 @@ contract ManageEgg is Admin{
         emit eggTransaction(sender, receiver, transfer);
     }
 
-       function buyEgg(address payable seller, address buyer, uint price, bytes32 transfer, bytes32 _hash) public payable {
+       function buyEgg(address payable seller, address payable buyer, bytes32 transfer, bytes32 _hash) public payable {
         // Require sender is the caller
-        require(msg.sender == seller, "The seller should be the transaction caller");
+        require(msg.sender == buyer, "The seller should be the transaction caller");
         // Require that egg exists
         require(eggState[_hash] != State.Default, "Egg is not on the chain");
         
@@ -261,9 +261,15 @@ contract ManageEgg is Admin{
             // Require sender and receiver to be correct
             require(isFarmer(seller), "seller should be Farmer");
             require(isFoodFactory(buyer), "buyer should be Food Factory");
+
+             require(msg.value <= buyer.balance, "Insufficient balance");
+
             // Change egg state
             state = State.FactoryBought;
 
+            //bool sent = payable(seller).send(price);
+            bool sent = payable(seller).send(msg.value);
+            require(sent, "Failed to send Ether");
         }
         
         // Require change of state and set new state
@@ -272,8 +278,7 @@ contract ManageEgg is Admin{
         // Set new owner
         eggOwner[_hash] = buyer;
 
-        bool sent = payable(seller).send(price);
-        require(sent, "Failed to send Ether");
+
 
         // emit the events to retrieve transactions
         emit eggTransfer(transfer, _hash, state);

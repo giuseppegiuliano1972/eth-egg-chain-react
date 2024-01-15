@@ -72,11 +72,12 @@ function FunctionalBuyEggs() {
             <Form
                 onSubmit={() => {
                   setError(null); 
-                  const priceWei = web3.utils.toWei(price, "ether");
+                  //const priceWei = web3.utils.toWei(price, "ether");
+                  //console.log("Price:", priceWei);
                   buyEgg({
                       seller: seller,
                       buyer: buyer,
-                      price: priceWei,
+                      price: price,
                       notes: notes,
                       egglink: eggCID
                   }).catch((error) => setError(error));
