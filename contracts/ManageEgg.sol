@@ -238,7 +238,7 @@ contract ManageEgg is Admin{
 
        function buyEgg(address payable seller, address payable buyer, bytes32 transfer, bytes32 _hash) public payable {
         // Require sender is the caller
-        require(msg.sender == buyer, "The seller should be the transaction caller");
+        require(msg.sender == buyer, "The buyer should be the transaction caller");
         // Require that egg exists
         require(eggState[_hash] != State.Default, "Egg is not on the chain");
         
@@ -267,8 +267,8 @@ contract ManageEgg is Admin{
             // Change egg state
             state = State.FactoryBought;
 
-            //bool sent = payable(seller).send(price);
-            bool sent = payable(seller).send(msg.value);
+            //bool sent = payable(seller).send(msg.value);
+            (bool sent, ) = seller.call{value: msg.value}("");
             require(sent, "Failed to send Ether");
         }
         
