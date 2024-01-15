@@ -14,7 +14,7 @@ event MarketAdded (address indexed account);
 Roles.Role private MarketRole;
 
 constructor() {
-        addMarket(msg.sender);
+        //addMarket(msg.sender);
 }
 
 modifier onlyMarket(){

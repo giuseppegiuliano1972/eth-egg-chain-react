@@ -14,7 +14,7 @@ event FoodFactoryAdded (address indexed account);
 Roles.Role private FoodFactoryRole;
 
 constructor() {
-        addFoodFactory(msg.sender);
+        //addFoodFactory(msg.sender);
 }
 
 modifier onlyFoodFactory(){

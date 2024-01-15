@@ -32,20 +32,23 @@ export const Web3Provider = ({ children }) => {
   const [starting, setStarting] = useState(true)
   const [error, setError] = useState(null)
 
+  
   const startWeb3 = useCallback(async () => {
     if (web3) {
       console.info('web3 already started')
     // CAN BE IMPROVED BY PUTTING THE FUNCTIONS OUTSIDE
-    /*} else if (window.web3) {
+    } else if (window.web3) {
+      const wweb3 = window.web3;
       console.info('found a windowed instance of web3, populating ...')
+      console.log(wweb3);
       //setWeb3(new Web3(window.ethereum))
-      setWeb3(window.web3)
-      setAccounts(await web3.eth.getAccounts())
-      setGateway(new web3.eth.Contract(
+      setWeb3(wweb3)
+      setAccounts(await wweb3.eth.getAccounts())
+      setGateway(new wweb3.eth.Contract(
         Gateway.abi,
-        "0x3a3a91BDE5f593453BB6F231690df66487a400BB"
+        "0x2688a17891f442043C6FFCb36490e6FdDA3Fc498"
       ))
-      setStarting(false)*/
+      setStarting(false)
     } else {
       try {
         console.info('Starting Web3')

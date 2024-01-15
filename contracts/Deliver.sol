@@ -14,7 +14,7 @@ event DeliverAdded (address indexed account);
 Roles.Role private DeliverRole;
 
 constructor() {
-        addDeliver(msg.sender);
+        //addDeliver(msg.sender);
 }
 
 modifier onlyDeliver(){

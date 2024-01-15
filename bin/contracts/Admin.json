@@ -1,0 +1,2889 @@
+{
+    "contractName": "Admin",
+    "abi": [
+        {
+            "inputs": [],
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "caller",
+                    "type": "address"
+                }
+            ],
+            "name": "InvalidCaller",
+            "type": "error"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "enum Admin.Role",
+                    "name": "current",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "enum Admin.Role",
+                    "name": "requested",
+                    "type": "uint8"
+                }
+            ],
+            "name": "InvalidRole",
+            "type": "error"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "account",
+                    "type": "address"
+                }
+            ],
+            "name": "ConsumerAdded",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "account",
+                    "type": "address"
+                }
+            ],
+            "name": "DeliverAdded",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "account",
+                    "type": "address"
+                }
+            ],
+            "name": "FarmerAdded",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "account",
+                    "type": "address"
+                }
+            ],
+            "name": "FoodFactoryAdded",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "account",
+                    "type": "address"
+                }
+            ],
+            "name": "MarketAdded",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "requester",
+                    "type": "address"
+                },
+                {
+                    "indexed": true,
+                    "internalType": "enum Admin.Role",
+                    "name": "role",
+                    "type": "uint8"
+                }
+            ],
+            "name": "addRequest",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "requester",
+                    "type": "address"
+                },
+                {
+                    "indexed": true,
+                    "internalType": "enum Admin.Role",
+                    "name": "role",
+                    "type": "uint8"
+                }
+            ],
+            "name": "approveRequest",
+            "type": "event"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "account",
+                    "type": "address"
+                }
+            ],
+            "name": "isConsumer",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "account",
+                    "type": "address"
+                }
+            ],
+            "name": "isDeliver",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "account",
+                    "type": "address"
+                }
+            ],
+            "name": "isFarmer",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "account",
+                    "type": "address"
+                }
+            ],
+            "name": "isFoodFactory",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "account",
+                    "type": "address"
+                }
+            ],
+            "name": "isMarket",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "requester",
+                    "type": "address"
+                },
+                {
+                    "internalType": "enum Admin.Role",
+                    "name": "role",
+                    "type": "uint8"
+                }
+            ],
+            "name": "requestAdd",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "requester",
+                    "type": "address"
+                },
+                {
+                    "internalType": "enum Admin.Role",
+                    "name": "role",
+                    "type": "uint8"
+                }
+            ],
+            "name": "requestApprove",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }
+    ],
+    "metadata": "{\"compiler\":{\"version\":\"0.8.21+commit.d9974bed\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"}],\"name\":\"InvalidCaller\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"enum Admin.Role\",\"name\":\"current\",\"type\":\"uint8\"},{\"internalType\":\"enum Admin.Role\",\"name\":\"requested\",\"type\":\"uint8\"}],\"name\":\"InvalidRole\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"ConsumerAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"DeliverAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"FarmerAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"FoodFactoryAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"MarketAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"requester\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"enum Admin.Role\",\"name\":\"role\",\"type\":\"uint8\"}],\"name\":\"addRequest\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"requester\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"enum Admin.Role\",\"name\":\"role\",\"type\":\"uint8\"}],\"name\":\"approveRequest\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"isConsumer\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"isDeliver\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"isFarmer\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"isFoodFactory\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"isMarket\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"requester\",\"type\":\"address\"},{\"internalType\":\"enum Admin.Role\",\"name\":\"role\",\"type\":\"uint8\"}],\"name\":\"requestAdd\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"requester\",\"type\":\"address\"},{\"internalType\":\"enum Admin.Role\",\"name\":\"role\",\"type\":\"uint8\"}],\"name\":\"requestApprove\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"Contract for managing requests for adding nodes\",\"kind\":\"dev\",\"methods\":{},\"title\":\"Admin\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"c:/Users/ggiul/egg-chain/eth-egg-chain-react/contracts/Admin.sol\":\"Admin\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"c:/Users/ggiul/egg-chain/eth-egg-chain-react/contracts/Admin.sol\":{\"keccak256\":\"0x587e00c91c1f84eaec7681ba85c3dff239ab1279a58b505dcbfb11c39fd130d3\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a743c62dd7ea455324bb486a86801af8123e8da8cf642fa1fa48cacfa81eb4e3\",\"dweb:/ipfs/QmZFu6Zd5gM3PKBdQWr7SVcPqL7AcasvPNb1efSDdGkzxg\"]},\"c:/Users/ggiul/egg-chain/eth-egg-chain-react/contracts/Consumer.sol\":{\"keccak256\":\"0x0eea231e2a44da10ccc8efc4bbbf755bfa5f794093a65342e3ab8e965023cb5a\",\"license\":\"TFT-1.0.0\",\"urls\":[\"bzz-raw://e6b5a891e6c675d0e76f37969790e4314c1d0a97e98b8f72b1572076e32d989b\",\"dweb:/ipfs/QmcEAbs7dLBpUgnJHvwj5doDxjiBoDsrchKTKEJsdXJMXz\"]},\"c:/Users/ggiul/egg-chain/eth-egg-chain-react/contracts/Deliver.sol\":{\"keccak256\":\"0xab88d48b15d1466c9d87ea58477c9247b5c3fd86f18462942113da88224507d7\",\"license\":\"TFT-1.0.0\",\"urls\":[\"bzz-raw://bfa0e27f114252de8fa0dec5e757fc46a9b823256f15545b066e780aff347f11\",\"dweb:/ipfs/QmUDAvX5MT7tDXzyFVrtLxWy8jskStFdHGsMRBsXG8nGns\"]},\"c:/Users/ggiul/egg-chain/eth-egg-chain-react/contracts/Farmer.sol\":{\"keccak256\":\"0x6ce63de4a1ed3651a2a92cf192a0bc04a4b9e7a81a6895ae81f22cbbbf89134a\",\"license\":\"TFT-1.0.0\",\"urls\":[\"bzz-raw://8262b42390470155694ec84ff8159f90f14019c86e00805a104bcfa3996c9b25\",\"dweb:/ipfs/QmNUcsye9obtSyy9JPD2qTEMWEAGKx5RBQhh19vxbmeTF6\"]},\"c:/Users/ggiul/egg-chain/eth-egg-chain-react/contracts/FoodFactory.sol\":{\"keccak256\":\"0x05b8d8595cc6274b7f581084cf6cea234f4caca16dd57b480d1f9cb9d0fe2e28\",\"license\":\"TFT-1.0.0\",\"urls\":[\"bzz-raw://ebd8576a2b7b32943e1f395aaa8fde949ca50e51a01364f83114072516794192\",\"dweb:/ipfs/QmbdHqZX41715vRrgxVHKjcH7TLhLAcH3ynqvb7iMdheRa\"]},\"c:/Users/ggiul/egg-chain/eth-egg-chain-react/contracts/Market.sol\":{\"keccak256\":\"0x7493a8de527e69e5f9fd0f8313c50ef1414a1265dde5dbb782dd138d36a932b6\",\"license\":\"TFT-1.0.0\",\"urls\":[\"bzz-raw://0b99c66d58d979c5a7a1304881057d84865f56073247b212d73d43facd994169\",\"dweb:/ipfs/QmZveVmJu5NPMWio7LtjNMZRreGdGV2GYCcQAXrFxJRH7p\"]},\"c:/Users/ggiul/egg-chain/eth-egg-chain-react/contracts/Roles.sol\":{\"keccak256\":\"0x516d50dfa1225dd4910634e742bb8606f12abeb9788a1f44bc3e1addc7cad279\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://dd2115ba532309d4ace0fa94364ebe6d55b63a6127d0acb36be60ad96bca8d8a\",\"dweb:/ipfs/QmU1LVueEyKmkUS2LMDqMVYCtJkQrrmDrssALho7FEM2M4\"]}},\"version\":1}",
+    "bytecode": "608060405234801561000f575f80fd5b5061001933610054565b61002233610094565b61002b336100d5565b61003433610116565b61003d33610157565b600580546001600160a01b03191633179055610213565b61005e5f82610198565b6040516001600160a01b038216907f2e0ded4123377a3c2bc9a26f1717655a129e2f20752924d42e730ec89c83dbd0905f90a250565b61009f600182610198565b6040516001600160a01b038216907f9cc959082142e774951fd55b8a182ee2f64f645df132747f6d526ddb421ce131905f90a250565b6100e0600282610198565b6040516001600160a01b038216907f5df5311009aa97175f52fb3639d210c182688926d6ffc79ea14b70b487ba16ff905f90a250565b610121600382610198565b6040516001600160a01b038216907fbc600b1f03d316c479b49930c28e328809316458d5b5dacbb7419df5f6f89647905f90a250565b610162600482610198565b6040516001600160a01b038216907f28b26e7a3d20aedbc5f8f2ebf7da671c0491723a2b78f47a097b0e46dee07142905f90a250565b6001600160a01b0381166101aa575f80fd5b6101b482826101e1565b156101bd575f80fd5b6001600160a01b03165f90815260209190915260409020805460ff19166001179055565b5f6001600160a01b0382166101f4575f80fd5b506001600160a01b03165f908152602091909152604090205460ff1690565b610778806102205f395ff3fe608060405234801561000f575f80fd5b506004361061007a575f3560e01c8063c01688e211610058578063c01688e2146100cb578063d737694f146100de578063e5075d06146100f1578063e7a9f75a14610106575f80fd5b80636ec934da1461007e578063834ff739146100a5578063b9429069146100b8575b5f80fd5b61009161008c36600461069b565b610119565b604051901515815260200160405180910390f35b6100916100b336600461069b565b61012b565b6100916100c636600461069b565b610137565b6100916100d936600461069b565b610142565b6100916100ec36600461069b565b61014e565b6101046100ff3660046106bb565b61015a565b005b6101046101143660046106bb565b610344565b5f6101256003836104c1565b92915050565b5f6101256004836104c1565b5f61012581836104c1565b5f6101256001836104c1565b5f6101256002836104c1565b336001600160a01b038316146101c35760405162461bcd60e51b8152602060048201526024808201527f52657175657374207761736e27742073656e7420627920676976656e206164646044820152637265737360e01b60648201526084015b60405180910390fd5b6001600160a01b0382165f9081526006602052604081205460ff1660058111156101ef576101ef6106f3565b1461022c576001600160a01b0382165f908152600660205260409081902054905163c9785ab760e01b81526101ba9160ff16908390600401610727565b6001600160a01b0382165f9081526006602052604081205460ff166005811115610258576102586106f3565b146102a55760405162461bcd60e51b815260206004820152601c60248201527f52657175657374657220616c726561647920686173206120726f6c650000000060448201526064016101ba565b60058160058111156102b9576102b96106f3565b11156102fb5760405162461bcd60e51b8152602060048201526011602482015270149bdb19481a5cc81b9bdd081d985b1a59607a1b60448201526064016101ba565b80600581111561030d5761030d6106f3565b6040516001600160a01b038416907ffbea2a4bd6d4c6a221168bf2859b13cc6963076734b769320cfb1cd5d7858856905f90a35050565b6005546001600160a01b0316331461037a5760405163065ece9760e51b81526001600160a01b03831660048201526024016101ba565b6005546001600160a01b03163314610390575f80fd5b6001600160a01b0382165f908152600660205260409020805482919060ff191660018360058111156103c4576103c46106f3565b021790555060018160058111156103dd576103dd6106f3565b036103f0576103eb826104f3565b610478565b6002816005811115610404576104046106f3565b03610412576103eb82610533565b6003816005811115610426576104266106f3565b03610434576103eb82610574565b6004816005811115610448576104486106f3565b03610456576103eb826105b5565b600581600581111561046a5761046a6106f3565b0361047857610478826105f6565b80600581111561048a5761048a6106f3565b6040516001600160a01b038416907f416feb16e2239e58f208d72eedead1837e81ee2746a5de4d7fbb7c1f7fcb0c35905f90a35050565b5f6001600160a01b0382166104d4575f80fd5b506001600160a01b03165f908152602091909152604090205460ff1690565b6104fd5f82610637565b6040516001600160a01b038216907f2e0ded4123377a3c2bc9a26f1717655a129e2f20752924d42e730ec89c83dbd0905f90a250565b61053e600182610637565b6040516001600160a01b038216907f9cc959082142e774951fd55b8a182ee2f64f645df132747f6d526ddb421ce131905f90a250565b61057f600282610637565b6040516001600160a01b038216907f5df5311009aa97175f52fb3639d210c182688926d6ffc79ea14b70b487ba16ff905f90a250565b6105c0600382610637565b6040516001600160a01b038216907fbc600b1f03d316c479b49930c28e328809316458d5b5dacbb7419df5f6f89647905f90a250565b610601600482610637565b6040516001600160a01b038216907f28b26e7a3d20aedbc5f8f2ebf7da671c0491723a2b78f47a097b0e46dee07142905f90a250565b6001600160a01b038116610649575f80fd5b61065382826104c1565b1561065c575f80fd5b6001600160a01b03165f90815260209190915260409020805460ff19166001179055565b80356001600160a01b0381168114610696575f80fd5b919050565b5f602082840312156106ab575f80fd5b6106b482610680565b9392505050565b5f80604083850312156106cc575f80fd5b6106d583610680565b91506020830135600681106106e8575f80fd5b809150509250929050565b634e487b7160e01b5f52602160045260245ffd5b6006811061072357634e487b7160e01b5f52602160045260245ffd5b9052565b604081016107358285610707565b6106b4602083018461070756fea26469706673582212205a490ea5cd8f131dd9c4cca3e57cb68a8278741d5431408c52a5ef9ab6602fc164736f6c63430008150033",
+    "deployedBytecode": "608060405234801561000f575f80fd5b506004361061007a575f3560e01c8063c01688e211610058578063c01688e2146100cb578063d737694f146100de578063e5075d06146100f1578063e7a9f75a14610106575f80fd5b80636ec934da1461007e578063834ff739146100a5578063b9429069146100b8575b5f80fd5b61009161008c36600461069b565b610119565b604051901515815260200160405180910390f35b6100916100b336600461069b565b61012b565b6100916100c636600461069b565b610137565b6100916100d936600461069b565b610142565b6100916100ec36600461069b565b61014e565b6101046100ff3660046106bb565b61015a565b005b6101046101143660046106bb565b610344565b5f6101256003836104c1565b92915050565b5f6101256004836104c1565b5f61012581836104c1565b5f6101256001836104c1565b5f6101256002836104c1565b336001600160a01b038316146101c35760405162461bcd60e51b8152602060048201526024808201527f52657175657374207761736e27742073656e7420627920676976656e206164646044820152637265737360e01b60648201526084015b60405180910390fd5b6001600160a01b0382165f9081526006602052604081205460ff1660058111156101ef576101ef6106f3565b1461022c576001600160a01b0382165f908152600660205260409081902054905163c9785ab760e01b81526101ba9160ff16908390600401610727565b6001600160a01b0382165f9081526006602052604081205460ff166005811115610258576102586106f3565b146102a55760405162461bcd60e51b815260206004820152601c60248201527f52657175657374657220616c726561647920686173206120726f6c650000000060448201526064016101ba565b60058160058111156102b9576102b96106f3565b11156102fb5760405162461bcd60e51b8152602060048201526011602482015270149bdb19481a5cc81b9bdd081d985b1a59607a1b60448201526064016101ba565b80600581111561030d5761030d6106f3565b6040516001600160a01b038416907ffbea2a4bd6d4c6a221168bf2859b13cc6963076734b769320cfb1cd5d7858856905f90a35050565b6005546001600160a01b0316331461037a5760405163065ece9760e51b81526001600160a01b03831660048201526024016101ba565b6005546001600160a01b03163314610390575f80fd5b6001600160a01b0382165f908152600660205260409020805482919060ff191660018360058111156103c4576103c46106f3565b021790555060018160058111156103dd576103dd6106f3565b036103f0576103eb826104f3565b610478565b6002816005811115610404576104046106f3565b03610412576103eb82610533565b6003816005811115610426576104266106f3565b03610434576103eb82610574565b6004816005811115610448576104486106f3565b03610456576103eb826105b5565b600581600581111561046a5761046a6106f3565b0361047857610478826105f6565b80600581111561048a5761048a6106f3565b6040516001600160a01b038416907f416feb16e2239e58f208d72eedead1837e81ee2746a5de4d7fbb7c1f7fcb0c35905f90a35050565b5f6001600160a01b0382166104d4575f80fd5b506001600160a01b03165f908152602091909152604090205460ff1690565b6104fd5f82610637565b6040516001600160a01b038216907f2e0ded4123377a3c2bc9a26f1717655a129e2f20752924d42e730ec89c83dbd0905f90a250565b61053e600182610637565b6040516001600160a01b038216907f9cc959082142e774951fd55b8a182ee2f64f645df132747f6d526ddb421ce131905f90a250565b61057f600282610637565b6040516001600160a01b038216907f5df5311009aa97175f52fb3639d210c182688926d6ffc79ea14b70b487ba16ff905f90a250565b6105c0600382610637565b6040516001600160a01b038216907fbc600b1f03d316c479b49930c28e328809316458d5b5dacbb7419df5f6f89647905f90a250565b610601600482610637565b6040516001600160a01b038216907f28b26e7a3d20aedbc5f8f2ebf7da671c0491723a2b78f47a097b0e46dee07142905f90a250565b6001600160a01b038116610649575f80fd5b61065382826104c1565b1561065c575f80fd5b6001600160a01b03165f90815260209190915260409020805460ff19166001179055565b80356001600160a01b0381168114610696575f80fd5b919050565b5f602082840312156106ab575f80fd5b6106b482610680565b9392505050565b5f80604083850312156106cc575f80fd5b6106d583610680565b91506020830135600681106106e8575f80fd5b809150509250929050565b634e487b7160e01b5f52602160045260245ffd5b6006811061072357634e487b7160e01b5f52602160045260245ffd5b9052565b604081016107358285610707565b6106b4602083018461070756fea26469706673582212205a490ea5cd8f131dd9c4cca3e57cb68a8278741d5431408c52a5ef9ab6602fc164736f6c63430008150033",
+    "sourceMap": "275:2300:0:-:0;;;634:45;;;;;;;;;-1:-1:-1;257:21:3;267:10;257:9;:21::i;:::-;:22:2;268:10;257;:22::i;:::-;270:26:4;285:10;270:14;:26::i;:::-;255:21:5;265:10;255:9;:21::i;:::-;261:23:1;273:10;261:11;:23::i;:::-;655:5:0;:18;;-1:-1:-1;;;;;;655:18:0;663:10;655:18;;;275:2300;;497:113:3;548:26;:13;566:7;548:17;:26::i;:::-;586:20;;-1:-1:-1;;;;;586:20:3;;;;;;;;497:113;:::o;498::2:-;550:24;:11;566:7;550:15;:24::i;:::-;586:21;;-1:-1:-1;;;;;586:21:2;;;;;;;;498:113;:::o;536:125:4:-;592:28;:15;612:7;592:19;:28::i;:::-;632:25;;-1:-1:-1;;;;;632:25:4;;;;;;;;536:125;:::o;492:110:5:-;543:23;:10;558:7;543:14;:23::i;:::-;578:20;;-1:-1:-1;;;;;578:20:5;;;;;;;;492:110;:::o;508:116:1:-;561:25;:12;578:7;561:16;:25::i;:::-;598:22;;-1:-1:-1;;;;;598:22:1;;;;;;;;508:116;:::o;297:172:6:-;-1:-1:-1;;;;;370:21:6;;362:30;;;;;;408:18;412:4;418:7;408:3;:18::i;:::-;407:19;399:28;;;;;;-1:-1:-1;;;;;436:20:6;:11;:20;;;;;;;;;;;:27;;-1:-1:-1;;436:27:6;459:4;436:27;;;297:172::o;799:173::-;886:4;-1:-1:-1;;;;;910:21:6;;902:30;;;;;;-1:-1:-1;;;;;;946:20:6;:11;:20;;;;;;;;;;;;;;;799:173::o;275:2300:0:-;;;;;;;",
+    "deployedSourceMap": "275:2300:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;381:105:5;;;;;;:::i;:::-;;:::i;:::-;;;548:14:7;;541:22;523:41;;511:2;496:18;381:105:5;;;;;;;395:109:1;;;;;;:::i;:::-;;:::i;385:108:3:-;;;;;;:::i;:::-;;:::i;387:107:2:-;;;;;;:::i;:::-;;:::i;417:115:4:-;;;;;;:::i;:::-;;:::i;980:623:0:-;;;;;;:::i;:::-;;:::i;:::-;;1774:796;;;;;;:::i;:::-;;:::i;381:105:5:-;436:4;459:23;:10;474:7;459:14;:23::i;:::-;452:30;381:105;-1:-1:-1;;381:105:5:o;395:109:1:-;452:4;475:25;:12;492:7;475:16;:25::i;385:108:3:-;440:4;463:26;440:4;481:7;463:17;:26::i;387:107:2:-;443:4;466:24;:11;482:7;466:15;:24::i;417:115:4:-;477:4;500:28;:15;520:7;500:19;:28::i;980:623:0:-;1089:10;-1:-1:-1;;;;;1089:23:0;;;1081:72;;;;-1:-1:-1;;;1081:72:0;;1119:2:7;1081:72:0;;;1101:21:7;1158:2;1138:18;;;1131:30;1197:34;1177:18;;;1170:62;-1:-1:-1;;;1248:18:7;;;1241:34;1292:19;;1081:72:0;;;;;;;;;-1:-1:-1;;;;;1205:22:0;;1231:9;1205:22;;;:11;:22;;;;;;;;:35;;;;;;;;:::i;:::-;;1201:132;;-1:-1:-1;;;;;1279:22:0;;;;;;:11;:22;;;;;;;;1249:84;;-1:-1:-1;;;1249:84:0;;;;1279:22;;;1321:4;;1249:84;;;:::i;1201:132::-;-1:-1:-1;;;;;1348:22:0;;1374:9;1348:22;;;:11;:22;;;;;;;;:35;;;;;;;;:::i;:::-;;1340:76;;;;-1:-1:-1;;;1340:76:0;;2184:2:7;1340:76:0;;;2166:21:7;2223:2;2203:18;;;2196:30;2262;2242:18;;;2235:58;2310:18;;1340:76:0;1982:352:7;1340:76:0;1476:13;1468:4;:21;;;;;;;;:::i;:::-;;;1460:51;;;;-1:-1:-1;;;1460:51:0;;2541:2:7;1460:51:0;;;2523:21:7;2580:2;2560:18;;;2553:30;-1:-1:-1;;;2599:18:7;;;2592:47;2656:18;;1460:51:0;2339:341:7;1460:51:0;1592:4;1570:27;;;;;;;;:::i;:::-;;;-1:-1:-1;;;;;1570:27:0;;;;;;;;980:623;;:::o;1774:796::-;1846:5;;-1:-1:-1;;;;;1846:5:0;1853:10;1846:17;1842:78;;1872:48;;-1:-1:-1;;;1872:48:0;;-1:-1:-1;;;;;2849:32:7;;1872:48:0;;;2831:51:7;2804:18;;1872:48:0;2685:203:7;1842:78:0;1971:5;;-1:-1:-1;;;;;1971:5:0;1978:10;1971:17;1963:26;;;;;;-1:-1:-1;;;;;2029:22:0;;;;;;:11;:22;;;;;:29;;2054:4;;2029:22;-1:-1:-1;;2029:29:0;;2054:4;2029:29;;;;;;;;:::i;:::-;;;;;-1:-1:-1;2151:11:0;2145:4;:17;;;;;;;;:::i;:::-;;2141:360;;2173:20;2183:9;2173;:20::i;:::-;2141:360;;;2222:12;2216:4;:18;;;;;;;;:::i;:::-;;2212:289;;2245:21;2256:9;2245:10;:21::i;2212:289::-;2295:16;2289:4;:22;;;;;;;;:::i;:::-;;2285:216;;2322:25;2337:9;2322:14;:25::i;2285:216::-;2376:11;2370:4;:17;;;;;;;;:::i;:::-;;2366:135;;2398:20;2408:9;2398;:20::i;2366:135::-;2447:13;2441:4;:19;;;;;;;;:::i;:::-;;2437:64;;2471:22;2483:9;2471:11;:22::i;:::-;2559:4;2533:31;;;;;;;;:::i;:::-;;;-1:-1:-1;;;;;2533:31:0;;;;;;;;1774:796;;:::o;799:173:6:-;886:4;-1:-1:-1;;;;;910:21:6;;902:30;;;;;;-1:-1:-1;;;;;;946:20:6;:11;:20;;;;;;;;;;;;;;;799:173::o;497:113:3:-;548:26;:13;566:7;548:17;:26::i;:::-;586:20;;-1:-1:-1;;;;;586:20:3;;;;;;;;497:113;:::o;498::2:-;550:24;:11;566:7;550:15;:24::i;:::-;586:21;;-1:-1:-1;;;;;586:21:2;;;;;;;;498:113;:::o;536:125:4:-;592:28;:15;612:7;592:19;:28::i;:::-;632:25;;-1:-1:-1;;;;;632:25:4;;;;;;;;536:125;:::o;492:110:5:-;543:23;:10;558:7;543:14;:23::i;:::-;578:20;;-1:-1:-1;;;;;578:20:5;;;;;;;;492:110;:::o;508:116:1:-;561:25;:12;578:7;561:16;:25::i;:::-;598:22;;-1:-1:-1;;;;;598:22:1;;;;;;;;508:116;:::o;297:172:6:-;-1:-1:-1;;;;;370:21:6;;362:30;;;;;;408:18;412:4;418:7;408:3;:18::i;:::-;407:19;399:28;;;;;;-1:-1:-1;;;;;436:20:6;:11;:20;;;;;;;;;;;:27;;-1:-1:-1;;436:27:6;459:4;436:27;;;297:172::o;14:173:7:-;82:20;;-1:-1:-1;;;;;131:31:7;;121:42;;111:70;;177:1;174;167:12;111:70;14:173;;;:::o;192:186::-;251:6;304:2;292:9;283:7;279:23;275:32;272:52;;;320:1;317;310:12;272:52;343:29;362:9;343:29;:::i;:::-;333:39;192:186;-1:-1:-1;;;192:186:7:o;575:337::-;650:6;658;711:2;699:9;690:7;686:23;682:32;679:52;;;727:1;724;717:12;679:52;750:29;769:9;750:29;:::i;:::-;740:39;;829:2;818:9;814:18;801:32;862:1;855:5;852:12;842:40;;878:1;875;868:12;842:40;901:5;891:15;;;575:337;;;;;:::o;1322:127::-;1383:10;1378:3;1374:20;1371:1;1364:31;1414:4;1411:1;1404:15;1438:4;1435:1;1428:15;1454:232;1530:1;1523:5;1520:12;1510:143;;1575:10;1570:3;1566:20;1563:1;1556:31;1610:4;1607:1;1600:15;1638:4;1635:1;1628:15;1510:143;1662:18;;1454:232::o;1691:286::-;1863:2;1848:18;;1875:39;1852:9;1896:6;1875:39;:::i;:::-;1923:48;1967:2;1956:9;1952:18;1944:6;1923:48;:::i",
+    "sourcePath": "c:/Users/ggiul/egg-chain/eth-egg-chain-react/contracts/Admin.sol",
+    "compiler": {
+        "name": "solc",
+        "version": "0.8.21+commit.d9974bed"
+    },
+    "ast": {
+        "absolutePath": "c:/Users/ggiul/egg-chain/eth-egg-chain-react/contracts/Admin.sol",
+        "exportedSymbols": {
+            "Admin": [
+                207
+            ],
+            "Consumer": [
+                272
+            ],
+            "Deliver": [
+                337
+            ],
+            "Farmer": [
+                402
+            ],
+            "FoodFactory": [
+                467
+            ],
+            "Market": [
+                532
+            ],
+            "Roles": [
+                636
+            ]
+        },
+        "id": 208,
+        "license": "MIT",
+        "nodeType": "SourceUnit",
+        "nodes": [
+            {
+                "id": 1,
+                "literals": [
+                    "solidity",
+                    "^",
+                    "0.8",
+                    ".21"
+                ],
+                "nodeType": "PragmaDirective",
+                "src": "33:24:0"
+            },
+            {
+                "absolutePath": "c:/Users/ggiul/egg-chain/eth-egg-chain-react/contracts/Farmer.sol",
+                "file": "./Farmer.sol",
+                "id": 2,
+                "nameLocation": "-1:-1:-1",
+                "nodeType": "ImportDirective",
+                "scope": 208,
+                "sourceUnit": 403,
+                "src": "61:22:0",
+                "symbolAliases": [],
+                "unitAlias": ""
+            },
+            {
+                "absolutePath": "c:/Users/ggiul/egg-chain/eth-egg-chain-react/contracts/Deliver.sol",
+                "file": "./Deliver.sol",
+                "id": 3,
+                "nameLocation": "-1:-1:-1",
+                "nodeType": "ImportDirective",
+                "scope": 208,
+                "sourceUnit": 338,
+                "src": "85:23:0",
+                "symbolAliases": [],
+                "unitAlias": ""
+            },
+            {
+                "absolutePath": "c:/Users/ggiul/egg-chain/eth-egg-chain-react/contracts/Consumer.sol",
+                "file": "./Consumer.sol",
+                "id": 4,
+                "nameLocation": "-1:-1:-1",
+                "nodeType": "ImportDirective",
+                "scope": 208,
+                "sourceUnit": 273,
+                "src": "110:24:0",
+                "symbolAliases": [],
+                "unitAlias": ""
+            },
+            {
+                "absolutePath": "c:/Users/ggiul/egg-chain/eth-egg-chain-react/contracts/FoodFactory.sol",
+                "file": "./FoodFactory.sol",
+                "id": 5,
+                "nameLocation": "-1:-1:-1",
+                "nodeType": "ImportDirective",
+                "scope": 208,
+                "sourceUnit": 468,
+                "src": "136:27:0",
+                "symbolAliases": [],
+                "unitAlias": ""
+            },
+            {
+                "absolutePath": "c:/Users/ggiul/egg-chain/eth-egg-chain-react/contracts/Market.sol",
+                "file": "./Market.sol",
+                "id": 6,
+                "nameLocation": "-1:-1:-1",
+                "nodeType": "ImportDirective",
+                "scope": 208,
+                "sourceUnit": 533,
+                "src": "165:22:0",
+                "symbolAliases": [],
+                "unitAlias": ""
+            },
+            {
+                "abstract": false,
+                "baseContracts": [
+                    {
+                        "baseName": {
+                            "id": 8,
+                            "name": "Farmer",
+                            "nameLocations": [
+                                "293:6:0"
+                            ],
+                            "nodeType": "IdentifierPath",
+                            "referencedDeclaration": 402,
+                            "src": "293:6:0"
+                        },
+                        "id": 9,
+                        "nodeType": "InheritanceSpecifier",
+                        "src": "293:6:0"
+                    },
+                    {
+                        "baseName": {
+                            "id": 10,
+                            "name": "Deliver",
+                            "nameLocations": [
+                                "301:7:0"
+                            ],
+                            "nodeType": "IdentifierPath",
+                            "referencedDeclaration": 337,
+                            "src": "301:7:0"
+                        },
+                        "id": 11,
+                        "nodeType": "InheritanceSpecifier",
+                        "src": "301:7:0"
+                    },
+                    {
+                        "baseName": {
+                            "id": 12,
+                            "name": "FoodFactory",
+                            "nameLocations": [
+                                "310:11:0"
+                            ],
+                            "nodeType": "IdentifierPath",
+                            "referencedDeclaration": 467,
+                            "src": "310:11:0"
+                        },
+                        "id": 13,
+                        "nodeType": "InheritanceSpecifier",
+                        "src": "310:11:0"
+                    },
+                    {
+                        "baseName": {
+                            "id": 14,
+                            "name": "Market",
+                            "nameLocations": [
+                                "323:6:0"
+                            ],
+                            "nodeType": "IdentifierPath",
+                            "referencedDeclaration": 532,
+                            "src": "323:6:0"
+                        },
+                        "id": 15,
+                        "nodeType": "InheritanceSpecifier",
+                        "src": "323:6:0"
+                    },
+                    {
+                        "baseName": {
+                            "id": 16,
+                            "name": "Consumer",
+                            "nameLocations": [
+                                "331:8:0"
+                            ],
+                            "nodeType": "IdentifierPath",
+                            "referencedDeclaration": 272,
+                            "src": "331:8:0"
+                        },
+                        "id": 17,
+                        "nodeType": "InheritanceSpecifier",
+                        "src": "331:8:0"
+                    }
+                ],
+                "canonicalName": "Admin",
+                "contractDependencies": [],
+                "contractKind": "contract",
+                "documentation": {
+                    "id": 7,
+                    "nodeType": "StructuredDocumentation",
+                    "src": "191:82:0",
+                    "text": " @title Admin\n @dev Contract for managing requests for adding nodes"
+                },
+                "fullyImplemented": true,
+                "id": 207,
+                "linearizedBaseContracts": [
+                    207,
+                    272,
+                    532,
+                    467,
+                    337,
+                    402
+                ],
+                "name": "Admin",
+                "nameLocation": "284:5:0",
+                "nodeType": "ContractDefinition",
+                "nodes": [
+                    {
+                        "constant": false,
+                        "id": 19,
+                        "mutability": "mutable",
+                        "name": "admin",
+                        "nameLocation": "373:5:0",
+                        "nodeType": "VariableDeclaration",
+                        "scope": 207,
+                        "src": "365:13:0",
+                        "stateVariable": true,
+                        "storageLocation": "default",
+                        "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                        },
+                        "typeName": {
+                            "id": 18,
+                            "name": "address",
+                            "nodeType": "ElementaryTypeName",
+                            "src": "365:7:0",
+                            "stateMutability": "nonpayable",
+                            "typeDescriptions": {
+                                "typeIdentifier": "t_address",
+                                "typeString": "address"
+                            }
+                        },
+                        "visibility": "internal"
+                    },
+                    {
+                        "canonicalName": "Admin.Role",
+                        "id": 26,
+                        "members": [
+                            {
+                                "id": 20,
+                                "name": "None",
+                                "nameLocation": "421:4:0",
+                                "nodeType": "EnumValue",
+                                "src": "421:4:0"
+                            },
+                            {
+                                "id": 21,
+                                "name": "Farmer",
+                                "nameLocation": "436:6:0",
+                                "nodeType": "EnumValue",
+                                "src": "436:6:0"
+                            },
+                            {
+                                "id": 22,
+                                "name": "Deliver",
+                                "nameLocation": "453:7:0",
+                                "nodeType": "EnumValue",
+                                "src": "453:7:0"
+                            },
+                            {
+                                "id": 23,
+                                "name": "FoodFactory",
+                                "nameLocation": "472:11:0",
+                                "nodeType": "EnumValue",
+                                "src": "472:11:0"
+                            },
+                            {
+                                "id": 24,
+                                "name": "Market",
+                                "nameLocation": "495:6:0",
+                                "nodeType": "EnumValue",
+                                "src": "495:6:0"
+                            },
+                            {
+                                "id": 25,
+                                "name": "Consumer",
+                                "nameLocation": "512:8:0",
+                                "nodeType": "EnumValue",
+                                "src": "512:8:0"
+                            }
+                        ],
+                        "name": "Role",
+                        "nameLocation": "409:4:0",
+                        "nodeType": "EnumDefinition",
+                        "src": "404:126:0"
+                    },
+                    {
+                        "constant": false,
+                        "id": 31,
+                        "mutability": "mutable",
+                        "name": "currentRole",
+                        "nameLocation": "588:11:0",
+                        "nodeType": "VariableDeclaration",
+                        "scope": 207,
+                        "src": "563:36:0",
+                        "stateVariable": true,
+                        "storageLocation": "default",
+                        "typeDescriptions": {
+                            "typeIdentifier": "t_mapping$_t_address_$_t_enum$_Role_$26_$",
+                            "typeString": "mapping(address => enum Admin.Role)"
+                        },
+                        "typeName": {
+                            "id": 30,
+                            "keyName": "",
+                            "keyNameLocation": "-1:-1:-1",
+                            "keyType": {
+                                "id": 27,
+                                "name": "address",
+                                "nodeType": "ElementaryTypeName",
+                                "src": "571:7:0",
+                                "typeDescriptions": {
+                                    "typeIdentifier": "t_address",
+                                    "typeString": "address"
+                                }
+                            },
+                            "nodeType": "Mapping",
+                            "src": "563:24:0",
+                            "typeDescriptions": {
+                                "typeIdentifier": "t_mapping$_t_address_$_t_enum$_Role_$26_$",
+                                "typeString": "mapping(address => enum Admin.Role)"
+                            },
+                            "valueName": "",
+                            "valueNameLocation": "-1:-1:-1",
+                            "valueType": {
+                                "id": 29,
+                                "nodeType": "UserDefinedTypeName",
+                                "pathNode": {
+                                    "id": 28,
+                                    "name": "Role",
+                                    "nameLocations": [
+                                        "582:4:0"
+                                    ],
+                                    "nodeType": "IdentifierPath",
+                                    "referencedDeclaration": 26,
+                                    "src": "582:4:0"
+                                },
+                                "referencedDeclaration": 26,
+                                "src": "582:4:0",
+                                "typeDescriptions": {
+                                    "typeIdentifier": "t_enum$_Role_$26",
+                                    "typeString": "enum Admin.Role"
+                                }
+                            }
+                        },
+                        "visibility": "internal"
+                    },
+                    {
+                        "body": {
+                            "id": 39,
+                            "nodeType": "Block",
+                            "src": "648:31:0",
+                            "statements": [
+                                {
+                                    "expression": {
+                                        "id": 37,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "lValueRequested": false,
+                                        "leftHandSide": {
+                                            "id": 34,
+                                            "name": "admin",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [],
+                                            "referencedDeclaration": 19,
+                                            "src": "655:5:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_address",
+                                                "typeString": "address"
+                                            }
+                                        },
+                                        "nodeType": "Assignment",
+                                        "operator": "=",
+                                        "rightHandSide": {
+                                            "expression": {
+                                                "id": 35,
+                                                "name": "msg",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 4294967281,
+                                                "src": "663:3:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_magic_message",
+                                                    "typeString": "msg"
+                                                }
+                                            },
+                                            "id": 36,
+                                            "isConstant": false,
+                                            "isLValue": false,
+                                            "isPure": false,
+                                            "lValueRequested": false,
+                                            "memberLocation": "667:6:0",
+                                            "memberName": "sender",
+                                            "nodeType": "MemberAccess",
+                                            "src": "663:10:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_address",
+                                                "typeString": "address"
+                                            }
+                                        },
+                                        "src": "655:18:0",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_address",
+                                            "typeString": "address"
+                                        }
+                                    },
+                                    "id": 38,
+                                    "nodeType": "ExpressionStatement",
+                                    "src": "655:18:0"
+                                }
+                            ]
+                        },
+                        "id": 40,
+                        "implemented": true,
+                        "kind": "constructor",
+                        "modifiers": [],
+                        "name": "",
+                        "nameLocation": "-1:-1:-1",
+                        "nodeType": "FunctionDefinition",
+                        "parameters": {
+                            "id": 32,
+                            "nodeType": "ParameterList",
+                            "parameters": [],
+                            "src": "645:2:0"
+                        },
+                        "returnParameters": {
+                            "id": 33,
+                            "nodeType": "ParameterList",
+                            "parameters": [],
+                            "src": "648:0:0"
+                        },
+                        "scope": 207,
+                        "src": "634:45:0",
+                        "stateMutability": "nonpayable",
+                        "virtual": false,
+                        "visibility": "public"
+                    },
+                    {
+                        "anonymous": false,
+                        "eventSelector": "fbea2a4bd6d4c6a221168bf2859b13cc6963076734b769320cfb1cd5d7858856",
+                        "id": 47,
+                        "name": "addRequest",
+                        "nameLocation": "766:10:0",
+                        "nodeType": "EventDefinition",
+                        "parameters": {
+                            "id": 46,
+                            "nodeType": "ParameterList",
+                            "parameters": [
+                                {
+                                    "constant": false,
+                                    "id": 42,
+                                    "indexed": true,
+                                    "mutability": "mutable",
+                                    "name": "requester",
+                                    "nameLocation": "793:9:0",
+                                    "nodeType": "VariableDeclaration",
+                                    "scope": 47,
+                                    "src": "777:25:0",
+                                    "stateVariable": false,
+                                    "storageLocation": "default",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_address",
+                                        "typeString": "address"
+                                    },
+                                    "typeName": {
+                                        "id": 41,
+                                        "name": "address",
+                                        "nodeType": "ElementaryTypeName",
+                                        "src": "777:7:0",
+                                        "stateMutability": "nonpayable",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_address",
+                                            "typeString": "address"
+                                        }
+                                    },
+                                    "visibility": "internal"
+                                },
+                                {
+                                    "constant": false,
+                                    "id": 45,
+                                    "indexed": true,
+                                    "mutability": "mutable",
+                                    "name": "role",
+                                    "nameLocation": "817:4:0",
+                                    "nodeType": "VariableDeclaration",
+                                    "scope": 47,
+                                    "src": "804:17:0",
+                                    "stateVariable": false,
+                                    "storageLocation": "default",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_enum$_Role_$26",
+                                        "typeString": "enum Admin.Role"
+                                    },
+                                    "typeName": {
+                                        "id": 44,
+                                        "nodeType": "UserDefinedTypeName",
+                                        "pathNode": {
+                                            "id": 43,
+                                            "name": "Role",
+                                            "nameLocations": [
+                                                "804:4:0"
+                                            ],
+                                            "nodeType": "IdentifierPath",
+                                            "referencedDeclaration": 26,
+                                            "src": "804:4:0"
+                                        },
+                                        "referencedDeclaration": 26,
+                                        "src": "804:4:0",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_enum$_Role_$26",
+                                            "typeString": "enum Admin.Role"
+                                        }
+                                    },
+                                    "visibility": "internal"
+                                }
+                            ],
+                            "src": "776:46:0"
+                        },
+                        "src": "760:63:0"
+                    },
+                    {
+                        "errorSelector": "c9785ab7",
+                        "id": 55,
+                        "name": "InvalidRole",
+                        "nameLocation": "835:11:0",
+                        "nodeType": "ErrorDefinition",
+                        "parameters": {
+                            "id": 54,
+                            "nodeType": "ParameterList",
+                            "parameters": [
+                                {
+                                    "constant": false,
+                                    "id": 50,
+                                    "mutability": "mutable",
+                                    "name": "current",
+                                    "nameLocation": "852:7:0",
+                                    "nodeType": "VariableDeclaration",
+                                    "scope": 55,
+                                    "src": "847:12:0",
+                                    "stateVariable": false,
+                                    "storageLocation": "default",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_enum$_Role_$26",
+                                        "typeString": "enum Admin.Role"
+                                    },
+                                    "typeName": {
+                                        "id": 49,
+                                        "nodeType": "UserDefinedTypeName",
+                                        "pathNode": {
+                                            "id": 48,
+                                            "name": "Role",
+                                            "nameLocations": [
+                                                "847:4:0"
+                                            ],
+                                            "nodeType": "IdentifierPath",
+                                            "referencedDeclaration": 26,
+                                            "src": "847:4:0"
+                                        },
+                                        "referencedDeclaration": 26,
+                                        "src": "847:4:0",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_enum$_Role_$26",
+                                            "typeString": "enum Admin.Role"
+                                        }
+                                    },
+                                    "visibility": "internal"
+                                },
+                                {
+                                    "constant": false,
+                                    "id": 53,
+                                    "mutability": "mutable",
+                                    "name": "requested",
+                                    "nameLocation": "866:9:0",
+                                    "nodeType": "VariableDeclaration",
+                                    "scope": 55,
+                                    "src": "861:14:0",
+                                    "stateVariable": false,
+                                    "storageLocation": "default",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_enum$_Role_$26",
+                                        "typeString": "enum Admin.Role"
+                                    },
+                                    "typeName": {
+                                        "id": 52,
+                                        "nodeType": "UserDefinedTypeName",
+                                        "pathNode": {
+                                            "id": 51,
+                                            "name": "Role",
+                                            "nameLocations": [
+                                                "861:4:0"
+                                            ],
+                                            "nodeType": "IdentifierPath",
+                                            "referencedDeclaration": 26,
+                                            "src": "861:4:0"
+                                        },
+                                        "referencedDeclaration": 26,
+                                        "src": "861:4:0",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_enum$_Role_$26",
+                                            "typeString": "enum Admin.Role"
+                                        }
+                                    },
+                                    "visibility": "internal"
+                                }
+                            ],
+                            "src": "846:30:0"
+                        },
+                        "src": "829:48:0"
+                    },
+                    {
+                        "body": {
+                            "id": 108,
+                            "nodeType": "Block",
+                            "src": "1037:566:0",
+                            "statements": [
+                                {
+                                    "expression": {
+                                        "arguments": [
+                                            {
+                                                "commonType": {
+                                                    "typeIdentifier": "t_address",
+                                                    "typeString": "address"
+                                                },
+                                                "id": 67,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": false,
+                                                "lValueRequested": false,
+                                                "leftExpression": {
+                                                    "expression": {
+                                                        "id": 64,
+                                                        "name": "msg",
+                                                        "nodeType": "Identifier",
+                                                        "overloadedDeclarations": [],
+                                                        "referencedDeclaration": 4294967281,
+                                                        "src": "1089:3:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_magic_message",
+                                                            "typeString": "msg"
+                                                        }
+                                                    },
+                                                    "id": 65,
+                                                    "isConstant": false,
+                                                    "isLValue": false,
+                                                    "isPure": false,
+                                                    "lValueRequested": false,
+                                                    "memberLocation": "1093:6:0",
+                                                    "memberName": "sender",
+                                                    "nodeType": "MemberAccess",
+                                                    "src": "1089:10:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_address",
+                                                        "typeString": "address"
+                                                    }
+                                                },
+                                                "nodeType": "BinaryOperation",
+                                                "operator": "==",
+                                                "rightExpression": {
+                                                    "id": 66,
+                                                    "name": "requester",
+                                                    "nodeType": "Identifier",
+                                                    "overloadedDeclarations": [],
+                                                    "referencedDeclaration": 57,
+                                                    "src": "1103:9:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_address",
+                                                        "typeString": "address"
+                                                    }
+                                                },
+                                                "src": "1089:23:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_bool",
+                                                    "typeString": "bool"
+                                                }
+                                            },
+                                            {
+                                                "hexValue": "52657175657374207761736e27742073656e7420627920676976656e2061646472657373",
+                                                "id": 68,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": true,
+                                                "kind": "string",
+                                                "lValueRequested": false,
+                                                "nodeType": "Literal",
+                                                "src": "1114:38:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_stringliteral_da1a5f2cc435dff68df62411811c9a127f057d5ca64b63d80596ba8ac7c422e4",
+                                                    "typeString": "literal_string \"Request wasn't sent by given address\""
+                                                },
+                                                "value": "Request wasn't sent by given address"
+                                            }
+                                        ],
+                                        "expression": {
+                                            "argumentTypes": [
+                                                {
+                                                    "typeIdentifier": "t_bool",
+                                                    "typeString": "bool"
+                                                },
+                                                {
+                                                    "typeIdentifier": "t_stringliteral_da1a5f2cc435dff68df62411811c9a127f057d5ca64b63d80596ba8ac7c422e4",
+                                                    "typeString": "literal_string \"Request wasn't sent by given address\""
+                                                }
+                                            ],
+                                            "id": 63,
+                                            "name": "require",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [
+                                                4294967278,
+                                                4294967278
+                                            ],
+                                            "referencedDeclaration": 4294967278,
+                                            "src": "1081:7:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                                                "typeString": "function (bool,string memory) pure"
+                                            }
+                                        },
+                                        "id": 69,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "kind": "functionCall",
+                                        "lValueRequested": false,
+                                        "nameLocations": [],
+                                        "names": [],
+                                        "nodeType": "FunctionCall",
+                                        "src": "1081:72:0",
+                                        "tryCall": false,
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_tuple$__$",
+                                            "typeString": "tuple()"
+                                        }
+                                    },
+                                    "id": 70,
+                                    "nodeType": "ExpressionStatement",
+                                    "src": "1081:72:0"
+                                },
+                                {
+                                    "condition": {
+                                        "commonType": {
+                                            "typeIdentifier": "t_enum$_Role_$26",
+                                            "typeString": "enum Admin.Role"
+                                        },
+                                        "id": 76,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "lValueRequested": false,
+                                        "leftExpression": {
+                                            "baseExpression": {
+                                                "id": 71,
+                                                "name": "currentRole",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 31,
+                                                "src": "1205:11:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_mapping$_t_address_$_t_enum$_Role_$26_$",
+                                                    "typeString": "mapping(address => enum Admin.Role)"
+                                                }
+                                            },
+                                            "id": 73,
+                                            "indexExpression": {
+                                                "id": 72,
+                                                "name": "requester",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 57,
+                                                "src": "1217:9:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_address",
+                                                    "typeString": "address"
+                                                }
+                                            },
+                                            "isConstant": false,
+                                            "isLValue": true,
+                                            "isPure": false,
+                                            "lValueRequested": false,
+                                            "nodeType": "IndexAccess",
+                                            "src": "1205:22:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_enum$_Role_$26",
+                                                "typeString": "enum Admin.Role"
+                                            }
+                                        },
+                                        "nodeType": "BinaryOperation",
+                                        "operator": "!=",
+                                        "rightExpression": {
+                                            "expression": {
+                                                "id": 74,
+                                                "name": "Role",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 26,
+                                                "src": "1231:4:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_type$_t_enum$_Role_$26_$",
+                                                    "typeString": "type(enum Admin.Role)"
+                                                }
+                                            },
+                                            "id": 75,
+                                            "isConstant": false,
+                                            "isLValue": false,
+                                            "isPure": true,
+                                            "lValueRequested": false,
+                                            "memberLocation": "1236:4:0",
+                                            "memberName": "None",
+                                            "nodeType": "MemberAccess",
+                                            "referencedDeclaration": 20,
+                                            "src": "1231:9:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_enum$_Role_$26",
+                                                "typeString": "enum Admin.Role"
+                                            }
+                                        },
+                                        "src": "1205:35:0",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_bool",
+                                            "typeString": "bool"
+                                        }
+                                    },
+                                    "id": 84,
+                                    "nodeType": "IfStatement",
+                                    "src": "1201:132:0",
+                                    "trueBody": {
+                                        "errorCall": {
+                                            "arguments": [
+                                                {
+                                                    "baseExpression": {
+                                                        "id": 78,
+                                                        "name": "currentRole",
+                                                        "nodeType": "Identifier",
+                                                        "overloadedDeclarations": [],
+                                                        "referencedDeclaration": 31,
+                                                        "src": "1279:11:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_mapping$_t_address_$_t_enum$_Role_$26_$",
+                                                            "typeString": "mapping(address => enum Admin.Role)"
+                                                        }
+                                                    },
+                                                    "id": 80,
+                                                    "indexExpression": {
+                                                        "id": 79,
+                                                        "name": "requester",
+                                                        "nodeType": "Identifier",
+                                                        "overloadedDeclarations": [],
+                                                        "referencedDeclaration": 57,
+                                                        "src": "1291:9:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_address",
+                                                            "typeString": "address"
+                                                        }
+                                                    },
+                                                    "isConstant": false,
+                                                    "isLValue": true,
+                                                    "isPure": false,
+                                                    "lValueRequested": false,
+                                                    "nodeType": "IndexAccess",
+                                                    "src": "1279:22:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_enum$_Role_$26",
+                                                        "typeString": "enum Admin.Role"
+                                                    }
+                                                },
+                                                {
+                                                    "id": 81,
+                                                    "name": "role",
+                                                    "nodeType": "Identifier",
+                                                    "overloadedDeclarations": [],
+                                                    "referencedDeclaration": 60,
+                                                    "src": "1321:4:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_enum$_Role_$26",
+                                                        "typeString": "enum Admin.Role"
+                                                    }
+                                                }
+                                            ],
+                                            "expression": {
+                                                "argumentTypes": [
+                                                    {
+                                                        "typeIdentifier": "t_enum$_Role_$26",
+                                                        "typeString": "enum Admin.Role"
+                                                    },
+                                                    {
+                                                        "typeIdentifier": "t_enum$_Role_$26",
+                                                        "typeString": "enum Admin.Role"
+                                                    }
+                                                ],
+                                                "id": 77,
+                                                "name": "InvalidRole",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 55,
+                                                "src": "1249:11:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_function_error_pure$_t_enum$_Role_$26_$_t_enum$_Role_$26_$returns$__$",
+                                                    "typeString": "function (enum Admin.Role,enum Admin.Role) pure"
+                                                }
+                                            },
+                                            "id": 82,
+                                            "isConstant": false,
+                                            "isLValue": false,
+                                            "isPure": false,
+                                            "kind": "functionCall",
+                                            "lValueRequested": false,
+                                            "nameLocations": [
+                                                "1270:7:0",
+                                                "1310:9:0"
+                                            ],
+                                            "names": [
+                                                "current",
+                                                "requested"
+                                            ],
+                                            "nodeType": "FunctionCall",
+                                            "src": "1249:84:0",
+                                            "tryCall": false,
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_tuple$__$",
+                                                "typeString": "tuple()"
+                                            }
+                                        },
+                                        "id": 83,
+                                        "nodeType": "RevertStatement",
+                                        "src": "1242:91:0"
+                                    }
+                                },
+                                {
+                                    "expression": {
+                                        "arguments": [
+                                            {
+                                                "commonType": {
+                                                    "typeIdentifier": "t_enum$_Role_$26",
+                                                    "typeString": "enum Admin.Role"
+                                                },
+                                                "id": 91,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": false,
+                                                "lValueRequested": false,
+                                                "leftExpression": {
+                                                    "baseExpression": {
+                                                        "id": 86,
+                                                        "name": "currentRole",
+                                                        "nodeType": "Identifier",
+                                                        "overloadedDeclarations": [],
+                                                        "referencedDeclaration": 31,
+                                                        "src": "1348:11:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_mapping$_t_address_$_t_enum$_Role_$26_$",
+                                                            "typeString": "mapping(address => enum Admin.Role)"
+                                                        }
+                                                    },
+                                                    "id": 88,
+                                                    "indexExpression": {
+                                                        "id": 87,
+                                                        "name": "requester",
+                                                        "nodeType": "Identifier",
+                                                        "overloadedDeclarations": [],
+                                                        "referencedDeclaration": 57,
+                                                        "src": "1360:9:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_address",
+                                                            "typeString": "address"
+                                                        }
+                                                    },
+                                                    "isConstant": false,
+                                                    "isLValue": true,
+                                                    "isPure": false,
+                                                    "lValueRequested": false,
+                                                    "nodeType": "IndexAccess",
+                                                    "src": "1348:22:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_enum$_Role_$26",
+                                                        "typeString": "enum Admin.Role"
+                                                    }
+                                                },
+                                                "nodeType": "BinaryOperation",
+                                                "operator": "==",
+                                                "rightExpression": {
+                                                    "expression": {
+                                                        "id": 89,
+                                                        "name": "Role",
+                                                        "nodeType": "Identifier",
+                                                        "overloadedDeclarations": [],
+                                                        "referencedDeclaration": 26,
+                                                        "src": "1374:4:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_type$_t_enum$_Role_$26_$",
+                                                            "typeString": "type(enum Admin.Role)"
+                                                        }
+                                                    },
+                                                    "id": 90,
+                                                    "isConstant": false,
+                                                    "isLValue": false,
+                                                    "isPure": true,
+                                                    "lValueRequested": false,
+                                                    "memberLocation": "1379:4:0",
+                                                    "memberName": "None",
+                                                    "nodeType": "MemberAccess",
+                                                    "referencedDeclaration": 20,
+                                                    "src": "1374:9:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_enum$_Role_$26",
+                                                        "typeString": "enum Admin.Role"
+                                                    }
+                                                },
+                                                "src": "1348:35:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_bool",
+                                                    "typeString": "bool"
+                                                }
+                                            },
+                                            {
+                                                "hexValue": "52657175657374657220616c726561647920686173206120726f6c65",
+                                                "id": 92,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": true,
+                                                "kind": "string",
+                                                "lValueRequested": false,
+                                                "nodeType": "Literal",
+                                                "src": "1385:30:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_stringliteral_cfdd06bdede7f4f5f372efa2b28d5e24237f8cc682a97dc43e76df6ea97205f6",
+                                                    "typeString": "literal_string \"Requester already has a role\""
+                                                },
+                                                "value": "Requester already has a role"
+                                            }
+                                        ],
+                                        "expression": {
+                                            "argumentTypes": [
+                                                {
+                                                    "typeIdentifier": "t_bool",
+                                                    "typeString": "bool"
+                                                },
+                                                {
+                                                    "typeIdentifier": "t_stringliteral_cfdd06bdede7f4f5f372efa2b28d5e24237f8cc682a97dc43e76df6ea97205f6",
+                                                    "typeString": "literal_string \"Requester already has a role\""
+                                                }
+                                            ],
+                                            "id": 85,
+                                            "name": "require",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [
+                                                4294967278,
+                                                4294967278
+                                            ],
+                                            "referencedDeclaration": 4294967278,
+                                            "src": "1340:7:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                                                "typeString": "function (bool,string memory) pure"
+                                            }
+                                        },
+                                        "id": 93,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "kind": "functionCall",
+                                        "lValueRequested": false,
+                                        "nameLocations": [],
+                                        "names": [],
+                                        "nodeType": "FunctionCall",
+                                        "src": "1340:76:0",
+                                        "tryCall": false,
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_tuple$__$",
+                                            "typeString": "tuple()"
+                                        }
+                                    },
+                                    "id": 94,
+                                    "nodeType": "ExpressionStatement",
+                                    "src": "1340:76:0"
+                                },
+                                {
+                                    "expression": {
+                                        "arguments": [
+                                            {
+                                                "commonType": {
+                                                    "typeIdentifier": "t_enum$_Role_$26",
+                                                    "typeString": "enum Admin.Role"
+                                                },
+                                                "id": 99,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": false,
+                                                "lValueRequested": false,
+                                                "leftExpression": {
+                                                    "id": 96,
+                                                    "name": "role",
+                                                    "nodeType": "Identifier",
+                                                    "overloadedDeclarations": [],
+                                                    "referencedDeclaration": 60,
+                                                    "src": "1468:4:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_enum$_Role_$26",
+                                                        "typeString": "enum Admin.Role"
+                                                    }
+                                                },
+                                                "nodeType": "BinaryOperation",
+                                                "operator": "<=",
+                                                "rightExpression": {
+                                                    "expression": {
+                                                        "id": 97,
+                                                        "name": "Role",
+                                                        "nodeType": "Identifier",
+                                                        "overloadedDeclarations": [],
+                                                        "referencedDeclaration": 26,
+                                                        "src": "1476:4:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_type$_t_enum$_Role_$26_$",
+                                                            "typeString": "type(enum Admin.Role)"
+                                                        }
+                                                    },
+                                                    "id": 98,
+                                                    "isConstant": false,
+                                                    "isLValue": false,
+                                                    "isPure": true,
+                                                    "lValueRequested": false,
+                                                    "memberLocation": "1481:8:0",
+                                                    "memberName": "Consumer",
+                                                    "nodeType": "MemberAccess",
+                                                    "referencedDeclaration": 25,
+                                                    "src": "1476:13:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_enum$_Role_$26",
+                                                        "typeString": "enum Admin.Role"
+                                                    }
+                                                },
+                                                "src": "1468:21:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_bool",
+                                                    "typeString": "bool"
+                                                }
+                                            },
+                                            {
+                                                "hexValue": "526f6c65206973206e6f742076616c6964",
+                                                "id": 100,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": true,
+                                                "kind": "string",
+                                                "lValueRequested": false,
+                                                "nodeType": "Literal",
+                                                "src": "1491:19:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_stringliteral_ede870fa8770cb1010625bfbe0e312915197a04a611ededa962f9aaf6d247e3f",
+                                                    "typeString": "literal_string \"Role is not valid\""
+                                                },
+                                                "value": "Role is not valid"
+                                            }
+                                        ],
+                                        "expression": {
+                                            "argumentTypes": [
+                                                {
+                                                    "typeIdentifier": "t_bool",
+                                                    "typeString": "bool"
+                                                },
+                                                {
+                                                    "typeIdentifier": "t_stringliteral_ede870fa8770cb1010625bfbe0e312915197a04a611ededa962f9aaf6d247e3f",
+                                                    "typeString": "literal_string \"Role is not valid\""
+                                                }
+                                            ],
+                                            "id": 95,
+                                            "name": "require",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [
+                                                4294967278,
+                                                4294967278
+                                            ],
+                                            "referencedDeclaration": 4294967278,
+                                            "src": "1460:7:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                                                "typeString": "function (bool,string memory) pure"
+                                            }
+                                        },
+                                        "id": 101,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "kind": "functionCall",
+                                        "lValueRequested": false,
+                                        "nameLocations": [],
+                                        "names": [],
+                                        "nodeType": "FunctionCall",
+                                        "src": "1460:51:0",
+                                        "tryCall": false,
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_tuple$__$",
+                                            "typeString": "tuple()"
+                                        }
+                                    },
+                                    "id": 102,
+                                    "nodeType": "ExpressionStatement",
+                                    "src": "1460:51:0"
+                                },
+                                {
+                                    "eventCall": {
+                                        "arguments": [
+                                            {
+                                                "id": 104,
+                                                "name": "requester",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 57,
+                                                "src": "1581:9:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_address",
+                                                    "typeString": "address"
+                                                }
+                                            },
+                                            {
+                                                "id": 105,
+                                                "name": "role",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 60,
+                                                "src": "1592:4:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_enum$_Role_$26",
+                                                    "typeString": "enum Admin.Role"
+                                                }
+                                            }
+                                        ],
+                                        "expression": {
+                                            "argumentTypes": [
+                                                {
+                                                    "typeIdentifier": "t_address",
+                                                    "typeString": "address"
+                                                },
+                                                {
+                                                    "typeIdentifier": "t_enum$_Role_$26",
+                                                    "typeString": "enum Admin.Role"
+                                                }
+                                            ],
+                                            "id": 103,
+                                            "name": "addRequest",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [],
+                                            "referencedDeclaration": 47,
+                                            "src": "1570:10:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_enum$_Role_$26_$returns$__$",
+                                                "typeString": "function (address,enum Admin.Role)"
+                                            }
+                                        },
+                                        "id": 106,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "kind": "functionCall",
+                                        "lValueRequested": false,
+                                        "nameLocations": [],
+                                        "names": [],
+                                        "nodeType": "FunctionCall",
+                                        "src": "1570:27:0",
+                                        "tryCall": false,
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_tuple$__$",
+                                            "typeString": "tuple()"
+                                        }
+                                    },
+                                    "id": 107,
+                                    "nodeType": "EmitStatement",
+                                    "src": "1565:32:0"
+                                }
+                            ]
+                        },
+                        "functionSelector": "e5075d06",
+                        "id": 109,
+                        "implemented": true,
+                        "kind": "function",
+                        "modifiers": [],
+                        "name": "requestAdd",
+                        "nameLocation": "989:10:0",
+                        "nodeType": "FunctionDefinition",
+                        "parameters": {
+                            "id": 61,
+                            "nodeType": "ParameterList",
+                            "parameters": [
+                                {
+                                    "constant": false,
+                                    "id": 57,
+                                    "mutability": "mutable",
+                                    "name": "requester",
+                                    "nameLocation": "1008:9:0",
+                                    "nodeType": "VariableDeclaration",
+                                    "scope": 109,
+                                    "src": "1000:17:0",
+                                    "stateVariable": false,
+                                    "storageLocation": "default",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_address",
+                                        "typeString": "address"
+                                    },
+                                    "typeName": {
+                                        "id": 56,
+                                        "name": "address",
+                                        "nodeType": "ElementaryTypeName",
+                                        "src": "1000:7:0",
+                                        "stateMutability": "nonpayable",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_address",
+                                            "typeString": "address"
+                                        }
+                                    },
+                                    "visibility": "internal"
+                                },
+                                {
+                                    "constant": false,
+                                    "id": 60,
+                                    "mutability": "mutable",
+                                    "name": "role",
+                                    "nameLocation": "1024:4:0",
+                                    "nodeType": "VariableDeclaration",
+                                    "scope": 109,
+                                    "src": "1019:9:0",
+                                    "stateVariable": false,
+                                    "storageLocation": "default",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_enum$_Role_$26",
+                                        "typeString": "enum Admin.Role"
+                                    },
+                                    "typeName": {
+                                        "id": 59,
+                                        "nodeType": "UserDefinedTypeName",
+                                        "pathNode": {
+                                            "id": 58,
+                                            "name": "Role",
+                                            "nameLocations": [
+                                                "1019:4:0"
+                                            ],
+                                            "nodeType": "IdentifierPath",
+                                            "referencedDeclaration": 26,
+                                            "src": "1019:4:0"
+                                        },
+                                        "referencedDeclaration": 26,
+                                        "src": "1019:4:0",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_enum$_Role_$26",
+                                            "typeString": "enum Admin.Role"
+                                        }
+                                    },
+                                    "visibility": "internal"
+                                }
+                            ],
+                            "src": "999:30:0"
+                        },
+                        "returnParameters": {
+                            "id": 62,
+                            "nodeType": "ParameterList",
+                            "parameters": [],
+                            "src": "1037:0:0"
+                        },
+                        "scope": 207,
+                        "src": "980:623:0",
+                        "stateMutability": "nonpayable",
+                        "virtual": false,
+                        "visibility": "public"
+                    },
+                    {
+                        "anonymous": false,
+                        "eventSelector": "416feb16e2239e58f208d72eedead1837e81ee2746a5de4d7fbb7c1f7fcb0c35",
+                        "id": 116,
+                        "name": "approveRequest",
+                        "nameLocation": "1665:14:0",
+                        "nodeType": "EventDefinition",
+                        "parameters": {
+                            "id": 115,
+                            "nodeType": "ParameterList",
+                            "parameters": [
+                                {
+                                    "constant": false,
+                                    "id": 111,
+                                    "indexed": true,
+                                    "mutability": "mutable",
+                                    "name": "requester",
+                                    "nameLocation": "1696:9:0",
+                                    "nodeType": "VariableDeclaration",
+                                    "scope": 116,
+                                    "src": "1680:25:0",
+                                    "stateVariable": false,
+                                    "storageLocation": "default",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_address",
+                                        "typeString": "address"
+                                    },
+                                    "typeName": {
+                                        "id": 110,
+                                        "name": "address",
+                                        "nodeType": "ElementaryTypeName",
+                                        "src": "1680:7:0",
+                                        "stateMutability": "nonpayable",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_address",
+                                            "typeString": "address"
+                                        }
+                                    },
+                                    "visibility": "internal"
+                                },
+                                {
+                                    "constant": false,
+                                    "id": 114,
+                                    "indexed": true,
+                                    "mutability": "mutable",
+                                    "name": "role",
+                                    "nameLocation": "1720:4:0",
+                                    "nodeType": "VariableDeclaration",
+                                    "scope": 116,
+                                    "src": "1707:17:0",
+                                    "stateVariable": false,
+                                    "storageLocation": "default",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_enum$_Role_$26",
+                                        "typeString": "enum Admin.Role"
+                                    },
+                                    "typeName": {
+                                        "id": 113,
+                                        "nodeType": "UserDefinedTypeName",
+                                        "pathNode": {
+                                            "id": 112,
+                                            "name": "Role",
+                                            "nameLocations": [
+                                                "1707:4:0"
+                                            ],
+                                            "nodeType": "IdentifierPath",
+                                            "referencedDeclaration": 26,
+                                            "src": "1707:4:0"
+                                        },
+                                        "referencedDeclaration": 26,
+                                        "src": "1707:4:0",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_enum$_Role_$26",
+                                            "typeString": "enum Admin.Role"
+                                        }
+                                    },
+                                    "visibility": "internal"
+                                }
+                            ],
+                            "src": "1679:46:0"
+                        },
+                        "src": "1659:67:0"
+                    },
+                    {
+                        "errorSelector": "cbd9d2e0",
+                        "id": 120,
+                        "name": "InvalidCaller",
+                        "nameLocation": "1738:13:0",
+                        "nodeType": "ErrorDefinition",
+                        "parameters": {
+                            "id": 119,
+                            "nodeType": "ParameterList",
+                            "parameters": [
+                                {
+                                    "constant": false,
+                                    "id": 118,
+                                    "mutability": "mutable",
+                                    "name": "caller",
+                                    "nameLocation": "1760:6:0",
+                                    "nodeType": "VariableDeclaration",
+                                    "scope": 120,
+                                    "src": "1752:14:0",
+                                    "stateVariable": false,
+                                    "storageLocation": "default",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_address",
+                                        "typeString": "address"
+                                    },
+                                    "typeName": {
+                                        "id": 117,
+                                        "name": "address",
+                                        "nodeType": "ElementaryTypeName",
+                                        "src": "1752:7:0",
+                                        "stateMutability": "nonpayable",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_address",
+                                            "typeString": "address"
+                                        }
+                                    },
+                                    "visibility": "internal"
+                                }
+                            ],
+                            "src": "1751:16:0"
+                        },
+                        "src": "1732:36:0"
+                    },
+                    {
+                        "body": {
+                            "id": 205,
+                            "nodeType": "Block",
+                            "src": "1835:735:0",
+                            "statements": [
+                                {
+                                    "condition": {
+                                        "commonType": {
+                                            "typeIdentifier": "t_address",
+                                            "typeString": "address"
+                                        },
+                                        "id": 131,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "lValueRequested": false,
+                                        "leftExpression": {
+                                            "id": 128,
+                                            "name": "admin",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [],
+                                            "referencedDeclaration": 19,
+                                            "src": "1846:5:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_address",
+                                                "typeString": "address"
+                                            }
+                                        },
+                                        "nodeType": "BinaryOperation",
+                                        "operator": "!=",
+                                        "rightExpression": {
+                                            "expression": {
+                                                "id": 129,
+                                                "name": "msg",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 4294967281,
+                                                "src": "1853:3:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_magic_message",
+                                                    "typeString": "msg"
+                                                }
+                                            },
+                                            "id": 130,
+                                            "isConstant": false,
+                                            "isLValue": false,
+                                            "isPure": false,
+                                            "lValueRequested": false,
+                                            "memberLocation": "1857:6:0",
+                                            "memberName": "sender",
+                                            "nodeType": "MemberAccess",
+                                            "src": "1853:10:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_address",
+                                                "typeString": "address"
+                                            }
+                                        },
+                                        "src": "1846:17:0",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_bool",
+                                            "typeString": "bool"
+                                        }
+                                    },
+                                    "id": 136,
+                                    "nodeType": "IfStatement",
+                                    "src": "1842:78:0",
+                                    "trueBody": {
+                                        "errorCall": {
+                                            "arguments": [
+                                                {
+                                                    "id": 133,
+                                                    "name": "requester",
+                                                    "nodeType": "Identifier",
+                                                    "overloadedDeclarations": [],
+                                                    "referencedDeclaration": 122,
+                                                    "src": "1903:9:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_address",
+                                                        "typeString": "address"
+                                                    }
+                                                }
+                                            ],
+                                            "expression": {
+                                                "argumentTypes": [
+                                                    {
+                                                        "typeIdentifier": "t_address",
+                                                        "typeString": "address"
+                                                    }
+                                                ],
+                                                "id": 132,
+                                                "name": "InvalidCaller",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 120,
+                                                "src": "1872:13:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_function_error_pure$_t_address_$returns$__$",
+                                                    "typeString": "function (address) pure"
+                                                }
+                                            },
+                                            "id": 134,
+                                            "isConstant": false,
+                                            "isLValue": false,
+                                            "isPure": false,
+                                            "kind": "functionCall",
+                                            "lValueRequested": false,
+                                            "nameLocations": [
+                                                "1895:6:0"
+                                            ],
+                                            "names": [
+                                                "caller"
+                                            ],
+                                            "nodeType": "FunctionCall",
+                                            "src": "1872:48:0",
+                                            "tryCall": false,
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_tuple$__$",
+                                                "typeString": "tuple()"
+                                            }
+                                        },
+                                        "id": 135,
+                                        "nodeType": "RevertStatement",
+                                        "src": "1865:55:0"
+                                    }
+                                },
+                                {
+                                    "expression": {
+                                        "arguments": [
+                                            {
+                                                "commonType": {
+                                                    "typeIdentifier": "t_address",
+                                                    "typeString": "address"
+                                                },
+                                                "id": 141,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": false,
+                                                "lValueRequested": false,
+                                                "leftExpression": {
+                                                    "id": 138,
+                                                    "name": "admin",
+                                                    "nodeType": "Identifier",
+                                                    "overloadedDeclarations": [],
+                                                    "referencedDeclaration": 19,
+                                                    "src": "1971:5:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_address",
+                                                        "typeString": "address"
+                                                    }
+                                                },
+                                                "nodeType": "BinaryOperation",
+                                                "operator": "==",
+                                                "rightExpression": {
+                                                    "expression": {
+                                                        "id": 139,
+                                                        "name": "msg",
+                                                        "nodeType": "Identifier",
+                                                        "overloadedDeclarations": [],
+                                                        "referencedDeclaration": 4294967281,
+                                                        "src": "1978:3:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_magic_message",
+                                                            "typeString": "msg"
+                                                        }
+                                                    },
+                                                    "id": 140,
+                                                    "isConstant": false,
+                                                    "isLValue": false,
+                                                    "isPure": false,
+                                                    "lValueRequested": false,
+                                                    "memberLocation": "1982:6:0",
+                                                    "memberName": "sender",
+                                                    "nodeType": "MemberAccess",
+                                                    "src": "1978:10:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_address",
+                                                        "typeString": "address"
+                                                    }
+                                                },
+                                                "src": "1971:17:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_bool",
+                                                    "typeString": "bool"
+                                                }
+                                            }
+                                        ],
+                                        "expression": {
+                                            "argumentTypes": [
+                                                {
+                                                    "typeIdentifier": "t_bool",
+                                                    "typeString": "bool"
+                                                }
+                                            ],
+                                            "id": 137,
+                                            "name": "require",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [
+                                                4294967278,
+                                                4294967278
+                                            ],
+                                            "referencedDeclaration": 4294967278,
+                                            "src": "1963:7:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                                                "typeString": "function (bool) pure"
+                                            }
+                                        },
+                                        "id": 142,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "kind": "functionCall",
+                                        "lValueRequested": false,
+                                        "nameLocations": [],
+                                        "names": [],
+                                        "nodeType": "FunctionCall",
+                                        "src": "1963:26:0",
+                                        "tryCall": false,
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_tuple$__$",
+                                            "typeString": "tuple()"
+                                        }
+                                    },
+                                    "id": 143,
+                                    "nodeType": "ExpressionStatement",
+                                    "src": "1963:26:0"
+                                },
+                                {
+                                    "expression": {
+                                        "id": 148,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "lValueRequested": false,
+                                        "leftHandSide": {
+                                            "baseExpression": {
+                                                "id": 144,
+                                                "name": "currentRole",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 31,
+                                                "src": "2029:11:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_mapping$_t_address_$_t_enum$_Role_$26_$",
+                                                    "typeString": "mapping(address => enum Admin.Role)"
+                                                }
+                                            },
+                                            "id": 146,
+                                            "indexExpression": {
+                                                "id": 145,
+                                                "name": "requester",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 122,
+                                                "src": "2041:9:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_address",
+                                                    "typeString": "address"
+                                                }
+                                            },
+                                            "isConstant": false,
+                                            "isLValue": true,
+                                            "isPure": false,
+                                            "lValueRequested": true,
+                                            "nodeType": "IndexAccess",
+                                            "src": "2029:22:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_enum$_Role_$26",
+                                                "typeString": "enum Admin.Role"
+                                            }
+                                        },
+                                        "nodeType": "Assignment",
+                                        "operator": "=",
+                                        "rightHandSide": {
+                                            "id": 147,
+                                            "name": "role",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [],
+                                            "referencedDeclaration": 125,
+                                            "src": "2054:4:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_enum$_Role_$26",
+                                                "typeString": "enum Admin.Role"
+                                            }
+                                        },
+                                        "src": "2029:29:0",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_enum$_Role_$26",
+                                            "typeString": "enum Admin.Role"
+                                        }
+                                    },
+                                    "id": 149,
+                                    "nodeType": "ExpressionStatement",
+                                    "src": "2029:29:0"
+                                },
+                                {
+                                    "condition": {
+                                        "commonType": {
+                                            "typeIdentifier": "t_enum$_Role_$26",
+                                            "typeString": "enum Admin.Role"
+                                        },
+                                        "id": 153,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "lValueRequested": false,
+                                        "leftExpression": {
+                                            "id": 150,
+                                            "name": "role",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [],
+                                            "referencedDeclaration": 125,
+                                            "src": "2145:4:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_enum$_Role_$26",
+                                                "typeString": "enum Admin.Role"
+                                            }
+                                        },
+                                        "nodeType": "BinaryOperation",
+                                        "operator": "==",
+                                        "rightExpression": {
+                                            "expression": {
+                                                "id": 151,
+                                                "name": "Role",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 26,
+                                                "src": "2151:4:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_type$_t_enum$_Role_$26_$",
+                                                    "typeString": "type(enum Admin.Role)"
+                                                }
+                                            },
+                                            "id": 152,
+                                            "isConstant": false,
+                                            "isLValue": false,
+                                            "isPure": true,
+                                            "lValueRequested": false,
+                                            "memberLocation": "2156:6:0",
+                                            "memberName": "Farmer",
+                                            "nodeType": "MemberAccess",
+                                            "referencedDeclaration": 21,
+                                            "src": "2151:11:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_enum$_Role_$26",
+                                                "typeString": "enum Admin.Role"
+                                            }
+                                        },
+                                        "src": "2145:17:0",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_bool",
+                                            "typeString": "bool"
+                                        }
+                                    },
+                                    "falseBody": {
+                                        "condition": {
+                                            "commonType": {
+                                                "typeIdentifier": "t_enum$_Role_$26",
+                                                "typeString": "enum Admin.Role"
+                                            },
+                                            "id": 162,
+                                            "isConstant": false,
+                                            "isLValue": false,
+                                            "isPure": false,
+                                            "lValueRequested": false,
+                                            "leftExpression": {
+                                                "id": 159,
+                                                "name": "role",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 125,
+                                                "src": "2216:4:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_enum$_Role_$26",
+                                                    "typeString": "enum Admin.Role"
+                                                }
+                                            },
+                                            "nodeType": "BinaryOperation",
+                                            "operator": "==",
+                                            "rightExpression": {
+                                                "expression": {
+                                                    "id": 160,
+                                                    "name": "Role",
+                                                    "nodeType": "Identifier",
+                                                    "overloadedDeclarations": [],
+                                                    "referencedDeclaration": 26,
+                                                    "src": "2222:4:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_type$_t_enum$_Role_$26_$",
+                                                        "typeString": "type(enum Admin.Role)"
+                                                    }
+                                                },
+                                                "id": 161,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": true,
+                                                "lValueRequested": false,
+                                                "memberLocation": "2227:7:0",
+                                                "memberName": "Deliver",
+                                                "nodeType": "MemberAccess",
+                                                "referencedDeclaration": 22,
+                                                "src": "2222:12:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_enum$_Role_$26",
+                                                    "typeString": "enum Admin.Role"
+                                                }
+                                            },
+                                            "src": "2216:18:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_bool",
+                                                "typeString": "bool"
+                                            }
+                                        },
+                                        "falseBody": {
+                                            "condition": {
+                                                "commonType": {
+                                                    "typeIdentifier": "t_enum$_Role_$26",
+                                                    "typeString": "enum Admin.Role"
+                                                },
+                                                "id": 171,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": false,
+                                                "lValueRequested": false,
+                                                "leftExpression": {
+                                                    "id": 168,
+                                                    "name": "role",
+                                                    "nodeType": "Identifier",
+                                                    "overloadedDeclarations": [],
+                                                    "referencedDeclaration": 125,
+                                                    "src": "2289:4:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_enum$_Role_$26",
+                                                        "typeString": "enum Admin.Role"
+                                                    }
+                                                },
+                                                "nodeType": "BinaryOperation",
+                                                "operator": "==",
+                                                "rightExpression": {
+                                                    "expression": {
+                                                        "id": 169,
+                                                        "name": "Role",
+                                                        "nodeType": "Identifier",
+                                                        "overloadedDeclarations": [],
+                                                        "referencedDeclaration": 26,
+                                                        "src": "2295:4:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_type$_t_enum$_Role_$26_$",
+                                                            "typeString": "type(enum Admin.Role)"
+                                                        }
+                                                    },
+                                                    "id": 170,
+                                                    "isConstant": false,
+                                                    "isLValue": false,
+                                                    "isPure": true,
+                                                    "lValueRequested": false,
+                                                    "memberLocation": "2300:11:0",
+                                                    "memberName": "FoodFactory",
+                                                    "nodeType": "MemberAccess",
+                                                    "referencedDeclaration": 23,
+                                                    "src": "2295:16:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_enum$_Role_$26",
+                                                        "typeString": "enum Admin.Role"
+                                                    }
+                                                },
+                                                "src": "2289:22:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_bool",
+                                                    "typeString": "bool"
+                                                }
+                                            },
+                                            "falseBody": {
+                                                "condition": {
+                                                    "commonType": {
+                                                        "typeIdentifier": "t_enum$_Role_$26",
+                                                        "typeString": "enum Admin.Role"
+                                                    },
+                                                    "id": 180,
+                                                    "isConstant": false,
+                                                    "isLValue": false,
+                                                    "isPure": false,
+                                                    "lValueRequested": false,
+                                                    "leftExpression": {
+                                                        "id": 177,
+                                                        "name": "role",
+                                                        "nodeType": "Identifier",
+                                                        "overloadedDeclarations": [],
+                                                        "referencedDeclaration": 125,
+                                                        "src": "2370:4:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_enum$_Role_$26",
+                                                            "typeString": "enum Admin.Role"
+                                                        }
+                                                    },
+                                                    "nodeType": "BinaryOperation",
+                                                    "operator": "==",
+                                                    "rightExpression": {
+                                                        "expression": {
+                                                            "id": 178,
+                                                            "name": "Role",
+                                                            "nodeType": "Identifier",
+                                                            "overloadedDeclarations": [],
+                                                            "referencedDeclaration": 26,
+                                                            "src": "2376:4:0",
+                                                            "typeDescriptions": {
+                                                                "typeIdentifier": "t_type$_t_enum$_Role_$26_$",
+                                                                "typeString": "type(enum Admin.Role)"
+                                                            }
+                                                        },
+                                                        "id": 179,
+                                                        "isConstant": false,
+                                                        "isLValue": false,
+                                                        "isPure": true,
+                                                        "lValueRequested": false,
+                                                        "memberLocation": "2381:6:0",
+                                                        "memberName": "Market",
+                                                        "nodeType": "MemberAccess",
+                                                        "referencedDeclaration": 24,
+                                                        "src": "2376:11:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_enum$_Role_$26",
+                                                            "typeString": "enum Admin.Role"
+                                                        }
+                                                    },
+                                                    "src": "2370:17:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_bool",
+                                                        "typeString": "bool"
+                                                    }
+                                                },
+                                                "falseBody": {
+                                                    "condition": {
+                                                        "commonType": {
+                                                            "typeIdentifier": "t_enum$_Role_$26",
+                                                            "typeString": "enum Admin.Role"
+                                                        },
+                                                        "id": 189,
+                                                        "isConstant": false,
+                                                        "isLValue": false,
+                                                        "isPure": false,
+                                                        "lValueRequested": false,
+                                                        "leftExpression": {
+                                                            "id": 186,
+                                                            "name": "role",
+                                                            "nodeType": "Identifier",
+                                                            "overloadedDeclarations": [],
+                                                            "referencedDeclaration": 125,
+                                                            "src": "2441:4:0",
+                                                            "typeDescriptions": {
+                                                                "typeIdentifier": "t_enum$_Role_$26",
+                                                                "typeString": "enum Admin.Role"
+                                                            }
+                                                        },
+                                                        "nodeType": "BinaryOperation",
+                                                        "operator": "==",
+                                                        "rightExpression": {
+                                                            "expression": {
+                                                                "id": 187,
+                                                                "name": "Role",
+                                                                "nodeType": "Identifier",
+                                                                "overloadedDeclarations": [],
+                                                                "referencedDeclaration": 26,
+                                                                "src": "2447:4:0",
+                                                                "typeDescriptions": {
+                                                                    "typeIdentifier": "t_type$_t_enum$_Role_$26_$",
+                                                                    "typeString": "type(enum Admin.Role)"
+                                                                }
+                                                            },
+                                                            "id": 188,
+                                                            "isConstant": false,
+                                                            "isLValue": false,
+                                                            "isPure": true,
+                                                            "lValueRequested": false,
+                                                            "memberLocation": "2452:8:0",
+                                                            "memberName": "Consumer",
+                                                            "nodeType": "MemberAccess",
+                                                            "referencedDeclaration": 25,
+                                                            "src": "2447:13:0",
+                                                            "typeDescriptions": {
+                                                                "typeIdentifier": "t_enum$_Role_$26",
+                                                                "typeString": "enum Admin.Role"
+                                                            }
+                                                        },
+                                                        "src": "2441:19:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_bool",
+                                                            "typeString": "bool"
+                                                        }
+                                                    },
+                                                    "id": 195,
+                                                    "nodeType": "IfStatement",
+                                                    "src": "2437:64:0",
+                                                    "trueBody": {
+                                                        "id": 194,
+                                                        "nodeType": "Block",
+                                                        "src": "2462:39:0",
+                                                        "statements": [
+                                                            {
+                                                                "expression": {
+                                                                    "arguments": [
+                                                                        {
+                                                                            "id": 191,
+                                                                            "name": "requester",
+                                                                            "nodeType": "Identifier",
+                                                                            "overloadedDeclarations": [],
+                                                                            "referencedDeclaration": 122,
+                                                                            "src": "2483:9:0",
+                                                                            "typeDescriptions": {
+                                                                                "typeIdentifier": "t_address",
+                                                                                "typeString": "address"
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "expression": {
+                                                                        "argumentTypes": [
+                                                                            {
+                                                                                "typeIdentifier": "t_address",
+                                                                                "typeString": "address"
+                                                                            }
+                                                                        ],
+                                                                        "id": 190,
+                                                                        "name": "addConsumer",
+                                                                        "nodeType": "Identifier",
+                                                                        "overloadedDeclarations": [],
+                                                                        "referencedDeclaration": 271,
+                                                                        "src": "2471:11:0",
+                                                                        "typeDescriptions": {
+                                                                            "typeIdentifier": "t_function_internal_nonpayable$_t_address_$returns$__$",
+                                                                            "typeString": "function (address)"
+                                                                        }
+                                                                    },
+                                                                    "id": 192,
+                                                                    "isConstant": false,
+                                                                    "isLValue": false,
+                                                                    "isPure": false,
+                                                                    "kind": "functionCall",
+                                                                    "lValueRequested": false,
+                                                                    "nameLocations": [],
+                                                                    "names": [],
+                                                                    "nodeType": "FunctionCall",
+                                                                    "src": "2471:22:0",
+                                                                    "tryCall": false,
+                                                                    "typeDescriptions": {
+                                                                        "typeIdentifier": "t_tuple$__$",
+                                                                        "typeString": "tuple()"
+                                                                    }
+                                                                },
+                                                                "id": 193,
+                                                                "nodeType": "ExpressionStatement",
+                                                                "src": "2471:22:0"
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                "id": 196,
+                                                "nodeType": "IfStatement",
+                                                "src": "2366:135:0",
+                                                "trueBody": {
+                                                    "id": 185,
+                                                    "nodeType": "Block",
+                                                    "src": "2389:37:0",
+                                                    "statements": [
+                                                        {
+                                                            "expression": {
+                                                                "arguments": [
+                                                                    {
+                                                                        "id": 182,
+                                                                        "name": "requester",
+                                                                        "nodeType": "Identifier",
+                                                                        "overloadedDeclarations": [],
+                                                                        "referencedDeclaration": 122,
+                                                                        "src": "2408:9:0",
+                                                                        "typeDescriptions": {
+                                                                            "typeIdentifier": "t_address",
+                                                                            "typeString": "address"
+                                                                        }
+                                                                    }
+                                                                ],
+                                                                "expression": {
+                                                                    "argumentTypes": [
+                                                                        {
+                                                                            "typeIdentifier": "t_address",
+                                                                            "typeString": "address"
+                                                                        }
+                                                                    ],
+                                                                    "id": 181,
+                                                                    "name": "addMarket",
+                                                                    "nodeType": "Identifier",
+                                                                    "overloadedDeclarations": [],
+                                                                    "referencedDeclaration": 531,
+                                                                    "src": "2398:9:0",
+                                                                    "typeDescriptions": {
+                                                                        "typeIdentifier": "t_function_internal_nonpayable$_t_address_$returns$__$",
+                                                                        "typeString": "function (address)"
+                                                                    }
+                                                                },
+                                                                "id": 183,
+                                                                "isConstant": false,
+                                                                "isLValue": false,
+                                                                "isPure": false,
+                                                                "kind": "functionCall",
+                                                                "lValueRequested": false,
+                                                                "nameLocations": [],
+                                                                "names": [],
+                                                                "nodeType": "FunctionCall",
+                                                                "src": "2398:20:0",
+                                                                "tryCall": false,
+                                                                "typeDescriptions": {
+                                                                    "typeIdentifier": "t_tuple$__$",
+                                                                    "typeString": "tuple()"
+                                                                }
+                                                            },
+                                                            "id": 184,
+                                                            "nodeType": "ExpressionStatement",
+                                                            "src": "2398:20:0"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "id": 197,
+                                            "nodeType": "IfStatement",
+                                            "src": "2285:216:0",
+                                            "trueBody": {
+                                                "id": 176,
+                                                "nodeType": "Block",
+                                                "src": "2313:42:0",
+                                                "statements": [
+                                                    {
+                                                        "expression": {
+                                                            "arguments": [
+                                                                {
+                                                                    "id": 173,
+                                                                    "name": "requester",
+                                                                    "nodeType": "Identifier",
+                                                                    "overloadedDeclarations": [],
+                                                                    "referencedDeclaration": 122,
+                                                                    "src": "2337:9:0",
+                                                                    "typeDescriptions": {
+                                                                        "typeIdentifier": "t_address",
+                                                                        "typeString": "address"
+                                                                    }
+                                                                }
+                                                            ],
+                                                            "expression": {
+                                                                "argumentTypes": [
+                                                                    {
+                                                                        "typeIdentifier": "t_address",
+                                                                        "typeString": "address"
+                                                                    }
+                                                                ],
+                                                                "id": 172,
+                                                                "name": "addFoodFactory",
+                                                                "nodeType": "Identifier",
+                                                                "overloadedDeclarations": [],
+                                                                "referencedDeclaration": 466,
+                                                                "src": "2322:14:0",
+                                                                "typeDescriptions": {
+                                                                    "typeIdentifier": "t_function_internal_nonpayable$_t_address_$returns$__$",
+                                                                    "typeString": "function (address)"
+                                                                }
+                                                            },
+                                                            "id": 174,
+                                                            "isConstant": false,
+                                                            "isLValue": false,
+                                                            "isPure": false,
+                                                            "kind": "functionCall",
+                                                            "lValueRequested": false,
+                                                            "nameLocations": [],
+                                                            "names": [],
+                                                            "nodeType": "FunctionCall",
+                                                            "src": "2322:25:0",
+                                                            "tryCall": false,
+                                                            "typeDescriptions": {
+                                                                "typeIdentifier": "t_tuple$__$",
+                                                                "typeString": "tuple()"
+                                                            }
+                                                        },
+                                                        "id": 175,
+                                                        "nodeType": "ExpressionStatement",
+                                                        "src": "2322:25:0"
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        "id": 198,
+                                        "nodeType": "IfStatement",
+                                        "src": "2212:289:0",
+                                        "trueBody": {
+                                            "id": 167,
+                                            "nodeType": "Block",
+                                            "src": "2236:38:0",
+                                            "statements": [
+                                                {
+                                                    "expression": {
+                                                        "arguments": [
+                                                            {
+                                                                "id": 164,
+                                                                "name": "requester",
+                                                                "nodeType": "Identifier",
+                                                                "overloadedDeclarations": [],
+                                                                "referencedDeclaration": 122,
+                                                                "src": "2256:9:0",
+                                                                "typeDescriptions": {
+                                                                    "typeIdentifier": "t_address",
+                                                                    "typeString": "address"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "expression": {
+                                                            "argumentTypes": [
+                                                                {
+                                                                    "typeIdentifier": "t_address",
+                                                                    "typeString": "address"
+                                                                }
+                                                            ],
+                                                            "id": 163,
+                                                            "name": "addDeliver",
+                                                            "nodeType": "Identifier",
+                                                            "overloadedDeclarations": [],
+                                                            "referencedDeclaration": 336,
+                                                            "src": "2245:10:0",
+                                                            "typeDescriptions": {
+                                                                "typeIdentifier": "t_function_internal_nonpayable$_t_address_$returns$__$",
+                                                                "typeString": "function (address)"
+                                                            }
+                                                        },
+                                                        "id": 165,
+                                                        "isConstant": false,
+                                                        "isLValue": false,
+                                                        "isPure": false,
+                                                        "kind": "functionCall",
+                                                        "lValueRequested": false,
+                                                        "nameLocations": [],
+                                                        "names": [],
+                                                        "nodeType": "FunctionCall",
+                                                        "src": "2245:21:0",
+                                                        "tryCall": false,
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_tuple$__$",
+                                                            "typeString": "tuple()"
+                                                        }
+                                                    },
+                                                    "id": 166,
+                                                    "nodeType": "ExpressionStatement",
+                                                    "src": "2245:21:0"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "id": 199,
+                                    "nodeType": "IfStatement",
+                                    "src": "2141:360:0",
+                                    "trueBody": {
+                                        "id": 158,
+                                        "nodeType": "Block",
+                                        "src": "2164:37:0",
+                                        "statements": [
+                                            {
+                                                "expression": {
+                                                    "arguments": [
+                                                        {
+                                                            "id": 155,
+                                                            "name": "requester",
+                                                            "nodeType": "Identifier",
+                                                            "overloadedDeclarations": [],
+                                                            "referencedDeclaration": 122,
+                                                            "src": "2183:9:0",
+                                                            "typeDescriptions": {
+                                                                "typeIdentifier": "t_address",
+                                                                "typeString": "address"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "expression": {
+                                                        "argumentTypes": [
+                                                            {
+                                                                "typeIdentifier": "t_address",
+                                                                "typeString": "address"
+                                                            }
+                                                        ],
+                                                        "id": 154,
+                                                        "name": "addFarmer",
+                                                        "nodeType": "Identifier",
+                                                        "overloadedDeclarations": [],
+                                                        "referencedDeclaration": 401,
+                                                        "src": "2173:9:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_function_internal_nonpayable$_t_address_$returns$__$",
+                                                            "typeString": "function (address)"
+                                                        }
+                                                    },
+                                                    "id": 156,
+                                                    "isConstant": false,
+                                                    "isLValue": false,
+                                                    "isPure": false,
+                                                    "kind": "functionCall",
+                                                    "lValueRequested": false,
+                                                    "nameLocations": [],
+                                                    "names": [],
+                                                    "nodeType": "FunctionCall",
+                                                    "src": "2173:20:0",
+                                                    "tryCall": false,
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_tuple$__$",
+                                                        "typeString": "tuple()"
+                                                    }
+                                                },
+                                                "id": 157,
+                                                "nodeType": "ExpressionStatement",
+                                                "src": "2173:20:0"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "eventCall": {
+                                        "arguments": [
+                                            {
+                                                "id": 201,
+                                                "name": "requester",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 122,
+                                                "src": "2548:9:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_address",
+                                                    "typeString": "address"
+                                                }
+                                            },
+                                            {
+                                                "id": 202,
+                                                "name": "role",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 125,
+                                                "src": "2559:4:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_enum$_Role_$26",
+                                                    "typeString": "enum Admin.Role"
+                                                }
+                                            }
+                                        ],
+                                        "expression": {
+                                            "argumentTypes": [
+                                                {
+                                                    "typeIdentifier": "t_address",
+                                                    "typeString": "address"
+                                                },
+                                                {
+                                                    "typeIdentifier": "t_enum$_Role_$26",
+                                                    "typeString": "enum Admin.Role"
+                                                }
+                                            ],
+                                            "id": 200,
+                                            "name": "approveRequest",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [],
+                                            "referencedDeclaration": 116,
+                                            "src": "2533:14:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_enum$_Role_$26_$returns$__$",
+                                                "typeString": "function (address,enum Admin.Role)"
+                                            }
+                                        },
+                                        "id": 203,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "kind": "functionCall",
+                                        "lValueRequested": false,
+                                        "nameLocations": [],
+                                        "names": [],
+                                        "nodeType": "FunctionCall",
+                                        "src": "2533:31:0",
+                                        "tryCall": false,
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_tuple$__$",
+                                            "typeString": "tuple()"
+                                        }
+                                    },
+                                    "id": 204,
+                                    "nodeType": "EmitStatement",
+                                    "src": "2528:36:0"
+                                }
+                            ]
+                        },
+                        "functionSelector": "e7a9f75a",
+                        "id": 206,
+                        "implemented": true,
+                        "kind": "function",
+                        "modifiers": [],
+                        "name": "requestApprove",
+                        "nameLocation": "1783:14:0",
+                        "nodeType": "FunctionDefinition",
+                        "parameters": {
+                            "id": 126,
+                            "nodeType": "ParameterList",
+                            "parameters": [
+                                {
+                                    "constant": false,
+                                    "id": 122,
+                                    "mutability": "mutable",
+                                    "name": "requester",
+                                    "nameLocation": "1806:9:0",
+                                    "nodeType": "VariableDeclaration",
+                                    "scope": 206,
+                                    "src": "1798:17:0",
+                                    "stateVariable": false,
+                                    "storageLocation": "default",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_address",
+                                        "typeString": "address"
+                                    },
+                                    "typeName": {
+                                        "id": 121,
+                                        "name": "address",
+                                        "nodeType": "ElementaryTypeName",
+                                        "src": "1798:7:0",
+                                        "stateMutability": "nonpayable",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_address",
+                                            "typeString": "address"
+                                        }
+                                    },
+                                    "visibility": "internal"
+                                },
+                                {
+                                    "constant": false,
+                                    "id": 125,
+                                    "mutability": "mutable",
+                                    "name": "role",
+                                    "nameLocation": "1822:4:0",
+                                    "nodeType": "VariableDeclaration",
+                                    "scope": 206,
+                                    "src": "1817:9:0",
+                                    "stateVariable": false,
+                                    "storageLocation": "default",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_enum$_Role_$26",
+                                        "typeString": "enum Admin.Role"
+                                    },
+                                    "typeName": {
+                                        "id": 124,
+                                        "nodeType": "UserDefinedTypeName",
+                                        "pathNode": {
+                                            "id": 123,
+                                            "name": "Role",
+                                            "nameLocations": [
+                                                "1817:4:0"
+                                            ],
+                                            "nodeType": "IdentifierPath",
+                                            "referencedDeclaration": 26,
+                                            "src": "1817:4:0"
+                                        },
+                                        "referencedDeclaration": 26,
+                                        "src": "1817:4:0",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_enum$_Role_$26",
+                                            "typeString": "enum Admin.Role"
+                                        }
+                                    },
+                                    "visibility": "internal"
+                                }
+                            ],
+                            "src": "1797:30:0"
+                        },
+                        "returnParameters": {
+                            "id": 127,
+                            "nodeType": "ParameterList",
+                            "parameters": [],
+                            "src": "1835:0:0"
+                        },
+                        "scope": 207,
+                        "src": "1774:796:0",
+                        "stateMutability": "nonpayable",
+                        "virtual": false,
+                        "visibility": "public"
+                    }
+                ],
+                "scope": 208,
+                "src": "275:2300:0",
+                "usedErrors": [
+                    55,
+                    120
+                ],
+                "usedEvents": [
+                    47,
+                    116,
+                    218,
+                    283,
+                    348,
+                    413,
+                    478
+                ]
+            }
+        ],
+        "src": "33:2542:0"
+    },
+    "functionHashes": {
+        "isConsumer(address)": "834ff739",
+        "isDeliver(address)": "c01688e2",
+        "isFarmer(address)": "b9429069",
+        "isFoodFactory(address)": "d737694f",
+        "isMarket(address)": "6ec934da",
+        "requestAdd(address,uint8)": "e5075d06",
+        "requestApprove(address,uint8)": "e7a9f75a"
+    },
+    "gasEstimates": {
+        "creation": {
+            "codeDepositCost": "382400",
+            "executionCost": "infinite",
+            "totalCost": "infinite"
+        },
+        "external": {
+            "isConsumer(address)": "2656",
+            "isDeliver(address)": "2633",
+            "isFarmer(address)": "2678",
+            "isFoodFactory(address)": "2655",
+            "isMarket(address)": "2634",
+            "requestAdd(address,uint8)": "infinite",
+            "requestApprove(address,uint8)": "58733"
+        }
+    }
+}
