@@ -21,7 +21,6 @@ class AddNode extends Component {
    ]
 
    handleChange = (event, data) => {
-    console.log(data.value);
     this.setState({
       [data.name]: data.value
     });
@@ -29,54 +28,11 @@ class AddNode extends Component {
 
   async onSubmit(event) {
     event.preventDefault();
-    let roleChoosen;
-    let nodeEvent;
-    roleChoosen = this.state['selNode'];
-    console.log(roleChoosen);
-    switch (roleChoosen){
-      case 1:
-        nodeEvent = "addFarmer";
-        console.log('Type:  ', roleChoosen, ' process: "Add Farmer"');
-        break;
-      
-      case 2:
-          nodeEvent = "addDeliver";
-          console.log('Type:  ', roleChoosen, ' process: "Add addDistibutor"');
-          break;
-
-      case 3:
-            nodeEvent = "addFoodFactory";
-            console.log('Type:  ', roleChoosen, ' process: "Add addFoodFact"');
-            break;
-
-      case 4:
-           nodeEvent = "addMarket";
-           console.log('Type:  ', roleChoosen, ' process: "Add addMarket"');
-           break;
-
-      case 5:
-            nodeEvent = "addConsumer";
-            console.log('Type:  ', roleChoosen, ' process: "Add addConsumer"');
-            break;
-      default:
-            this.setState({ errMsg: "Role not permitted" });
-            console.log('Type:  ', roleChoosen, ' Error Role not permitted');
-            break;
-    }
-
+    let roleChoosen = this.state['selNode'];
+    
     this.setState({ errMsg: "", loading: true });
     try {
-      const accounts = await web3.eth.getAccounts();
-
-      console.log(this.state.address);
-      //nodeEvent corrisponde alla funzione del contratto. Viene recuperata 
-      //da Gateway.json che deriva dagli altri contratti. Derivando 
-      //gli altri contratti importa all'interno del proprio JSON tutte le funzioni
-      //dichiarate nei vari contratti
-      /*await gateway.methods[nodeEvent](this.state.address).send({
-        from: accounts[0],
-      });*/
-
+      // Call Request Add from the gateway contract
       await gateway.methods['requestAdd'](this.state.address, roleChoosen).send({
         from: this.state.address,
       });

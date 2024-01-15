@@ -12,8 +12,7 @@ import "./Market.sol";
  * @dev Contract for managing requests for adding nodes
  */
 contract Admin is Farmer, Deliver, FoodFactory, Market, Consumer{
-  // Roles contract
-  address admin;
+
   // Possible roles
   enum Role {
     None, //0
@@ -23,6 +22,9 @@ contract Admin is Farmer, Deliver, FoodFactory, Market, Consumer{
     Market, //4
     Consumer  //5
   }
+
+  // Admin of the contract
+  address admin;
   // Map addresses to roles
   mapping(address => Role) currentRole;
 
@@ -31,44 +33,61 @@ contract Admin is Farmer, Deliver, FoodFactory, Market, Consumer{
     admin = msg.sender;
   }
 
-  // Request event with the address of the requester and the desired role
+  /// Request event with the address of the requester and the desired role
+  /// @param requester address of the applicant
+  /// @param role uint8 of the desired role
   event addRequest(address indexed requester, Role indexed role);
 
+  /// Error for handling wrong sender
+  /// @param sender address of the function caller
+  /// @param required address given as input
+  error InvalidSender(address sender, address required);
+
+  /// Error for handling already registered account
+  /// @param current uint8 current role
+  /// @param requested uint8 requested role
   error InvalidRole(Role current, Role requested);
 
-  // Wrapper function for addRequest event
-  // Checks if request is valid and emits the event
+  /// Wrapper function for addRequest event
+  /// Checks if request is valid and emits the event
   function requestAdd(address requester, Role role) public {
-    // check if sender is requester
-    require(msg.sender == requester, "Request wasn't sent by given address");
-    // check if requester is already in
+    // Check if sender is requester
+    if (msg.sender != requester) revert InvalidSender({
+      sender: msg.sender,
+      required: requester
+    });
+    // Check if given role is valid
+    if (role > Role.Consumer) revert InvalidRole({
+      current: currentRole[requester],
+      requested: role
+    });
+    // Check if requester is already registered
     if (currentRole[requester] != Role.None) revert InvalidRole({
       current: currentRole[requester],
       requested: role
     });
-    require(currentRole[requester] == Role.None, "Requester already has a role");
-    // check if given role is valid
-    require(role <= Role.Consumer, "Role is not valid");
     
-    // if everything is good emit event
+    // If everything is good emit event
     emit addRequest(requester, role);
   }
   
-  // Event emitted when a request was approved
+  /// Event emitted when a request was approved
+  /// @param requester address of the applicant
+  /// @param role uint8 of the approved role
   event approveRequest(address indexed requester, Role indexed role);
 
-  error InvalidCaller(address caller);
-
+  /// Wrapper function for approveRequest event
+  /// Checks if sender is the admin and emits the event
   function requestApprove(address requester, Role role) public {
-    if (admin!=msg.sender) revert InvalidCaller({
-      caller: requester
+    // Verify that sender is admin
+    if (admin != msg.sender) revert InvalidSender({
+      sender: msg.sender,
+      required: admin
     });
-    // verify that sender is admin
-    require(admin==msg.sender);
-    // just add role to mapping
+    // Add role to mapping
     currentRole[requester] = role;
 
-    // Might be able do it faster if instead of role we get the contract
+    // Call the correct adder
     if (role==Role.Farmer) {
       addFarmer(requester);
     }
@@ -85,7 +104,7 @@ contract Admin is Farmer, Deliver, FoodFactory, Market, Consumer{
       addConsumer(requester);
     }
 
-    // emit event
+    // If sender is admin then emit event
     emit approveRequest(requester, role);
   }
 
