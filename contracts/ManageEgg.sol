@@ -49,7 +49,8 @@ contract ManageEgg is Admin{
 
     event Packed(uint id);
     event Delivered(uint id);
-    event FactoryBought(uint id);
+    //event FactoryBought(uint id);
+    event FactoryBought(address indexed _from, address indexed _to, uint amount, uint balance);
     event MarketArrived(uint id);
     event MarketForSale(uint id);
     event FoodFactoryArrived(uint id);
@@ -269,6 +270,8 @@ contract ManageEgg is Admin{
 
             bool sent = payable(seller).send(msg.value);
             require(sent, "Failed to send Ether");
+
+            emit FactoryBought(buyer, seller, msg.value, buyer.balance);
         }
         
         // Require change of state and set new state
@@ -276,8 +279,6 @@ contract ManageEgg is Admin{
         eggState[_hash] = state;
         // Set new owner
         eggOwner[_hash] = buyer;
-
-
 
         // emit the events to retrieve transactions
         emit eggTransfer(transfer, _hash, state);
@@ -409,7 +410,7 @@ contract ManageEgg is Admin{
         eggHistory[idEgg].push("Bought by a Food Factory");
 
         // Let's emit the event to save it on chain
-        emit FactoryBought(idEgg);
+        //emit FactoryBought(idEgg);
     }
 
    function buyConsumer(uint idEgg, uint price) public payable 
@@ -437,57 +438,5 @@ contract ManageEgg is Admin{
     }
 
 
-    function fetchData(uint idEgg) public view returns 
-        (
-         uint _id,
-         address ownerID, 
-         address farmerAddr,
-         string  memory note,
-         uint    price,
-         uint    marketPrice,
-         uint    totalEggsInPackage,
-         uint    totalEggsInMarketPackage,
-         State   eggstate,
-         address deliveryAddr,
-         address marketAddr,
-         address foodFactoryAddr,
-         address consumerAddr
-        ){
-
-        EggProduct memory egg = eggProduct[idEgg];
-
-        _id = egg.id;
-        ownerID = egg.ownerID;
-        farmerAddr = egg.farmerAddr;
-       // farm = ""; //egg.farm;
-        note = egg.note;
-        price = egg.price;
-        marketPrice = egg.marketPrice;
-        totalEggsInPackage = egg.totalEggsInPackage;
-        totalEggsInMarketPackage = egg.totalEggsInMarketPackage;
-        eggstate = egg.eggState;
-        deliveryAddr = egg.deliveryAddr;
-        marketAddr = egg.marketAddr;
-        foodFactoryAddr = egg.foodFactoryAddr;
-        consumerAddr = egg.consumerAddr;
-
-       return 
-            (
-            _id,
-            ownerID, 
-            farmerAddr,
-            note,
-            price,
-            marketPrice,
-            totalEggsInPackage,
-            totalEggsInMarketPackage,
-            eggstate,
-            deliveryAddr,
-            marketAddr,
-            foodFactoryAddr,
-            consumerAddr
-            );
-        
-        
-    }
+    
 }

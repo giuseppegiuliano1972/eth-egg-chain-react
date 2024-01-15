@@ -14,7 +14,7 @@ event ConsumerAdded (address indexed account);
 Roles.Role private ConsumerRole;
 
 constructor() {
-        addConsumer(msg.sender);
+       // addConsumer(msg.sender);
 }
 
 modifier onlyConsumer(){

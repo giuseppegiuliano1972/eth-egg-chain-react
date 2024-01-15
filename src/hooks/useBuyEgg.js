@@ -25,13 +25,19 @@ export const useBuyEgg = () => {
 
         // convert eggid to appropiate format
         const egglink = CID.parse(json.egglink)
-
+        console.log("Seller:", json.seller, "Buyer:", json.buyer);
         // register transfer and handle outcome
         await gateway.methods.buyEgg(json.seller, json.buyer, web3.utils.bytesToHex(cid.multihash.digest), web3.utils.bytesToHex(egglink.multihash.digest))
                                 .send({from: json.buyer, value:  json.price})
                                 .on('confirmation', function(confirmation, receipt){
                                   // convert to string and set cid
-                                  setBuyCID(cid.toString())
+                                  console.log("confirmationNumber", confirmation);
+                                  console.log("receipt", receipt);
+                                  setBuyCID(cid.toString());
+                                })
+                                .on("receipt", function (receipt) {
+                                  // receipt example
+                                  console.log("receipt:", receipt);
                                 })
                                 .on('error', function(error, receipt){
                                   setBuyCID('')

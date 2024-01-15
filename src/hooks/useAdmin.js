@@ -52,7 +52,7 @@ export const useAdmin = () => {
       } finally {
         await Promise.all([promise1, promise2]).then(() => {
           const difference = _requests.filter(r => !_approved.some(a => r[0]===a[0]))
-          if(difference.length < 1) { difference.add(["There are no new requests.", ""]); }
+          if (difference === null) { difference = new Set(['','']); }
           setRequests([...new Set(difference)])
         })
         setLoading(false)
