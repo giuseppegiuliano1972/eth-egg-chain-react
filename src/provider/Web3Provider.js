@@ -36,19 +36,36 @@ export const Web3Provider = ({ children }) => {
   const startWeb3 = useCallback(async () => {
     if (web3) {
       console.info('web3 already started')
-    // CAN BE IMPROVED BY PUTTING THE FUNCTIONS OUTSIDE
-    } else if (window.web3) {
-      const wweb3 = window.web3;
-      console.info('found a windowed instance of web3, populating ...')
-      console.log(wweb3);
-      //setWeb3(new Web3(window.ethereum))
-      setWeb3(wweb3)
-      setAccounts(await wweb3.eth.getAccounts())
-      setGateway(new wweb3.eth.Contract(
-        Gateway.abi,
-        "0x2688a17891f442043C6FFCb36490e6FdDA3Fc498"
-      ))
-      setStarting(false)
+    } else if (window.ethereum) {
+      try {
+        console.info('found a windowed instance of web3, populating ...')
+
+        const createWeb3 = (async () => {
+          window.ethereum.request({ method: "eth_requestAccounts" });
+          return new Web3(window.ethereum);
+        })
+      
+        const createGateway = (async (web3) => {
+          const index = Object.keys(Gateway.networks).reduce((a,b) => a > b ? a : b);
+          const contract_address = Gateway.networks[index].address;
+
+          return new web3.eth.Contract(
+            Gateway.abi,
+            contract_address
+          );
+        })
+        const _web3 = await createWeb3()
+        const _gateway = await createGateway(_web3)
+        const _accounts = await _web3.eth.getAccounts()
+
+        setWeb3(_web3)
+        setAccounts(_accounts)
+        setGateway(_gateway)
+        setStarting(false)
+      } catch(e) {
+        console.error(e)
+        setError(true)
+      }
     } else {
       try {
         console.info('Starting Web3')

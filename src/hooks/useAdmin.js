@@ -69,7 +69,7 @@ export const useAdmin = () => {
         setLoading(true)
 
         if(role !== 0) await gateway.methods['requestApprove'](account, role).send({
-          from: accounts[0],
+          from: '0x5691B0A35644d5a3A3f77Ee73197823c9592a7DD',
         }).on('confirmation', function(confirmation, receipt){
           // Put here any feedback on transaction result
           console.log("Transaction confirmed!");

@@ -11,7 +11,7 @@ function Account() {
 
   const options = useCallback(() => {
     var _options = [{value: "no accounts found"}]
-    if(accounts !== null)
+    if(accounts !== null && accounts.lenght > 0)
       _options = accounts.map((account) => { return {key: account, text: account, value: account}});
     return _options;
   }, [accounts])
