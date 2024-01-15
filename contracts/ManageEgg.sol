@@ -267,8 +267,7 @@ contract ManageEgg is Admin{
             // Change egg state
             state = State.FactoryBought;
 
-            //bool sent = payable(seller).send(msg.value);
-            (bool sent, ) = seller.call{value: msg.value}("");
+            bool sent = payable(seller).send(msg.value);
             require(sent, "Failed to send Ether");
         }
         
