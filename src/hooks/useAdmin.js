@@ -64,12 +64,12 @@ export const useAdmin = () => {
   }, [accounts, gateway, web3Error, web3Starting])
 
   const approveRequest = useCallback(async (account, role) => {
-    if (!web3Error && !web3Starting && gateway!=null && accounts!=null) {
+    if (!web3Error && !web3Starting && gateway!==null && accounts!==null) {
       try {
         setLoading(true)
 
         if(role !== 0) await gateway.methods['requestApprove'](account, role).send({
-          from: '0x5691B0A35644d5a3A3f77Ee73197823c9592a7DD',
+          from: accounts[0],
         }).on('confirmation', function(confirmation, receipt){
           // Put here any feedback on transaction result
           console.log("Transaction confirmed!");

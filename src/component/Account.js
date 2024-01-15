@@ -1,4 +1,4 @@
-import { useCallback, useEffect, React } from 'react'
+import { useCallback, useEffect, useState, React } from 'react'
 import "semantic-ui-css/semantic.min.css";
 import { Dropdown } from "semantic-ui-react";
 
@@ -8,26 +8,28 @@ import { useWeb3 } from '../hooks/useWeb3'
 function Account() {
   // state from web
   const { accounts, selected, setSelected, error, starting } = useWeb3();
+  const [options, setOptions] = useState([{value: "no accounts found"}])
 
-  const options = useCallback(() => {
-    var _options = [{value: "no accounts found"}]
-    if(accounts !== null && accounts.lenght > 0)
+  const updateOptions = useCallback(async() => {
+    var _options = options
+    if(accounts !== null) 
       _options = accounts.map((account) => { return {key: account, text: account, value: account}});
-    return _options;
+    setOptions(_options)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accounts])
 
   useEffect(() => {
-      if(accounts !== null )
-        setSelected(accounts[0])
-      console.log(accounts)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+    updateOptions()
+    if(accounts !== null )
+      setSelected(accounts[0])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accounts])
 
   return (
     <div className="account-selector">
       <h3>Active Account: <Dropdown 
         inline
-        options={options()}
+        options={options}
         value={selected}
         loading={starting}
         error={error}
