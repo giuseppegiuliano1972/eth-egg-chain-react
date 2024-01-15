@@ -19,10 +19,7 @@ import { useAdmin } from '../hooks/useAdmin'
 
 function Admin() {
     // state variables
-    const { requests, loadingRequests, approveRequest } = useAdmin()
-    
-    // personal error
-    const [error, setError] = useState(null)
+    const { requests, approveRequest, loading, error } = useAdmin()
 
     // role "enum"
     const roles = [
@@ -35,7 +32,12 @@ function Admin() {
 
     return (
         <div className="main-container">
-            <Card centered fluid loading={loadingRequests}>
+            {(error!==null) && (
+                <Message negative>
+                    {error.toString()}
+                </Message>
+            )}
+            <Card centered fluid loading={loading}>
                 <CardContent>
                     <CardHeader> Recent Join Requests</CardHeader>
                 </CardContent>

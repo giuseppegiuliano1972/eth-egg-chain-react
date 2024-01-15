@@ -4,9 +4,9 @@ import { useWeb3 } from './useWeb3'
 export const useAdmin = () => {
   // eslint-disable-next-line no-unused-vars
   const { web3, accounts, selected, gateway, web3Error, web3Starting } = useWeb3()
-  // eslint-disable-next-line no-unused-vars
-  const [loading, setLoading] = useState(false)
   const [requests, setRequests] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
   // Function to show incoming requests for admission
   const fetchRequests = useCallback(async () => {
@@ -75,6 +75,7 @@ export const useAdmin = () => {
           console.log("Transaction confirmed!");
         })
         .on('error', function(error, receipt){
+          setError(error);
           console.error(error);
         });
       } catch (e) {
@@ -93,5 +94,5 @@ export const useAdmin = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gateway])
   
-  return { loading, requests, approveRequest }
+  return { requests, approveRequest, loading, error }
 }
