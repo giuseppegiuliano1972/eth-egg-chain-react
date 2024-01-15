@@ -14,6 +14,7 @@ function FunctionalMarketPackEggs() {
     const [price, setPrice] = useState(0)
     const [quantity, setQuantity] = useState(0)
     const [notes, setNotes] = useState('')
+    const [eggCID, setEggCID] = useState('')
     
     // personal error
     const [error, setError] = useState(null)
@@ -38,16 +39,17 @@ function FunctionalMarketPackEggs() {
                         address: address,
                         price: price,
                         quantity: quantity,
-                        notes: notes
+                        notes: notes,
+                        egglink: eggCID
                     }).catch((error) => setError(error))
                 }}                                                // Creates object egg before committing
                 error={kuboError||web3Error||error}               // Set error
             >
-                <Form.Field>
-                    <label>Egg id</label>
+               <Form.Field>
+                    <label>Egg CID</label>
                     <Input
-                        value={id}
-                        onChange={(event) => setId(event.target.value)}
+                        value={eggCID}
+                        onChange={(event) => setEggCID(event.target.value)}
                     />
                 </Form.Field>
                 <Form.Field>

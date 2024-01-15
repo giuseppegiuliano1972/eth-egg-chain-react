@@ -54,7 +54,8 @@ contract ManageEgg is Admin{
     event MarketArrived(uint id);
     event MarketForSale(uint id);
     event FoodFactoryArrived(uint id);
-    event ConsumerBought(uint id);
+    //event ConsumerBought(uint id);
+    event ConsumerBought(address indexed _from, address indexed _to, uint amount, uint balance);
     
 
     constructor()  payable{
@@ -168,14 +169,16 @@ contract ManageEgg is Admin{
     }
 
     // Wrapper Function that emits event eggPacked
-    function packMarketEgg(address owner, bytes32 _hash) public {
+    function packMarketEgg(address owner, bytes32 transfer, bytes32 _hash) public {
         
         // Check if the owner is the same farmer in the written address
         require(msg.sender == owner, "The Market Address should be equal to the user address");
         // Could be costly, maybe use has
         require(isMarket(owner), "The Market Address should be an existing market address");
+        // Require that egg exists
+        require(eggState[_hash] != State.Default, "Egg is not on the chain");
         // Check state of egg to be market arrived
-        require(eggState[_hash] == State.MarketArrived);
+        require(eggState[_hash] == State.MarketArrived, "The state is not MarketArrived");
         
         // Change state to market for sale
         eggState[_hash] = State.MarketForSale;
@@ -218,13 +221,7 @@ contract ManageEgg is Admin{
             // Change egg state in case of market
             if(isMarket(receiver)) state = State.MarketArrived;
         }
-        if(eggState[_hash] == State.MarketForSale) {
-            // Require sender and receiver to be correct
-            require(isMarket(sender), "Sender should be market");
-            require(isConsumer(receiver), "Receiver should be consumer");
-            // Change egg state
-            state = State.ConsumerBought;
-        }
+      
         
         // Require change of state and set new state
         require(state != State.Default, "Sender and Receiver roles are not compatible for a transfer");
@@ -238,6 +235,9 @@ contract ManageEgg is Admin{
     }
 
        function buyEgg(address payable seller, address payable buyer, bytes32 transfer, bytes32 _hash) public payable {
+        
+        // Require Seller is current owner
+        require(seller == eggOwner[_hash], "Seller should own the egg");
         // Require sender is the caller
         require(msg.sender == buyer, "The buyer should be the transaction caller");
         // Require that egg exists
@@ -248,14 +248,20 @@ contract ManageEgg is Admin{
         // Act depending on egg state
       
         if(eggState[_hash] == State.MarketForSale) {
-            // Require Seller is current owner
-            require(seller == eggOwner[_hash], "Seller should own the egg");
+
 
             // Require sender and receiver to be correct
-            require(isMarket(seller), "Seller should be market");
-            require(isConsumer(buyer), "Buyer should be consumer");
+            require(isMarket(seller), "Seller should be a market");
+            require(isConsumer(buyer), "Buyer should be a consumer");
+            //check the consumer balance
+            require(msg.value <= buyer.balance, "Insufficient balance");
             // Change egg state
             state = State.ConsumerBought;
+
+            bool sent = payable(seller).send(msg.value);
+            require(sent, "Failed to send Ether");
+
+            emit ConsumerBought(buyer, seller, msg.value, buyer.balance);
         }
 
         if(eggState[_hash] == State.FoodFactoryArrived) {
@@ -434,7 +440,7 @@ contract ManageEgg is Admin{
         eggHistory[idEgg].push("Bought by a Food Factory");
 
         // Let's emit the event to save it on chain
-        emit ConsumerBought(idEgg);
+        //emit ConsumerBought(idEgg);
     }
 
 
