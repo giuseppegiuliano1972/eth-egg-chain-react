@@ -26,6 +26,12 @@ export const useBuyEgg = () => {
         // convert eggid to appropiate format
         const egglink = CID.parse(json.egglink)
         console.log("Seller:", json.seller, "Buyer:", json.buyer);
+
+        //check for zero price
+        if (parseInt(json.price) === 0){
+       
+          throw new Error('The price cannot be zero! ');
+        } 
         // register transfer and handle outcome
         await gateway.methods.buyEgg(json.seller, json.buyer, web3.utils.bytesToHex(cid.multihash.digest), web3.utils.bytesToHex(egglink.multihash.digest))
                                 .send({from: json.buyer, to: json.seller , value: web3.utils.toWei( json.price, "ether") })

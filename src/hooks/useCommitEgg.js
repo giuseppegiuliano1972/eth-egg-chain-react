@@ -26,6 +26,19 @@ export const useCommitEgg = () => {
         // convert to string and set cid
         setCidString(cid.toString())
 
+        
+        //check for zero quantity
+        if (parseInt(json.quantity) === 0){
+        
+          throw new Error('The quantity cannot be zero! ');
+        }
+        
+        //check for zero price
+        if (parseInt(json.price) === 0){
+        
+          throw new Error('The price cannot be zero! ');
+        } 
+
         // register egg and handle outcome
         console.log(cid)
         await gateway.methods.packEgg(json.address, web3.utils.bytesToHex(cid.multihash.digest))
@@ -53,14 +66,31 @@ export const useCommitEgg = () => {
     if (!kuboError && !kuboStarting && !web3Error && !web3Starting) {
       try {
         setLoading(true);
-
-        // TODO: Add input validation
-
         // add egg as a dag json to ipfs
         const cid = await kubo.dag.put(json);
-
+        
         // convert eggid to appropiate format
         const egglink = CID.parse(json.egglink)
+        
+        setCidString(json.egglink);
+        fetchCommittedEgg();
+        
+        if (parseInt(committedEgg.quantity) < parseInt(json.quantity)){
+         
+            throw new Error('New quantity cannot be higher than the quantity of eggs received! ');
+        } 
+        
+        //check for zero quantity
+        if (parseInt(json.quantity) === 0){
+         
+          throw new Error('The quantity cannot be zero! ');
+        }
+        
+        //check for zero price
+        if (parseInt(json.price) === 0){
+         
+          throw new Error('The price cannot be zero! ');
+        } 
 
         // register egg and handle outcome
         console.log(cid)
@@ -117,6 +147,7 @@ export const useCommitEgg = () => {
 
         // set field with returned values
         setCommittedEgg(json.value);
+        console.log("JSON VALUE:", json.value);
       } finally {
         setLoading(false)
       }

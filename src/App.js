@@ -6,9 +6,7 @@ import AddNode from './component/AddNode'
 import './App.css'
 import FunctionalFetchData from './component/FunctionalFetchData'
 import FunctionalFarmerPackEggs from './component/FunctionalFarmerPackEggs';
-import MarketPackEggs from './component/MarketPackEggs';
 import FunctionalTransferEggs from './component/FunctionalTransferEggs';
-import BuyEggs from './component/BuyEggs';
 import FunctionalBuyEggs from './component/FunctionalBuyEggs';
 import Admin from './component/Admin'
 import FunctionalMarketPackEggs  from './component/FunctionalMarketPackEggs';
