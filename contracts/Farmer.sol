@@ -14,7 +14,7 @@ event FarmerAdded (address indexed account);
 Roles.Role private ChickenFarmer;
 
 constructor() {
-        //addFarmer(msg.sender);
+ 
 }
 
 

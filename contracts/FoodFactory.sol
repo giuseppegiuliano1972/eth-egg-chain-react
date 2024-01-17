@@ -13,9 +13,7 @@ event FoodFactoryAdded (address indexed account);
 
 Roles.Role private FoodFactoryRole;
 
-constructor() {
-        //addFoodFactory(msg.sender);
-}
+constructor() {}
 
 modifier onlyFoodFactory(){
         require(isFoodFactory(msg.sender), 'Not a Food Factory');

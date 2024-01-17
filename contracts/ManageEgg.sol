@@ -7,8 +7,6 @@ import "./Admin.sol";
 contract ManageEgg is Admin{
     address chickenOwner;
 
-     uint id;
-    
      enum State{
         Default, //0
         Packed, //1
@@ -28,20 +26,12 @@ contract ManageEgg is Admin{
     // mapping for current egg owner
     mapping(bytes32 => address) eggOwner;
 
-    event Packed(uint id);
-    event Delivered(uint id);
-    //event FactoryBought(uint id);
     event FactoryBought(address indexed _from, address indexed _to, uint amount, uint balance);
-    event MarketArrived(uint id);
-    event MarketForSale(uint id);
-    event FoodFactoryArrived(uint id);
-    //event ConsumerBought(uint id);
     event ConsumerBought(address indexed _from, address indexed _to, uint amount, uint balance);
     
 
     constructor()  payable{
         chickenOwner = msg.sender;
-        id = 1;
     }
 
     

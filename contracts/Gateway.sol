@@ -7,13 +7,16 @@ import "./ManageEgg.sol";
 
 
 contract Gateway is ManageEgg {
-  constructor()  payable{
+  address payable owner;
 
+  constructor()  payable{
+    owner = payable(msg.sender);
   }
 
- // function kill() public onlyOwner{
- //   selfdestruct(msg.sender);
- // }
+  function kill() public {
+        require(msg.sender == owner, "Only the contract owner can call this function");
+         selfdestruct(owner);
+  }
 
  // function transferOwner(address newOwner) public onlyOwner{
  //   transferOwnership(newOwner);
