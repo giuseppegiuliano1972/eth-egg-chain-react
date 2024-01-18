@@ -18,9 +18,6 @@ contract ManageEgg is Admin{
         ConsumerBought //7
      }
 
-        // mapping for history eggs
-    mapping(uint => string[]) eggHistory;
-
     // mapping for current egg states
     mapping(bytes32 => State) eggState;
     // mapping for current egg owner
@@ -55,7 +52,7 @@ contract ManageEgg is Admin{
     }
 
     // Wrapper Function that emits event eggPacked
-    function packMarketEgg(address owner, bytes32 transfer, bytes32 _hash) public {
+    function packMarketEgg(address owner, bytes32 _hash) public {
         
         // Check if the owner is the same farmer in the written address
         require(msg.sender == owner, "The Market Address should be equal to the user address");

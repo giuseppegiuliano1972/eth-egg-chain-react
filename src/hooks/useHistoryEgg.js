@@ -34,8 +34,6 @@ export const useHistoryEgg = () => {
             const cid = CID.create(1, 0x71, {bytes: digest })
             history.push(cid.toString())
           }
-
-          if(history.length < 1) history.push("This account hasn't packed any eggs. Select another account from the top.")
         })
       } catch (e) {
         console.error(e)

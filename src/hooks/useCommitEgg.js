@@ -18,7 +18,7 @@ export const useCommitEgg = () => {
       try {
         setLoading(true);
 
-        // TODO: Add input validation
+        // Input validation
 
         // add egg as a dag json to ipfs
         const cid = await kubo.dag.put(json);
@@ -68,15 +68,12 @@ export const useCommitEgg = () => {
         setLoading(true);
         // add egg as a dag json to ipfs
         const cid = await kubo.dag.put(json);
+        setCidString(cid.toString())
         
-        // convert eggid to appropiate format
-        const egglink = CID.parse(json.egglink)
+        // get original egg for checks
+        const original_egg = await kubo.dag.get(CID.parse(json.egglink));
         
-        setCidString(json.egglink);
-        fetchCommittedEgg();
-        
-        if (parseInt(committedEgg.quantity) < parseInt(json.quantity)){
-         
+        if (parseInt(original_egg.quantity) < parseInt(json.quantity)){
             throw new Error('New quantity cannot be higher than the quantity of eggs received! ');
         } 
         
@@ -94,7 +91,7 @@ export const useCommitEgg = () => {
 
         // register egg and handle outcome
         console.log(cid)
-        await gateway.methods.packMarketEgg(json.address, web3.utils.bytesToHex(cid.multihash.digest),  web3.utils.bytesToHex(egglink.multihash.digest))
+        await gateway.methods.packMarketEgg(json.address, web3.utils.bytesToHex(cid.multihash.digest))
                                 .send({from: json.address})
                                 .on('confirmation', function(confirmation, receipt){
                                   // Put here any feedback on transaction result
@@ -113,7 +110,7 @@ export const useCommitEgg = () => {
       console.log('please wait for kubo and web3 to start')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gateway, web3Error, web3Starting, kuboError, kuboStarting, kubo])
+  }, [gateway, web3Error, web3Starting, kuboError, kuboStarting, kubo, cidString])
 
   const fetchCommittedEgg = useCallback(async () => {
     if (!kuboError && !kuboStarting && !web3Error && !web3Starting) {
@@ -124,7 +121,7 @@ export const useCommitEgg = () => {
         const _cid = CID.parse(cidString);
 
         // Get all events involving the egg
-        // eventually handle multiple results
+        // Here we get the first packing
         await gateway.getPastEvents('eggPacked', {
           filter: {_hash: web3.utils.bytesToHex(_cid.multihash.digest)},
           fromBlock: 0,

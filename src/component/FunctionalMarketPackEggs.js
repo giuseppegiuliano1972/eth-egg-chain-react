@@ -9,7 +9,6 @@ import { useWeb3 } from '../hooks/useWeb3'
 
 function FunctionalMarketPackEggs() {
     // state variables
-    const [id, setId] = useState('')
     const [address, setAddress] = useState('')
     const [price, setPrice] = useState(0)
     const [quantity, setQuantity] = useState(0)
@@ -35,7 +34,6 @@ function FunctionalMarketPackEggs() {
                 onSubmit={() => {
                     setError(null);
                     commitMarketEgg({
-                        id: id,
                         address: address,
                         price: price,
                         quantity: quantity,

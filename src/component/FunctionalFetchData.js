@@ -1,6 +1,19 @@
-import { React, useState } from 'react'
+import { React, Fragment, useState } from 'react'
 import "semantic-ui-css/semantic.min.css";
-import { Button, Card, Form, Input, Message } from "semantic-ui-react";
+import { 
+    Button,
+    Form,
+    Input,
+    Card,
+    CardHeader,
+    CardContent,
+    Feed,
+    FeedContent,
+    FeedEvent,
+    FeedUser,
+    FeedSummary,
+    Divider,
+    Message } from "semantic-ui-react";
 
 // Kubo support
 import { useKubo } from '../hooks/useKubo'
@@ -51,6 +64,7 @@ function FunctionalFetchData() {
                     Fetch
                 </Button>
             </Form>
+            {(committedEgg['address']!==undefined) && 
             <Card>
                 <Card.Content
                     header={`Product nr. ${cidString}`}
@@ -60,18 +74,41 @@ function FunctionalFetchData() {
                 <Card.Content description={`Price: ${committedEgg.price}`} />
                 <Card.Content description={`Eggs in Package: ${committedEgg.quantity}`} />
                 <Card.Content description={`Notes: ${committedEgg.notes}`} />
+                {(committedEgg['egglink']!==undefined) && 
+                <Card.Content description={`Original Egg CID: ${committedEgg.egglink}`} />
+                }
             </Card>
-
-            <h3>Your Eggs:</h3>
-            {
-                historyEgg.map((cid)=>{
-                    return <Card style={{ width: '128rem' }} loading={loadingHistory} key={`${cid}`}>
-                        <Card.Content
-                        header={`Product CID: ${cid}`}
-                        />
-                    </Card>
-                })
             }
+            
+
+            <Card centered fluid loading={loadingHistory}>
+                <CardContent>
+                    <CardHeader> Your Eggs</CardHeader>
+                </CardContent>
+                <CardContent>
+                    <Feed>
+                        {
+                            historyEgg.map((cid)=>{
+                                return (
+                                <Fragment key={`${cid}`}>
+                                <FeedEvent>
+                                    <FeedContent>
+                                        <FeedSummary>
+                                            Product ID: <FeedUser>{cid}</FeedUser>
+                                        </FeedSummary>
+                                    </FeedContent>
+                                    <Button onClick={ () => setCidString(cid) } floated='right' color='blue'>
+                                        Copy
+                                    </Button>
+                                </FeedEvent>
+                                <Divider/>
+                                </Fragment>
+                                )
+                            })
+                        }
+                    </Feed>
+                </CardContent>
+            </Card>
         </div>
     )
 }
