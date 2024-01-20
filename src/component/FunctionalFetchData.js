@@ -49,7 +49,7 @@ function FunctionalFetchData() {
                 error={kuboError||error}               // Uses error as kubos error
             >
                 <Form.Field>
-                    <label>ID</label>
+                    <label>CID</label>
                     <Input
                         value={cidString}   // Initial value
                         onChange={(event) => setCidString(event.target.value)} // Value update
