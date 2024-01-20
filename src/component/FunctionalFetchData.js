@@ -67,11 +67,25 @@ function FunctionalFetchData() {
             {(committedEgg['address']!==undefined) && 
             <Card fluid>
                 <Card.Content
-                    header={`Product nr. ${cidString}`}
+                    header={`Product CID: ${cidString}`}
                     textAlign="center"
                 />
                 {Object.keys(committedEgg).map((key) => {
-                    return <Card.Content content={`${key}: ${committedEgg[key]}`}/>
+                    if(committedEgg[key].constructor != Object) 
+                        return <Card.Content key={`${key}`} content={`${key}: ${committedEgg[key]}`}/>
+                    else {
+                        return (
+                        <Fragment key={`${key}`}>
+                            <Card.Content
+                                description={`Transfer CID: ${key}`}
+                                textAlign="center"
+                            />
+                            {Object.keys(committedEgg[key]).map((tkey) => {
+                                return <Card.Content key={`${tkey}`} content={`${tkey}: ${committedEgg[key][tkey]}`}/>
+                            })}
+                        </Fragment>
+                        )
+                    }
                 })}
             </Card>
             }
@@ -90,7 +104,7 @@ function FunctionalFetchData() {
                                 <FeedEvent>
                                     <FeedContent>
                                         <FeedSummary>
-                                            Product ID: <FeedUser>{cid}</FeedUser>
+                                            Product CID: <FeedUser>{cid}</FeedUser>
                                         </FeedSummary>
                                     </FeedContent>
                                     <Button onClick={ () => setCidString(cid) } floated='right' color='blue'>
@@ -110,3 +124,8 @@ function FunctionalFetchData() {
 }
 
 export default FunctionalFetchData
+
+/* 
+                        {Object.keys(committedEgg[key]).map((tkey) => {
+                            return <Card.Content content={`${tkey}: ${committedEgg[tkey]}`}
+                        })} */

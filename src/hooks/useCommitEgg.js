@@ -13,6 +13,17 @@ export const useCommitEgg = () => {
   const [cidString, setCidString] = useState('')
   const [committedEgg, setCommittedEgg] = useState({})
 
+  const states = [
+    'Default', //0
+    'Packed', //1
+    'Delivered', //2
+    'FactoryBought', //3
+    'MarketArrived', //4
+    'FoodFactoryArrived', //5
+    'MarketForSale', //6
+    'ConsumerBought' //7
+  ]
+
   const commitEgg = useCallback(async (json) => {
     if (!kuboError && !kuboStarting && !web3Error && !web3Starting) {
       try {
@@ -143,6 +154,10 @@ export const useCommitEgg = () => {
         console.log('Fetching: ', cidString)
         const _cid = CID.parse(cidString);
 
+        let state = 0
+        let address
+        let transfers = []
+
         // Get all events involving the egg
         // Here we get the first packing
         await gateway.getPastEvents('eggPacked', {
@@ -154,20 +169,47 @@ export const useCommitEgg = () => {
           console.log(events);
         }).then(function(events){
           for (const event of events) {
-            const address = web3.eth.abi.decodeParameter('address', event.topics[1])
-            console.log('Owner: ', address);
+            address = web3.eth.abi.decodeParameter('address', event.topics[1]);
+            state = 1;
+          }
+        })
+
+        // Here we get the transfers
+        await gateway.getPastEvents('eggTransfer', {
+          filter: {_hash: web3.utils.bytesToHex(_cid.multihash.digest)},
+          fromBlock: 0,
+          toBlock: 'latest'
+        }, function(error, events) {
+          console.error(error);
+          console.log(events);
+        }).then(function(events){
+          for (const event of events) {
+            const bytes = web3.utils.hexToBytes((event.topics[1]).toString());
+            const digest = new Uint8Array(34);
+            digest.set([18, 32])
+            digest.set(bytes, 2)
+            const cid = CID.create(1, 0x71, {bytes: digest })
+            transfers.push(cid)
+            state = web3.eth.abi.decodeParameter('uint8', event.topics[3])
           }
         })
 
         // convert from string to CID format
-        const cid = CID.parse(cidString)
+        const cid = CID.parse(cidString);
 
         // query ipfs for the json of the egg
-        const json = await kubo.dag.get(cid);
+        const json = (await kubo.dag.get(cid)).value;
+
+        if(address !== json.address) throw new Error('Egg address on ipfs was not found on the blockchain.');
+
+        json.state = states[state];
+        for (const transfer of transfers) {
+          const transfer_json = (await kubo.dag.get(transfer)).value;
+          json[transfer.toString()] = transfer_json
+        }
 
         // set field with returned values
-        setCommittedEgg(json.value);
-        console.log("JSON VALUE:", json.value);
+        setCommittedEgg(json);
       } finally {
         setLoading(false)
       }
