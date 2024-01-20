@@ -71,7 +71,8 @@ export const useCommitEgg = () => {
         setCidString(cid.toString())
         
         // get original egg for checks
-        const original_egg = await kubo.dag.get(CID.parse(json.egglink));
+        const egglink = CID.parse(json.egglink)
+        const original_egg = await kubo.dag.get(egglink);
         
         if (parseInt(original_egg.quantity) < parseInt(json.quantity)){
             throw new Error('New quantity cannot be higher than the quantity of eggs received! ');
@@ -91,7 +92,7 @@ export const useCommitEgg = () => {
 
         // register egg and handle outcome
         console.log(cid)
-        await gateway.methods.packMarketEgg(json.address, web3.utils.bytesToHex(cid.multihash.digest))
+        await gateway.methods.packMarketEgg(json.address, web3.utils.bytesToHex(egglink.multihash.digest), web3.utils.bytesToHex(cid.multihash.digest))
                                 .send({from: json.address})
                                 .on('confirmation', function(confirmation, receipt){
                                   // Put here any feedback on transaction result

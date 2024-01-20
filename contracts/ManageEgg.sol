@@ -52,21 +52,21 @@ contract ManageEgg is Admin{
     }
 
     // Wrapper Function that emits event eggPacked
-    function packMarketEgg(address owner, bytes32 _hash) public {
+    function packMarketEgg(address owner, bytes32 original, bytes32 _hash) public {
         
         // Check if the owner is the same farmer in the written address
         require(msg.sender == owner, "The Market Address should be equal to the user address");
         // Could be costly, maybe use has
         require(isMarket(owner), "The Market Address should be an existing market address");
         // Require that egg exists
-        require(eggState[_hash] != State.Default, "Egg is not on the chain");
+        require(eggState[original] != State.Default, "Egg is not on the chain");
         // Check state of egg to be market arrived
-        require(eggState[_hash] == State.MarketArrived, "The state is not MarketArrived");
+        require(eggState[original] == State.MarketArrived, "The state is not MarketArrived");
         
         // Change state to market for sale
-        eggState[_hash] = State.MarketForSale;
+        eggState[original] = State.MarketForSale;
         // Change owner to caller
-        eggOwner[_hash] = owner;
+        eggOwner[original] = owner;
 
         emit eggPacked(owner, _hash);
     }
