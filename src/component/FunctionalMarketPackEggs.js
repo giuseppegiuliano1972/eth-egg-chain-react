@@ -62,15 +62,31 @@ function FunctionalMarketPackEggs() {
                 <Form.Field>
                     <label>Price</label>
                     <Input
+                        type="number" // this will allow only numbers to be input
                         value={price}
-                        onChange={(event) => setPrice(event.target.value)}
+                        onChange={(event) => {
+                            const value = event.target.value;
+                            if (!isNaN(value) && value.match(/^\d*(\.\d+)?$/)) {
+                                setPrice(value);
+                            } else {
+                                setError(new Error('Invalid price input. Please enter a valid number.'));
+                            }
+                        }}
                     />
                 </Form.Field>
                 <Form.Field>
                     <label>How many eggs are in the package?</label>
                     <Input
+                        type="number" // this will allow only numbers to be input
                         value={quantity}
-                        onChange={(event) => setQuantity(event.target.value)}
+                        onChange={(event) => { // check if it is an integer
+                            const value = event.target.value;
+                            if (!isNaN(value) && Number.isInteger(parseFloat(value)) && value.match(/^\d*(\.\d+)?$/)) {
+                                setQuantity(value);
+                            } else {
+                                setError(new Error('Invalid quantity input. Please enter a valid integer.'));
+                            }
+                        }}
                     />
                 </Form.Field>
                 <Form.Field>
