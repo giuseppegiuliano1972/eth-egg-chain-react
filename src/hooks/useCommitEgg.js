@@ -20,24 +20,33 @@ export const useCommitEgg = () => {
 
         // Input validation
 
-        // add egg as a dag json to ipfs
-        const cid = await kubo.dag.put(json);
+        // get quantity and validate it's a number
+        const quantity = parseInt(json.quantity);
 
-        // convert to string and set cid
-        setCidString(cid.toString())
-
-        
-        //check for zero quantity
-        if (parseInt(json.quantity) === 0){
-        
-          throw new Error('The quantity cannot be zero! ');
+        // Check that quantity is a positive integer
+        if (!Number.isInteger(quantity) || quantity <= 0) {
+          throw new Error('The quantity must be a positive integer.');
         }
         
-        //check for zero price
-        if (parseInt(json.price) === 0){
+        // get price and validate it's a number
+        const price = parseFloat(json.price);
+
+        // Check that price is a number, greater than zero, and not NaN
+        if (typeof price !== 'number' || price <= 0 || isNaN(price)) {
+            throw new Error('The price must be a number greater than zero.');
+        }
+
         
-          throw new Error('The price cannot be zero! ');
-        } 
+        // add egg as a dag json to ipfs
+        // store price and quantity as strings
+        const cid = await kubo.dag.put({
+          ...json,
+          price: price.toString(),
+          quantity: quantity.toString()
+        });
+
+        // convert to string and set cid
+        setCidString(cid.toString());
 
         // register egg and handle outcome
         console.log(cid)
@@ -66,29 +75,42 @@ export const useCommitEgg = () => {
     if (!kuboError && !kuboStarting && !web3Error && !web3Starting) {
       try {
         setLoading(true);
-        // add egg as a dag json to ipfs
-        const cid = await kubo.dag.put(json);
-        setCidString(cid.toString())
         
         // get original egg for checks
         const egglink = CID.parse(json.egglink)
         const original_egg = await kubo.dag.get(egglink);
-        
-        if (parseInt(original_egg.quantity) < parseInt(json.quantity)){
-            throw new Error('New quantity cannot be higher than the quantity of eggs received! ');
-        } 
-        
-        //check for zero quantity
-        if (parseInt(json.quantity) === 0){
-         
-          throw new Error('The quantity cannot be zero! ');
+
+        // get quantity and validate it's a number
+        const quantity = parseInt(json.quantity);
+
+        // Check that quantity is a positive integer
+        if (!Number.isInteger(quantity) || quantity <= 0) {
+          throw new Error('The quantity must be a positive integer.');
         }
         
-        //check for zero price
-        if (parseInt(json.price) === 0){
-         
-          throw new Error('The price cannot be zero! ');
-        } 
+        // get price and validate it's a number
+        const price = parseFloat(json.price);
+
+        // Check that price is a number, greater than zero, and not NaN
+        if (typeof price !== 'number' || price <= 0 || isNaN(price)) {
+            throw new Error('The price must be a number greater than zero.');
+        }
+        
+        // Check that eggs quantity is higher or equal than quantity of eggs received
+        if (parseInt(original_egg.quantity) < quantity){
+            throw new Error('New quantity cannot be higher than the quantity of eggs received! ');
+        }
+
+        // add egg as a dag json to ipfs
+        // store price and quantity as strings
+        const cid = await kubo.dag.put({
+          ...json,
+          price: price.toString(),
+          quantity: quantity.toString()
+        });
+
+        // convert to string and set cid
+        setCidString(cid.toString())
 
         // register egg and handle outcome
         console.log(cid)
