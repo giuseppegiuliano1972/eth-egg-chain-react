@@ -60,7 +60,7 @@ export const Web3Provider = ({ children }) => {
         })
         _web3 = await createWeb3()
         _gateway = await createGateway(_web3)
-        _accounts = await window.ethereum.request({ method: "eth_requestAccounts" })
+        _accounts = await _web3.eth.getAccounts()
       } catch(e) {
         console.error(e)
         setError(true)
@@ -68,7 +68,7 @@ export const Web3Provider = ({ children }) => {
         setWeb3(_web3)
         setGateway(_gateway)
         setAccounts(_accounts)
-        setSelected(_accounts[0])
+        if(_accounts) setSelected(_accounts[0])
         setStarting(false)
       }
     } else {
@@ -89,20 +89,21 @@ export const Web3Provider = ({ children }) => {
         })
         _web3 = await createWeb3()
         _gateway = await createGateway(_web3)
-        //_accounts = await _web3.eth.requestAccounts()
+        _accounts = await _web3.eth.getAccounts()
         
         _web3.on('accountsChanged', function (accounts) {
           setAccounts(accounts)
           setSelected(accounts[0])
         });
+        
         setStarting(false)
       } catch (e) {
         console.error(e)
         setError(true)
       } finally {
-        if(_web3) setWeb3(_web3)
-        if(_gateway) setGateway(_gateway)
-        if(_accounts) setAccounts(_accounts)
+        setWeb3(_web3)
+        setGateway(_gateway)
+        setAccounts(_accounts)
         if(_accounts) setSelected(_accounts[0])
         setStarting(false)
       }
