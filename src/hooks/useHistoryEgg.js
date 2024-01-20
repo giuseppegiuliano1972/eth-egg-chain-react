@@ -48,7 +48,9 @@ export const useHistoryEgg = () => {
   }, [accounts, selected, gateway, web3Error, web3Starting])
 
   useEffect(() => {
-    fetchHistory()
+    if(gateway!==null)
+      fetchHistory()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected])
   
   return { loading, historyEgg, fetchHistory }

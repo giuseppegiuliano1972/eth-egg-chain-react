@@ -51,7 +51,7 @@ export const useAdmin = () => {
         console.error(e)
       } finally {
         await Promise.all([promise1, promise2]).then(() => {
-          const difference = _requests.filter(r => !_approved.some(a => r[0]===a[0]))
+          let difference = _requests.filter(r => !_approved.some(a => r[0]===a[0]))
           if (difference === null) { difference = new Set(['','']); }
           setRequests([...new Set(difference)])
         })
@@ -69,7 +69,7 @@ export const useAdmin = () => {
         setLoading(true)
 
         if(role !== 0) await gateway.methods['requestApprove'](account, role).send({
-          from: accounts[0],
+          from: selected,
         }).on('confirmation', function(confirmation, receipt){
           // Put here any feedback on transaction result
           console.log("Transaction confirmed!");

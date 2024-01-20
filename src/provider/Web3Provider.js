@@ -15,7 +15,7 @@ import Gateway from "../abi/Gateway.json";
 
 export const Web3Context = createContext({
   web3: null,
-  accounts: null,
+  accounts: [],
   selected: 'no accounts selected',
   setSelected: null,
   gateway: null,
@@ -25,7 +25,7 @@ export const Web3Context = createContext({
 
 export const Web3Provider = ({ children }) => {
   const [web3, setWeb3] = useState(null)
-  const [accounts, setAccounts] = useState(null)
+  const [accounts, setAccounts] = useState([])
   // eslint-disable-next-line no-unused-vars
   const [selected, setSelected] = useState('no accounts selected')
   const [gateway, setGateway] = useState(null)
@@ -34,6 +34,7 @@ export const Web3Provider = ({ children }) => {
 
   
   const startWeb3 = useCallback(async () => {
+    let _web3, _gateway, _accounts
     if (web3) {
       console.info('web3 already started')
     } else if (window.ethereum) {
@@ -41,7 +42,6 @@ export const Web3Provider = ({ children }) => {
         console.info('found a windowed instance of web3, populating ...')
 
         const createWeb3 = (async () => {
-          window.ethereum.request({ method: "eth_requestAccounts" });
           window.ethereum.on('accountsChanged', function (accounts) {
             setAccounts(accounts)
             setSelected(accounts[0])
@@ -58,18 +58,18 @@ export const Web3Provider = ({ children }) => {
             contract_address
           );
         })
-        const _web3 = await createWeb3()
-        const _gateway = await createGateway(_web3)
-        const _accounts = await _web3.eth.requestAccounts()
-
-        setWeb3(_web3)
-        setAccounts(_accounts)
-        setGateway(_gateway)
-        setSelected(_accounts[0])
-        setStarting(false)
+        _web3 = await createWeb3()
+        _gateway = await createGateway(_web3)
+        _accounts = await window.ethereum.request({ method: "eth_requestAccounts" })
       } catch(e) {
         console.error(e)
         setError(true)
+      } finally {
+        setWeb3(_web3)
+        setGateway(_gateway)
+        setAccounts(_accounts)
+        setSelected(_accounts[0])
+        setStarting(false)
       }
     } else {
       try {
@@ -87,23 +87,24 @@ export const Web3Provider = ({ children }) => {
             contract_address
           );
         })
-        const _web3 = await createWeb3()
-        const _gateway = await createGateway(_web3)
-        const _accounts = await _web3.eth.requestAccounts()
+        _web3 = await createWeb3()
+        _gateway = await createGateway(_web3)
+        //_accounts = await _web3.eth.requestAccounts()
         
         _web3.on('accountsChanged', function (accounts) {
           setAccounts(accounts)
           setSelected(accounts[0])
         });
-        
-        setWeb3(_web3)
-        setAccounts(_accounts)
-        setGateway(_gateway)
-        setSelected(_accounts[0])
         setStarting(false)
       } catch (e) {
         console.error(e)
         setError(true)
+      } finally {
+        if(_web3) setWeb3(_web3)
+        if(_gateway) setGateway(_gateway)
+        if(_accounts) setAccounts(_accounts)
+        if(_accounts) setSelected(_accounts[0])
+        setStarting(false)
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
