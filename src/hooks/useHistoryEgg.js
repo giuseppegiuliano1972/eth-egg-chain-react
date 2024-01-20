@@ -49,7 +49,7 @@ export const useHistoryEgg = () => {
 
   useEffect(() => {
     fetchHistory()
-  }, [fetchHistory, selected])
+  }, [selected])
   
   return { loading, historyEgg, fetchHistory }
 }

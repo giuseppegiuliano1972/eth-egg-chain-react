@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import Navbar from './component/navbar/Navbar';
-import Account from './component/Account';
 import Web3 from 'web3'
 import AddNode from './component/AddNode'
 import './App.css'
@@ -34,7 +33,6 @@ class App extends Component {
 
       <>
 
-        <Account />
         <Router>
         <Navbar />
         <Routes>

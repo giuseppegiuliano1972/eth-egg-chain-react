@@ -65,18 +65,14 @@ function FunctionalFetchData() {
                 </Button>
             </Form>
             {(committedEgg['address']!==undefined) && 
-            <Card>
+            <Card fluid>
                 <Card.Content
                     header={`Product nr. ${cidString}`}
                     textAlign="center"
                 />
-                <Card.Content description={`Farmer Address: ${committedEgg.address}`} />
-                <Card.Content description={`Price: ${committedEgg.price}`} />
-                <Card.Content description={`Eggs in Package: ${committedEgg.quantity}`} />
-                <Card.Content description={`Notes: ${committedEgg.notes}`} />
-                {(committedEgg['egglink']!==undefined) && 
-                <Card.Content description={`Original Egg CID: ${committedEgg.egglink}`} />
-                }
+                {Object.keys(committedEgg).map((key) => {
+                    return <Card.Content content={`${key}: ${committedEgg[key]}`}/>
+                })}
             </Card>
             }
             

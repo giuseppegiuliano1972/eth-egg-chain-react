@@ -16,7 +16,7 @@ import Gateway from "../abi/Gateway.json";
 export const Web3Context = createContext({
   web3: null,
   accounts: null,
-  selected: null,
+  selected: 'no accounts selected',
   setSelected: null,
   gateway: null,
   error: false,
@@ -27,7 +27,7 @@ export const Web3Provider = ({ children }) => {
   const [web3, setWeb3] = useState(null)
   const [accounts, setAccounts] = useState(null)
   // eslint-disable-next-line no-unused-vars
-  const [selected, setSelected] = useState(null)
+  const [selected, setSelected] = useState('no accounts selected')
   const [gateway, setGateway] = useState(null)
   const [starting, setStarting] = useState(true)
   const [error, setError] = useState(null)
@@ -42,6 +42,10 @@ export const Web3Provider = ({ children }) => {
 
         const createWeb3 = (async () => {
           window.ethereum.request({ method: "eth_requestAccounts" });
+          window.ethereum.on('accountsChanged', function (accounts) {
+            setAccounts(accounts)
+            setSelected(accounts[0])
+          });
           return new Web3(window.ethereum);
         })
       
@@ -61,6 +65,7 @@ export const Web3Provider = ({ children }) => {
         setWeb3(_web3)
         setAccounts(_accounts)
         setGateway(_gateway)
+        setSelected(_accounts[0])
         setStarting(false)
       } catch(e) {
         console.error(e)
@@ -84,10 +89,17 @@ export const Web3Provider = ({ children }) => {
         })
         const _web3 = await createWeb3()
         const _gateway = await createGateway(_web3)
+        const _accounts = await _web3.eth.requestAccounts()
+        
+        _web3.on('accountsChanged', function (accounts) {
+          setAccounts(accounts)
+          setSelected(accounts[0])
+        });
         
         setWeb3(_web3)
-        setAccounts(await _web3.eth.requestAccounts())
+        setAccounts(_accounts)
         setGateway(_gateway)
+        setSelected(_accounts[0])
         setStarting(false)
       } catch (e) {
         console.error(e)
