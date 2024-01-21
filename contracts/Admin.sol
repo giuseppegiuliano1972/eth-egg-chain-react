@@ -41,12 +41,12 @@ contract Admin is Farmer, Deliver, FoodFactory, Market, Consumer{
   /// Error for handling wrong sender
   /// @param sender address of the function caller
   /// @param required address given as input
-  error InvalidSender(address sender, address required);
+  error InvalidSender(address sender, address required, string message);
 
   /// Error for handling already registered account
   /// @param current uint8 current role
   /// @param requested uint8 requested role
-  error InvalidRole(Role current, Role requested);
+  error InvalidRole(Role current, Role requested, string message);
 
   /// Wrapper function for addRequest event
   /// Checks if request is valid and emits the event
@@ -54,17 +54,20 @@ contract Admin is Farmer, Deliver, FoodFactory, Market, Consumer{
     // Check if sender is requester
     if (msg.sender != requester) revert InvalidSender({
       sender: msg.sender,
-      required: requester
+      required: requester,
+      message: "Invalid sender"
     });
     // Check if given role is valid
     if (role > Role.Consumer) revert InvalidRole({
       current: currentRole[requester],
-      requested: role
+      requested: role,
+      message: "Invalid Role"
     });
     // Check if requester is already registered
     if (currentRole[requester] != Role.None) revert InvalidRole({
       current: currentRole[requester],
-      requested: role
+      requested: role,
+      message: "You already have a role"
     });
     
     // If everything is good emit event
@@ -82,7 +85,8 @@ contract Admin is Farmer, Deliver, FoodFactory, Market, Consumer{
     // Verify that sender is admin
     if (admin != msg.sender) revert InvalidSender({
       sender: msg.sender,
-      required: admin
+      required: admin,
+      message: "You are not authorized"
     });
     // Add role to mapping
     currentRole[requester] = role;

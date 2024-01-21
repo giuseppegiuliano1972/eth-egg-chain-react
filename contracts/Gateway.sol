@@ -13,9 +13,13 @@ contract Gateway is ManageEgg {
     owner = payable(msg.sender);
   }
 
-  function kill() public {
-        require(msg.sender == owner, "Only the contract owner can call this function");
-         selfdestruct(owner);
+  modifier onlyOwner() {
+    require(msg.sender == owner, "Caller is not the owner");
+    _;
   }
 
+  // Function to deactivate the contract, it will need to be improved for production...
+  function deactivateContract() public onlyOwner {
+    selfdestruct(owner);
+  }
 }

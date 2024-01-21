@@ -20,18 +20,31 @@ export const useBuyEgg = () => {
 
         // TODO: Add input validation
 
-        // add transfer as a dag json to ipfs
-        const cid = await kubo.dag.put(json);
 
         // convert eggid to appropiate format
         const egglink = CID.parse(json.egglink)
+        // get original egg for checks
+        const original_egg = await kubo.dag.get(egglink);
         console.log("Seller:", json.seller, "Buyer:", json.buyer);
 
         //check for zero price
         if (parseInt(json.price) === 0){
        
           throw new Error('The price cannot be zero! ');
-        } 
+        }
+
+        console.log("json seller: " + json.seller);
+        console.log("selected: " + selected);
+        console.log("json buyer: " + json.buyer)
+
+        // check that selected account is the same as buyer
+        // if(json.buyer !== selected) {
+        //   throw new Error('Your address doesn\'t match the buyer\'s address');
+        // }
+
+        // add transfer as a dag json to ipfs
+        const cid = await kubo.dag.put(json);
+
         // register transfer and handle outcome
         await gateway.methods.buyEgg(json.seller, json.buyer, web3.utils.bytesToHex(cid.multihash.digest), web3.utils.bytesToHex(egglink.multihash.digest))
                                 .send({from: selected, to: json.seller , value: web3.utils.toWei( json.price, "ether") })

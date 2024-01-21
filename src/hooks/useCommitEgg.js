@@ -129,7 +129,7 @@ export const useCommitEgg = () => {
         // register egg and handle outcome
         console.log(cid)
         await gateway.methods.packMarketEgg(json.address, web3.utils.bytesToHex(egglink.multihash.digest), web3.utils.bytesToHex(cid.multihash.digest))
-                                .send({from: json.address})
+                                .send({from: selected})
                                 .on('confirmation', function(confirmation, receipt){
                                   // Put here any feedback on transaction result
                                   console.log("Transaction confirmed!");
