@@ -7,7 +7,7 @@ import { CID } from 'kubo-rpc-client'
 export const useTransferEgg = () => {
   const { kubo, kuboError, kuboStarting } = useKubo()
   // eslint-disable-next-line no-unused-vars
-  const { web3, accounts, gateway, web3Error, web3Starting } = useWeb3()
+  const { web3, accounts, selected, gateway, web3Error, web3Starting } = useWeb3()
   // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(false)
   const [transferCID, setTransferCID] = useState('')
@@ -28,7 +28,7 @@ export const useTransferEgg = () => {
 
         // register transfer and handle outcome
         await gateway.methods.transferEgg(json.sender, json.receiver, web3.utils.bytesToHex(cid.multihash.digest), web3.utils.bytesToHex(egglink.multihash.digest))
-                                .send({from: json.sender})
+                                .send({from: selected})
                                 .on('confirmation', function(confirmation, receipt){
                                   // convert to string and set cid
                                   setTransferCID(cid.toString())

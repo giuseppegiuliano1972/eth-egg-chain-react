@@ -29,6 +29,9 @@ export const useCommitEgg = () => {
       try {
         setLoading(true);
 
+        // Add nonce to differentiate eggs
+        json.nonce = await web3.eth.getBlockNumber()
+
         // Input validation
 
         // get quantity and validate it's a number
