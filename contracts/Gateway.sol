@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: TFT-1.0.0
+ // SPDX-License-Identifier: TFT-1.0.0
 
 pragma solidity ^0.8.21;
 
@@ -18,7 +18,4 @@ contract Gateway is ManageEgg {
          selfdestruct(owner);
   }
 
- // function transferOwner(address newOwner) public onlyOwner{
- //   transferOwnership(newOwner);
- // }
 }
