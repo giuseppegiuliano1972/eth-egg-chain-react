@@ -99,8 +99,12 @@ export const useCommitEgg = () => {
         // Input validation
         
         // get original egg for checks
-        const egglink = CID.parse(json.egglink)
-        const original_egg = await kubo.dag.get(egglink);
+        const egglink = CID.parse(json.egglink);
+        console.log("egglink: " + egglink);
+
+        const original_egg = (await kubo.dag.get(egglink)).value;
+        console.log("original_egg: " + original_egg);
+        console.log(original_egg);
 
         // get quantity and validate it's a number
         const quantity = parseInt(json.quantity);
@@ -120,7 +124,7 @@ export const useCommitEgg = () => {
         
         // Check that eggs quantity is higher or equal than quantity of eggs received
         if (parseInt(original_egg.quantity) < quantity){
-            throw new Error('New quantity cannot be higher than the quantity of eggs received! ');
+            throw new Error('New quantity cannot be higher than the quantity of eggs received! Packed Egg quantity: ' + original_egg.quantity);
         }
 
         // add egg as a dag json to ipfs
@@ -135,7 +139,6 @@ export const useCommitEgg = () => {
         setCidString(cid.toString())
 
         // register egg and handle outcome
-        console.log(cid)
         await gateway.methods.packMarketEgg(json.address, web3.utils.bytesToHex(egglink.multihash.digest), web3.utils.bytesToHex(cid.multihash.digest))
                                 .send({from: selected})
                                 .on('confirmation', function(confirmation, receipt){

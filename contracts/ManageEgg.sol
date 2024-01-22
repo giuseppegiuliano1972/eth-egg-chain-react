@@ -59,13 +59,13 @@ contract ManageEgg is Admin{
     function packMarketEgg(address owner, bytes32 original, bytes32 _hash) public {
         
         // Check if the owner is the same farmer in the written address
-        require(msg.sender == owner, "The Market Address should be equal to the user address");
+        require(msg.sender == owner, "The Market Address should be equal to the caller address");
         // Could be costly, maybe use has
         require(isMarket(owner), "The Market Address should be an existing market address");
         // Require that egg exists
         require(eggState[original] != State.Default, "Egg is not on the chain");
         // Check state of egg to be market arrived
-        require(eggState[original] == State.MarketArrived, "The state is not MarketArrived");
+        require(eggState[original] == State.MarketArrived, "The egg state is not MarketArrived");
         
         // Change state to market for sale
         eggState[original] = State.MarketForSale;
