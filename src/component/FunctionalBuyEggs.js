@@ -112,10 +112,18 @@ function FunctionalBuyEggs() {
                 <Form.Field>
                     <label>Price</label>
                     <Input
+                        type="number"
                         label="ETH"
                         labelPosition="right"
                         value={price}
-                        onChange={(event) => setPrice(event.target.value)}
+                        onChange={(event) => {
+                          const value = event.target.value;
+                          if (!isNaN(value) && value.match(/^\d*(\.\d+)?$/)) {
+                              setPrice(value);
+                          } else {
+                              setError(new Error('Invalid price input. Please enter a valid number.'));
+                          }
+                      }}
                       />
                 </Form.Field>
                 <Form.Field>

@@ -17,24 +17,37 @@ export const useBuyEgg = () => {
     if (!kuboError && !kuboStarting && !web3Error && !web3Starting) {
       try {
         setLoading(true);
-
+        
         // TODO: Add input validation
 
-        // add transfer as a dag json to ipfs
-        const cid = await kubo.dag.put(json);
-
+        console.log("json egglink: " + json.egglink);
         // convert eggid to appropiate format
-        const egglink = CID.parse(json.egglink)
+        const egglink = CID.parse(json.egglink);
+        console.log(" egglink: " + egglink);
+        // get original egg for checks
+        const original_egg = await kubo.dag.get(egglink);
+        console.log(" original_egg: " + original_egg);
         console.log("Seller:", json.seller, "Buyer:", json.buyer);
 
         //check for zero price
         if (parseInt(json.price) === 0){
        
           throw new Error('The price cannot be zero! ');
-        } 
+        }
+
+        console.log("json seller: " + json.seller);
+        console.log("selected: " + selected);
+        console.log("json buyer: " + json.buyer);
+
+        // add transfer as a dag json to ipfs
+        const cid = await kubo.dag.put(json);
+
+
+        console.log("cid: " + cid.address);
+        console.log("original_egg dig: " + web3.utils.bytesToHex(egglink.multihash.digest));
         // register transfer and handle outcome
-        await gateway.methods.buyEgg(json.seller, json.buyer, web3.utils.bytesToHex(cid.multihash.digest), web3.utils.bytesToHex(egglink.multihash.digest))
-                                .send({from: selected, to: json.seller , value: web3.utils.toWei( json.price, "ether") })
+        await gateway.methods.buyEgg(json.seller, json.buyer, web3.utils.bytesToHex(cid.multihash.digest), web3.utils.bytesToHex(egglink.multihash.digest), web3.utils.toWei( json.price, "ether"))
+                                .send({from: selected,  value: web3.utils.toWei( json.price, "ether")})
                                 .on('confirmation', function(confirmation, receipt){
                                   // convert to string and set cid
                                   console.log("confirmationNumber", confirmation);

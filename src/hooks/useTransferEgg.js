@@ -28,7 +28,7 @@ export const useTransferEgg = () => {
 
         // register transfer and handle outcome
         await gateway.methods.transferEgg(json.sender, json.receiver, web3.utils.bytesToHex(cid.multihash.digest), web3.utils.bytesToHex(egglink.multihash.digest))
-                                .send({from: selected})
+                                .send({from: json.sender})
                                 .on('confirmation', function(confirmation, receipt){
                                   // convert to string and set cid
                                   setTransferCID(cid.toString())

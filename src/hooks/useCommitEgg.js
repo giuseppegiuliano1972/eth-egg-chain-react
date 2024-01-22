@@ -59,13 +59,19 @@ export const useCommitEgg = () => {
           quantity: quantity.toString()
         });
 
+        //input validation
+        if (json.address.toLowerCase() != window.ethereum.selectedAddress){
+       
+          throw new Error('Address different from the MetaMask account selected! ');
+        }
+
         // convert to string and set cid
         setCidString(cid.toString());
 
         // register egg and handle outcome
         console.log(cid)
         await gateway.methods.packEgg(json.address, web3.utils.bytesToHex(cid.multihash.digest))
-                                .send({from: selected})
+                                .send({from: json.address})
                                 .on('confirmation', function(confirmation, receipt){
                                   // Put here any feedback on transaction result
                                   console.log("Transaction confirmed!");
@@ -129,7 +135,7 @@ export const useCommitEgg = () => {
         // register egg and handle outcome
         console.log(cid)
         await gateway.methods.packMarketEgg(json.address, web3.utils.bytesToHex(egglink.multihash.digest), web3.utils.bytesToHex(cid.multihash.digest))
-                                .send({from: json.address})
+                                .send({from: selected})
                                 .on('confirmation', function(confirmation, receipt){
                                   // Put here any feedback on transaction result
                                   console.log("Transaction confirmed!");
