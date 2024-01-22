@@ -112,4 +112,23 @@ contract Admin is Farmer, Deliver, FoodFactory, Market, Consumer{
     emit approveRequest(requester, role);
   }
 
+  /// Event emitted when a request is refused
+  /// @param requester address of the applicant
+  /// @param role uint8 of the refused role
+  event refuseRequest(address indexed requester, Role indexed role);
+
+  /// Wrapper function for refuseRequest event
+  /// Checks if sender is the admin and emits the event
+  function requestRefuse(address requester, Role role) public {
+    // Verify that sender is admin
+    if (admin != msg.sender) revert InvalidSender({
+      sender: msg.sender,
+      required: admin,
+      message: "You are not authorized"
+    });
+
+    // If sender is admin then emit event
+    emit refuseRequest(requester, role);
+  }
+
 }

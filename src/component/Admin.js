@@ -46,7 +46,7 @@ function Admin() {
                         {
                             requests.map((request)=>{
                                 return (
-                                <Fragment key={`${request[0]}`}>
+                                <Fragment key={`${request}`}>
                                 <FeedEvent>
                                     <FeedContent>
                                         <FeedSummary>
@@ -58,6 +58,9 @@ function Admin() {
                                     </FeedContent>
                                     <Button onClick={() => approveRequest(request[0], request[1])} floated='right' color='blue'>
                                         Approve request
+                                    </Button>
+                                    <Button onClick={() => refuseRequest(request[0], request[1])} floated='right' color='red'>
+                                        Refuse request
                                     </Button>
                                 </FeedEvent>
                                 <Divider/>
