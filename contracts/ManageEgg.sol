@@ -117,10 +117,10 @@ contract ManageEgg is Admin{
         emit eggTransaction(sender, receiver, transfer);
     }
 
-       function buyEgg(address payable seller, address payable buyer, bytes32 transfer, bytes32 _hash) public payable {
+       function buyEgg(address payable seller, address payable buyer, bytes32 transfer, bytes32 _hash, uint price) payable external {
         
         // Require Seller is current owner
-        require(seller == eggOwner[transfer], "Seller should own the egg");
+        //require(seller == eggOwner[transfer], "Seller should own the egg");
         // Require sender is the caller
         require(msg.sender == buyer, "The buyer should be the transaction caller");
         // Require that egg exists
@@ -140,10 +140,10 @@ contract ManageEgg is Admin{
             // Change egg state
             state = State.ConsumerBought;
 
-            bool sent = payable(seller).send(msg.value);
+            bool sent = payable(seller).send(price);
             require(sent, "Failed to send Ether");
 
-            emit ConsumerBought(buyer, seller, msg.value, buyer.balance);
+            emit ConsumerBought(buyer, seller, price, buyer.balance);
         }
 
         if(eggState[_hash] == State.FoodFactoryArrived) {
@@ -156,8 +156,10 @@ contract ManageEgg is Admin{
             // Change egg state
             state = State.FactoryBought;
 
-            bool sent = payable(seller).send(msg.value);
+            bool sent = payable(seller).send(price);
             require(sent, "Failed to send Ether");
+
+
 
             emit FactoryBought(buyer, seller, msg.value, buyer.balance);
         }
