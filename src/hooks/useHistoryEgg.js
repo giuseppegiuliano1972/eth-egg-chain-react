@@ -1,18 +1,20 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useWeb3 } from './useWeb3'
+import { useKubo } from './useKubo'
 
 import { CID } from 'multiformats/cid'
 
 export const useHistoryEgg = () => {
   // eslint-disable-next-line no-unused-vars
   const { web3, accounts, selected, gateway, web3Error, web3Starting } = useWeb3()
+  const { kubo, kuboError, kuboStarting } = useKubo()
   // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(false)
   const [historyEgg, setHistoryEgg] = useState([])
 
   // Function to show all eggs of the account
   const fetchHistory = useCallback(async () => {
-    if (!web3Error && !web3Starting && accounts !== null) {
+    if (!kuboError && !kuboStarting && !web3Error && !web3Starting && accounts !== null) {
       var history = []
       try {
         setLoading(true)
@@ -51,7 +53,8 @@ export const useHistoryEgg = () => {
             digest.set([18, 32])
             digest.set(bytes, 2)
             const cid = CID.create(1, 0x71, {bytes: digest })
-            history.push(cid.toString())
+            const transaction = await kubo.dag.get(cid)
+            history.push(transaction.egglink)
           }
         })
       } catch (e) {
@@ -64,7 +67,7 @@ export const useHistoryEgg = () => {
       console.log('please wait for kubo and web3 to start')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accounts, selected, gateway, web3Error, web3Starting])
+  }, [accounts, selected, gateway, web3Error, web3Starting, kuboError, kuboStarting])
 
   useEffect(() => {
     if(gateway!==null)
