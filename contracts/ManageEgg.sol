@@ -123,20 +123,18 @@ contract ManageEgg is Admin{
 
        function buyEgg(address payable seller, address payable buyer, bytes32 transfer, bytes32 _hash, uint price) payable external {
         
-        // Require Buyer is current owner
-        require(buyer == eggOwner[_hash], "Buyer should own the egg");
         // Require sender is the caller
         require(msg.sender == buyer, "The buyer should be the transaction caller");
         // Require that egg exists
         require(eggState[_hash] != State.Default, "Egg is not on the chain");
-        // Require that Seller is the original farmer for the egg
-        require(eggFarmer[_hash] == seller, "Seller should be the farmer that packed this egg");
         
         State state = State.Default;
         // Act depending on egg state
       
         if(eggState[_hash] == State.MarketForSale) {
 
+            // Require Seller is current owner
+            require(seller == eggOwner[_hash], "Seller should own the egg");
 
             // Require sender and receiver to be correct
             require(isMarket(seller), "Seller should be a market");
@@ -153,11 +151,18 @@ contract ManageEgg is Admin{
         }
 
         if(eggState[_hash] == State.FoodFactoryArrived) {
+
+            // Require Buyer is current owner
+            require(buyer == eggOwner[_hash], "Buyer should own the egg");
+
             // Require sender and receiver to be correct
             require(isFarmer(seller), "seller should be Farmer");
             require(isFoodFactory(buyer), "buyer should be Food Factory");
 
-             require(price <= buyer.balance, "Insufficient balance");
+            require(price <= buyer.balance, "Insufficient balance");
+
+            // Require that Seller is the original farmer for the egg
+            require(eggFarmer[_hash] == seller, "Seller should be the farmer that packed this egg");
 
             // Change egg state
             state = State.FactoryBought;

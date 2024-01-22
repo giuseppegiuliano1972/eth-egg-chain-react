@@ -18,7 +18,7 @@ export const useTransferEgg = () => {
       try {
         setLoading(true);
 
-        // TODO: Add input validation
+        // Input validation
 
         // add transfer as a dag json to ipfs
         const cid = await kubo.dag.put(json);
@@ -28,7 +28,7 @@ export const useTransferEgg = () => {
 
         // register transfer and handle outcome
         await gateway.methods.transferEgg(json.sender, json.receiver, web3.utils.bytesToHex(cid.multihash.digest), web3.utils.bytesToHex(egglink.multihash.digest))
-                                .send({from: json.sender})
+                                .send({from: selected})
                                 .on('confirmation', function(confirmation, receipt){
                                   // convert to string and set cid
                                   setTransferCID(cid.toString())

@@ -17,30 +17,39 @@ export const useBuyEgg = () => {
     if (!kuboError && !kuboStarting && !web3Error && !web3Starting) {
       try {
         setLoading(true);
-        
-        // TODO: Add input validation
 
-        console.log("json egglink: " + json.egglink);
+        // Input validation
+
         // convert eggid to appropiate format
         const egglink = CID.parse(json.egglink);
-        console.log(" egglink: " + egglink);
+        console.log("egglink: " + egglink);
         // get original egg for checks
-        const original_egg = await kubo.dag.get(egglink);
-        console.log(" original_egg: " + original_egg);
-        console.log("Seller:", json.seller, "Buyer:", json.buyer);
+        const packed_egg = (await kubo.dag.get(egglink)).value;
+        console.log("packed_egg: " + packed_egg);
+        console.log(packed_egg);
 
-        //check for zero price
-        if (parseInt(json.price) === 0){
-       
-          throw new Error('The price cannot be zero! ');
+        // get price and validate it's a number
+        const price = parseFloat(json.price);
+
+        // Check that price is a number, greater than zero, and not NaN
+        if (typeof price !== 'number' || price <= 0 || isNaN(price)) {
+          throw new Error('The price must be a number greater than zero.');
         }
 
-        console.log("json seller: " + json.seller);
-        console.log("selected: " + selected);
-        console.log("json buyer: " + json.buyer);
+        console.log(parseFloat(packed_egg.price));
+        console.log(price);
+
+        // Check that egg's price inputted is equal to egg price
+        if (parseFloat(packed_egg.price) != price){
+          throw new Error('This packed egg costs: ' + packed_egg.price.toString() + ' ETH');
+        }
 
         // add transfer as a dag json to ipfs
-        const cid = await kubo.dag.put(json);
+        // store price as string
+        const cid = await kubo.dag.put({
+          ...json,
+          price: price.toString(),
+        });
 
 
         console.log("cid: " + cid.address);

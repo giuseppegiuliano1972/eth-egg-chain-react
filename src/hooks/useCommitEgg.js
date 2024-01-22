@@ -95,6 +95,8 @@ export const useCommitEgg = () => {
     if (!kuboError && !kuboStarting && !web3Error && !web3Starting) {
       try {
         setLoading(true);
+
+        // Input validation
         
         // get original egg for checks
         const egglink = CID.parse(json.egglink)
