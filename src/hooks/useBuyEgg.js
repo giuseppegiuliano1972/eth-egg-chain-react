@@ -42,7 +42,7 @@ export const useBuyEgg = () => {
 
         // register transfer and handle outcome
         await gateway.methods.buyEgg(json.seller, json.buyer, web3.utils.bytesToHex(cid.multihash.digest), web3.utils.bytesToHex(egglink.multihash.digest))
-                                .send({from: selected})
+                                .send({from: json.buyer, to: json.seller, value: web3.utils.toWei( json.price, "ether")})
                                 .on('confirmation', function(confirmation, receipt){
                                   // convert to string and set cid
                                   console.log("confirmationNumber", confirmation);
