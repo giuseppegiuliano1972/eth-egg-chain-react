@@ -22,6 +22,8 @@ contract ManageEgg is Admin{
     mapping(bytes32 => State) eggState;
     // mapping for current egg owner
     mapping(bytes32 => address) eggOwner;
+    // mapping for current genesis egg owner
+    mapping(bytes32 => address) eggFarmer;
 
     event FactoryBought(address indexed _from, address indexed _to, uint amount, uint balance);
     event ConsumerBought(address indexed _from, address indexed _to, uint amount, uint balance);
@@ -47,6 +49,8 @@ contract ManageEgg is Admin{
         eggState[_hash] = State.Packed;
         // Change owner to caller
         eggOwner[_hash] = owner;
+        // Set genesis owner to caller
+        eggFarmer[_hash] = owner;
 
         emit eggPacked(owner, _hash);
     }
@@ -119,12 +123,14 @@ contract ManageEgg is Admin{
 
        function buyEgg(address payable seller, address payable buyer, bytes32 transfer, bytes32 _hash, uint price) payable external {
         
-        // Require Seller is current owner
-        //require(seller == eggOwner[transfer], "Seller should own the egg");
+        // Require Buyer is current owner
+        require(buyer == eggOwner[_hash], "Buyer should own the egg");
         // Require sender is the caller
         require(msg.sender == buyer, "The buyer should be the transaction caller");
         // Require that egg exists
         require(eggState[_hash] != State.Default, "Egg is not on the chain");
+        // Require that Seller is the original farmer for the egg
+        require(eggFarmer[_hash] == seller, "Seller should be the farmer that packed this egg");
         
         State state = State.Default;
         // Act depending on egg state
@@ -136,7 +142,7 @@ contract ManageEgg is Admin{
             require(isMarket(seller), "Seller should be a market");
             require(isConsumer(buyer), "Buyer should be a consumer");
             //check the consumer balance
-            require(msg.value <= buyer.balance, "Insufficient balance");
+            require(price <= buyer.balance, "Insufficient balance");
             // Change egg state
             state = State.ConsumerBought;
 
@@ -151,7 +157,7 @@ contract ManageEgg is Admin{
             require(isFarmer(seller), "seller should be Farmer");
             require(isFoodFactory(buyer), "buyer should be Food Factory");
 
-             require(msg.value <= buyer.balance, "Insufficient balance");
+             require(price <= buyer.balance, "Insufficient balance");
 
             // Change egg state
             state = State.FactoryBought;
@@ -161,7 +167,7 @@ contract ManageEgg is Admin{
 
 
 
-            emit FactoryBought(buyer, seller, msg.value, buyer.balance);
+            emit FactoryBought(buyer, seller, price, buyer.balance);
         }
         
         // Require change of state and set new state
