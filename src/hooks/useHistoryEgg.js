@@ -50,15 +50,16 @@ export const useHistoryEgg = () => {
             // compress following into a function
             const bytes = web3.utils.hexToBytes((event.topics[3]).toString());
             const digest = new Uint8Array(34);
-            digest.set([18, 32])
-            digest.set(bytes, 2)
-            const cid = CID.create(1, 0x71, {bytes: digest })
-            const transaction = await kubo.dag.get(cid)
-            history.push(transaction.egglink)
+            digest.set([18, 32]);
+            digest.set(bytes, 2);
+            const cid = CID.create(1, 0x71, {bytes: digest });
+            const transaction = await kubo.dag.get(cid);
+            console.log(transaction);
+            history.push(transaction.value.egglink);
           }
         })
       } catch (e) {
-        console.error(e)
+        console.error(e);
       } finally {
         setHistoryEgg([...new Set(history)])
         setLoading(false)
