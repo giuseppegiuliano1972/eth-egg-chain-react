@@ -37,17 +37,12 @@ export const useBuyEgg = () => {
         console.log("selected: " + selected);
         console.log("json buyer: " + json.buyer)
 
-        // check that selected account is the same as buyer
-        // if(json.buyer !== selected) {
-        //   throw new Error('Your address doesn\'t match the buyer\'s address');
-        // }
-
         // add transfer as a dag json to ipfs
         const cid = await kubo.dag.put(json);
 
         // register transfer and handle outcome
         await gateway.methods.buyEgg(json.seller, json.buyer, web3.utils.bytesToHex(cid.multihash.digest), web3.utils.bytesToHex(egglink.multihash.digest))
-                                .send({from: selected, to: json.seller , value: web3.utils.toWei( json.price, "ether") })
+                                .send({from: selected})
                                 .on('confirmation', function(confirmation, receipt){
                                   // convert to string and set cid
                                   console.log("confirmationNumber", confirmation);

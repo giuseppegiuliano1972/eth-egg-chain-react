@@ -120,13 +120,12 @@ contract ManageEgg is Admin{
        function buyEgg(address payable seller, address payable buyer, bytes32 transfer, bytes32 _hash) public payable {
         
         // Require Seller is current owner
-        require(seller == eggOwner[_hash], "Seller should own the egg");
+        require(seller == eggOwner[transfer], "Seller should own the egg");
         // Require sender is the caller
         require(msg.sender == buyer, "The buyer should be the transaction caller");
         // Require that egg exists
         require(eggState[_hash] != State.Default, "Egg is not on the chain");
         
-
         State state = State.Default;
         // Act depending on egg state
       
