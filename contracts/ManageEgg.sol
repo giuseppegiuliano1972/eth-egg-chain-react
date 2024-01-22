@@ -72,7 +72,7 @@ contract ManageEgg is Admin{
         // Change owner to caller
         eggOwner[original] = owner;
 
-        emit eggPacked(owner, _hash);
+        emit eggTransfer(_hash, original, eggState[original]);
     }
 
     // Events emitted after egg moves to another node
