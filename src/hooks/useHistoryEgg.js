@@ -35,6 +35,25 @@ export const useHistoryEgg = () => {
             history.push(cid.toString())
           }
         })
+
+        await gateway.getPastEvents('eggTransaction', {
+          filter: {buyer: selected},
+          fromBlock: 0,
+          toBlock: 'latest'
+        }, function(error, events) {
+          console.error(error);
+          console.log(events);
+        }).then(async function(events){
+          for (const event of events) {
+            // compress following into a function
+            const bytes = web3.utils.hexToBytes((event.topics[2]).toString());
+            const digest = new Uint8Array(34);
+            digest.set([18, 32])
+            digest.set(bytes, 2)
+            const cid = CID.create(1, 0x71, {bytes: digest })
+            history.push(cid.toString())
+          }
+        })
       } catch (e) {
         console.error(e)
       } finally {
