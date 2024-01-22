@@ -46,7 +46,7 @@ export const useHistoryEgg = () => {
         }).then(async function(events){
           for (const event of events) {
             // compress following into a function
-            const bytes = web3.utils.hexToBytes((event.topics[2]).toString());
+            const bytes = web3.utils.hexToBytes((event.topics[3]).toString());
             const digest = new Uint8Array(34);
             digest.set([18, 32])
             digest.set(bytes, 2)
