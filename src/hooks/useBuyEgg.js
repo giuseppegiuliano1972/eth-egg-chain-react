@@ -76,9 +76,9 @@ export const useBuyEgg = () => {
 
 
         console.log("cid: " + cid.address);
-        console.log("original_egg dig: " + web3.utils.bytesToHex(egg_farmer_cid.multihash.digest));
+        console.log("original_egg dig: " + web3.utils.bytesToHex(farmer_egg_cid.multihash.digest));
         // register transfer and handle outcome
-        await gateway.methods.buyEgg(json.seller, json.buyer, web3.utils.bytesToHex(cid.multihash.digest), web3.utils.bytesToHex(egg_farmer_cid.multihash.digest), web3.utils.toWei( json.price, "ether"))
+        await gateway.methods.buyEgg(json.seller, json.buyer, web3.utils.bytesToHex(cid.multihash.digest), web3.utils.bytesToHex(farmer_egg_cid.multihash.digest), web3.utils.toWei( json.price, "ether"))
                                 .send({from: selected,  value: web3.utils.toWei( json.price, "ether")})
                                 .on('confirmation', function(confirmation, receipt){
                                   // convert to string and set cid
