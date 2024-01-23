@@ -72,7 +72,7 @@ export const useAdmin = () => {
             for (const a in _requests) {
               if (e == a) count_a++;
             }
-            for (const b in _approved) {
+            for (const b in _processed) {
               if (e == b) count_b++;
             }
             if (count_a > count_b) set_of_requests.add(e);

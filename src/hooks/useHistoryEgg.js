@@ -55,13 +55,7 @@ export const useHistoryEgg = () => {
             const cid = CID.create(1, 0x71, {bytes: digest });
             const transaction = await kubo.dag.get(cid);
             console.log(transaction);
-            if (transaction.value.egglink !== undefined) {
-              history.push(transaction.value.egglink);
-            }
-            else {
-              history.push(cid.toString());
-            }
-            
+            history.push(transaction.value.egglink);
           }
         })
       } catch (e) {

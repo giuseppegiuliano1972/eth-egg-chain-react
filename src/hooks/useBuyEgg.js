@@ -25,8 +25,8 @@ export const useBuyEgg = () => {
         var market_egg;
 
         // Get market pack egg event from chain
-        await gateway.getPastEvents('eggTransaction', {
-          filter: {_hash: farmer_egg_cid, state: 6},
+        await gateway.getPastEvents('eggTransfer', {
+          filter: {_hash: web3.utils.bytesToHex(farmer_egg_cid.multihash.digest), state: 6},
           fromBlock: 0,
           toBlock: 'latest'
         }, function(error, events) {
@@ -72,6 +72,7 @@ export const useBuyEgg = () => {
         const cid = await kubo.dag.put({
           ...json,
           price: price.toString(),
+          egglink: farmer_egg_cid.toString(),
         });
 
 
