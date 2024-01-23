@@ -59,7 +59,7 @@ export const useHistoryEgg = () => {
               history.push(transaction.value.egglink);
             }
             else {
-              history.push(cid);
+              history.push(cid.toString());
             }
             
           }
