@@ -21,6 +21,9 @@ export const useBuyEgg = () => {
         // Input validation
         const eggcid = CID.parse(json.eggcid)
         const egg = await kubo.dag.get(eggcid)
+        const value = egg.value
+
+        console.log(egg);
 
         // get price and validate it's a number
         const price = parseFloat(json.price);
@@ -30,13 +33,13 @@ export const useBuyEgg = () => {
           throw new Error('The price must be a number greater than zero.');
         } 
         
-        if (parseFloat(egg.price) != price) {
-          throw new Error('This packed egg costs: ' + egg.price.toString() + ' ETH');
+        if (parseFloat(value.price) != price) {
+          throw new Error('This packed egg costs: ' + egg.value.price + ' ETH');
         }
 
-        if (egg.address != json.seller) {
-          throw new Error('The packer of the egg is not the seller. The packer is ' + egg.address);
-        }
+        // if (value.address != json.seller) {
+        //   throw new Error('The packer of the egg is not the seller. The packer is ' + value.address);
+        // }
 
         // Here do checks related to the market case
         // Currently useless since price is REDEFINED by market
@@ -67,9 +70,9 @@ export const useBuyEgg = () => {
 
 
         console.log("cid: " + cid.address);
-        console.log("original_egg dig: " + web3.utils.bytesToHex(egglink.multihash.digest));
+        console.log("original_egg dig: " + web3.utils.bytesToHex(eggcid.multihash.digest));
         // register transfer and handle outcome
-        await gateway.methods.buyEgg(json.seller, json.buyer, web3.utils.bytesToHex(cid.multihash.digest), web3.utils.bytesToHex(egglink.multihash.digest), web3.utils.toWei( json.price, "ether"))
+        await gateway.methods.buyEgg(json.seller, json.buyer, web3.utils.bytesToHex(cid.multihash.digest), web3.utils.bytesToHex(eggcid.multihash.digest), web3.utils.toWei( json.price, "ether"))
                                 .send({from: selected,  value: web3.utils.toWei( json.price, "ether")})
                                 .on('confirmation', function(confirmation, receipt){
                                   // convert to string and set cid
