@@ -12,7 +12,8 @@ export const useAdmin = () => {
   const fetchRequests = useCallback(async () => {
     if (!web3Error && !web3Starting && gateway!=null) {
       var _requests = []
-      var _processed = []
+      var _approved = []
+      var _refused = []
       var promise1, promise2, promise3;
       try {
         setLoading(true)
@@ -43,7 +44,7 @@ export const useAdmin = () => {
             // parse event arguments
             const account = web3.eth.abi.decodeParameter('address', event.topics[1])
             const role = web3.eth.abi.decodeParameter('uint8', event.topics[2])
-            _processed.push([account, role])
+            _approved.push([account, role])
           }
         })
 
@@ -58,29 +59,34 @@ export const useAdmin = () => {
             // parse event arguments
             const account = web3.eth.abi.decodeParameter('address', event.topics[1])
             const role = web3.eth.abi.decodeParameter('uint8', event.topics[2])
-            _processed.push([account, role])
+            _refused.push([account, role])
           }
         })
       } catch (e) {
         console.error(e)
       } finally {
         await Promise.all([promise1, promise2, promise3]).then(() => {
-          let set_of_requests = new Set()
-          for (const e in _requests) {
+          let set_of_requests = []
+          for (const e of _requests) {
+            //console.log(e);
             let count_a = 0;
             let count_b = 0;
-            for (const a in _requests) {
-              if (e == a) count_a++;
+            for (const a of _requests) {
+              //console.log("a: ", a);
+              if (e[0] == a[0] && e[1] == a[1]) count_a++;
             }
-            for (const b in _processed) {
-              if (e == b) count_b++;
+            for (const b of _refused) {
+              //console.log("b: ", b);
+              if (e[0] == b[0] && e[1] == b[1]) count_b++;
             }
-            if (count_a > count_b) set_of_requests.add(e);
+            if (count_a > count_b) set_of_requests.push(e);
           }
-          let difference = _requests.filter(r => !_processed.some(a => (r[0]===a[0] && r[1]===a[1])))
+
+          let difference = _requests.filter(r => !_approved.some(a => (r[0]===a[0] && r[1]===a[1])))
           if (difference === null) { difference = new Set(['','']); }
           // setRequests([...new Set(difference)])
-          setRequests([...set_of_requests])
+          if (set_of_requests.length < 1) { set_of_requests = new Set(); }
+          setRequests([...new Set(set_of_requests)])
         })
         setLoading(false)
       }
