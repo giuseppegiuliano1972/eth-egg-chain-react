@@ -122,9 +122,14 @@ export const useCommitEgg = () => {
             throw new Error('The price must be a number greater than zero.');
         }
         
-        // Check that eggs quantity is higher or equal than quantity of eggs received
-        if (parseInt(original_egg.quantity) < quantity){
+        // Check that eggs quantity is lower or equal than quantity of eggs received
+        if (parseInt(original_egg.quantity) >= quantity){
             throw new Error('New quantity cannot be higher than the quantity of eggs received! Packed Egg quantity: ' + original_egg.quantity);
+        }
+
+        // Check that eggs price is higher or equal than price of eggs received
+        if (parseInt(original_egg.price) <= price){
+          throw new Error('New price cannot be lower than the price of eggs received! Packed Egg price: ' + original_egg.price);
         }
 
         // add egg as a dag json to ipfs

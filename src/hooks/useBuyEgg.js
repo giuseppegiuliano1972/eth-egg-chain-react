@@ -19,14 +19,8 @@ export const useBuyEgg = () => {
         setLoading(true);
 
         // Input validation
-
-        // convert eggid to appropiate format
-        const egglink = CID.parse(json.egglink);
-        console.log("egglink: " + egglink);
-        // get original egg for checks
-        const packed_egg = (await kubo.dag.get(egglink)).value;
-        console.log("packed_egg: " + packed_egg);
-        console.log(packed_egg);
+        const eggcid = CID.parse(json.eggcid)
+        const egg = await kubo.dag.get(eggcid)
 
         // get price and validate it's a number
         const price = parseFloat(json.price);
@@ -34,15 +28,35 @@ export const useBuyEgg = () => {
         // Check that price is a number, greater than zero, and not NaN
         if (typeof price !== 'number' || price <= 0 || isNaN(price)) {
           throw new Error('The price must be a number greater than zero.');
+        } 
+        
+        if (parseFloat(egg.price) != price) {
+          throw new Error('This packed egg costs: ' + egg.price.toString() + ' ETH');
         }
 
-        console.log(parseFloat(packed_egg.price));
-        console.log(price);
-
-        // Check that egg's price inputted is equal to egg price
-        if (parseFloat(packed_egg.price) != price){
-          throw new Error('This packed egg costs: ' + packed_egg.price.toString() + ' ETH');
+        if (egg.address != json.seller) {
+          throw new Error('The packer of the egg is not the seller. The packer is ' + egg.address);
         }
+
+        // Here do checks related to the market case
+        // Currently useless since price is REDEFINED by market
+        /*
+        if (egg.egglink !== undefined) {
+          // convert eggid to appropiate format
+          const egglink = CID.parse(egg.egglink);
+          console.log("egglink: " + egglink);
+          
+          // get original egg for checks
+          const packed_egg = (await kubo.dag.get(egglink)).value;
+          console.log("packed_egg: " + packed_egg);
+          console.log(packed_egg);
+
+          // Check that egg's price inputted is equal to egg price
+          if (parseFloat(packed_egg.price) != price){
+            throw new Error('This packed egg costs: ' + packed_egg.price.toString() + ' ETH');
+          }
+        }  
+        */      
 
         // add transfer as a dag json to ipfs
         // store price as string

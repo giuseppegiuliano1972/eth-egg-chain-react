@@ -62,6 +62,8 @@ contract ManageEgg is Admin{
         require(msg.sender == owner, "The Market Address should be equal to the caller address");
         // Could be costly, maybe use has
         require(isMarket(owner), "The Market Address should be an existing market address");
+        // Check current owner is owner
+        require(eggOwner[original] == owner, "The caller is not the owner of the egg");
         // Require that egg exists
         require(eggState[original] != State.Default, "Egg is not on the chain");
         // Check state of egg to be market arrived
@@ -176,7 +178,7 @@ contract ManageEgg is Admin{
         }
         
         // Require change of state and set new state
-        require(state != State.Default, "Seller and Buyer roles are not compatible for a transfer");
+        require(state != State.Default, "Egg is not ready for sale");
         eggState[_hash] = state;
         // Set new owner
         eggOwner[_hash] = buyer;

@@ -79,7 +79,7 @@ function FunctionalBuyEggs() {
                       buyer: buyer,
                       price: price,
                       notes: notes,
-                      egglink: eggCID
+                      eggcid: eggCID
                   }).catch((error) => setError(error));
                 }}                                                // Creates object buy before committing
                 error={kuboError||web3Error||error}               // Set error
