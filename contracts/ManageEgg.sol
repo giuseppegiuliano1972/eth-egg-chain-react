@@ -70,10 +70,6 @@ contract ManageEgg is Admin{
         require(eggState[original] == State.MarketArrived, "The egg state is not MarketArrived");
         
         // Change state to market for sale
-        eggState[original] = State.MarketForSale;
-        // Change owner to caller
-        eggOwner[original] = owner;
-        // Change state to market for sale
         eggState[_hash] = State.MarketForSale;
         // Change owner to caller
         eggOwner[_hash] = owner;
