@@ -67,23 +67,23 @@ export const useAdmin = () => {
       } finally {
         await Promise.all([promise1, promise2, promise3]).then(() => {
           let set_of_requests = []
-          for (const e of _requests) {
+          let done = []
+
+          let difference = _requests.filter(r => !_approved.some(a => (r[0]===a[0] && r[1]===a[1])))
+
+          for (const e of difference) {
             //console.log(e);
             let count_a = 0;
             let count_b = 0;
-            for (const a of _requests) {
-              //console.log("a: ", a);
-              if (e[0] == a[0] && e[1] == a[1]) count_a++;
-            }
-            for (const b of _refused) {
-              //console.log("b: ", b);
-              if (e[0] == b[0] && e[1] == b[1]) count_b++;
-            }
+
+            for (const a of difference) if (e[0] == a[0] && e[1] == a[1]) count_a++;
+            for (const b of _refused) if (e[0] == b[0] && e[1] == b[1]) count_b++;
+            for (const c of done) if (e[0] == c[0] && e[1] == c[1]) count_a=-1;
             if (count_a > count_b) set_of_requests.push(e);
+            done.push(e);
           }
 
-          let difference = _requests.filter(r => !_approved.some(a => (r[0]===a[0] && r[1]===a[1])))
-          if (difference === null) { difference = new Set(['','']); }
+          // if (difference === null) { difference = new Set(['','']); }
           // setRequests([...new Set(difference)])
           if (set_of_requests.length < 1) { set_of_requests = new Set(); }
           setRequests([...new Set(set_of_requests)])
