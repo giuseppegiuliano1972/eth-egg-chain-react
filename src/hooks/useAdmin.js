@@ -65,9 +65,22 @@ export const useAdmin = () => {
         console.error(e)
       } finally {
         await Promise.all([promise1, promise2, promise3]).then(() => {
+          let set_of_requests = new Set()
+          for (const e in _requests) {
+            let count_a = 0;
+            let count_b = 0;
+            for (const a in _requests) {
+              if (e == a) count_a++;
+            }
+            for (const b in _approved) {
+              if (e == b) count_b++;
+            }
+            if (count_a > count_b) set_of_requests.add(e);
+          }
           let difference = _requests.filter(r => !_processed.some(a => (r[0]===a[0] && r[1]===a[1])))
           if (difference === null) { difference = new Set(['','']); }
-          setRequests([...new Set(difference)])
+          // setRequests([...new Set(difference)])
+          setRequests([...set_of_requests])
         })
         setLoading(false)
       }
