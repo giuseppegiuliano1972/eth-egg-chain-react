@@ -73,10 +73,6 @@ contract ManageEgg is Admin{
         eggState[original] = State.MarketForSale;
         // Change owner to caller
         eggOwner[original] = owner;
-        // Change state to market for sale
-        eggState[_hash] = State.MarketForSale;
-        // Change owner to caller
-        eggOwner[_hash] = owner;
 
         emit eggTransfer(_hash, original, eggState[original]);
     }
@@ -162,8 +158,8 @@ contract ManageEgg is Admin{
             require(buyer == eggOwner[_hash], "Buyer should own the egg");
 
             // Require sender and receiver to be correct
-            require(isFarmer(seller), "seller should be Farmer");
-            require(isFoodFactory(buyer), "buyer should be Food Factory");
+            require(isFarmer(seller), "Seller should be Farmer");
+            require(isFoodFactory(buyer), "Buyer should be Food Factory");
 
             require(price <= buyer.balance, "Insufficient balance");
 

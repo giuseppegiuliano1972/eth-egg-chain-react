@@ -19,11 +19,41 @@ export const useBuyEgg = () => {
         setLoading(true);
 
         // Input validation
-        const eggcid = CID.parse(json.eggcid)
-        const egg = await kubo.dag.get(eggcid)
-        const value = egg.value
+        const farmer_egg_cid = CID.parse(json.eggcid)
+        const farmer_egg = (await kubo.dag.get(farmer_egg_cid)).value
 
-        console.log(egg);
+        var market_egg;
+
+        // Get market pack egg event from chain
+        await gateway.getPastEvents('eggTransaction', {
+          filter: {_hash: farmer_egg_cid, state: 6},
+          fromBlock: 0,
+          toBlock: 'latest'
+        }, function(error, events) {
+          console.error(error);
+          console.log(events);
+        }).then(async function(events){
+          for (const event of events) {
+            // compress following into a function
+            const bytes = web3.utils.hexToBytes((event.topics[1]).toString());
+            const digest = new Uint8Array(34);
+            digest.set([18, 32]);
+            digest.set(bytes, 2);
+            const market_egg_cid = CID.create(1, 0x71, {bytes: digest });
+            market_egg = (await kubo.dag.get(market_egg_cid)).value
+          }
+        })
+
+        var egg_price;
+
+        if (market_egg === undefined) {
+          // It's the farmer's egg
+          egg_price = farmer_egg.price;
+
+        } else {
+          // It's the market's egg
+          egg_price = market_egg.price;
+        }
 
         // get price and validate it's a number
         const price = parseFloat(json.price);
@@ -33,33 +63,9 @@ export const useBuyEgg = () => {
           throw new Error('The price must be a number greater than zero.');
         } 
         
-        if (parseFloat(value.price) != price) {
-          throw new Error('This packed egg costs: ' + egg.value.price + ' ETH');
+        if (parseFloat(egg_price) != price) {
+          throw new Error('This packed egg costs: ' + egg_price + ' ETH');
         }
-
-        // if (value.address != json.seller) {
-        //   throw new Error('The packer of the egg is not the seller. The packer is ' + value.address);
-        // }
-
-        // Here do checks related to the market case
-        // Currently useless since price is REDEFINED by market
-        /*
-        if (egg.egglink !== undefined) {
-          // convert eggid to appropiate format
-          const egglink = CID.parse(egg.egglink);
-          console.log("egglink: " + egglink);
-          
-          // get original egg for checks
-          const packed_egg = (await kubo.dag.get(egglink)).value;
-          console.log("packed_egg: " + packed_egg);
-          console.log(packed_egg);
-
-          // Check that egg's price inputted is equal to egg price
-          if (parseFloat(packed_egg.price) != price){
-            throw new Error('This packed egg costs: ' + packed_egg.price.toString() + ' ETH');
-          }
-        }  
-        */      
 
         // add transfer as a dag json to ipfs
         // store price as string
@@ -70,9 +76,9 @@ export const useBuyEgg = () => {
 
 
         console.log("cid: " + cid.address);
-        console.log("original_egg dig: " + web3.utils.bytesToHex(eggcid.multihash.digest));
+        console.log("original_egg dig: " + web3.utils.bytesToHex(egg_farmer_cid.multihash.digest));
         // register transfer and handle outcome
-        await gateway.methods.buyEgg(json.seller, json.buyer, web3.utils.bytesToHex(cid.multihash.digest), web3.utils.bytesToHex(eggcid.multihash.digest), web3.utils.toWei( json.price, "ether"))
+        await gateway.methods.buyEgg(json.seller, json.buyer, web3.utils.bytesToHex(cid.multihash.digest), web3.utils.bytesToHex(egg_farmer_cid.multihash.digest), web3.utils.toWei( json.price, "ether"))
                                 .send({from: selected,  value: web3.utils.toWei( json.price, "ether")})
                                 .on('confirmation', function(confirmation, receipt){
                                   // convert to string and set cid
