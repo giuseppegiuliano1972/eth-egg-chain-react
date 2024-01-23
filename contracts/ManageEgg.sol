@@ -73,6 +73,10 @@ contract ManageEgg is Admin{
         eggState[original] = State.MarketForSale;
         // Change owner to caller
         eggOwner[original] = owner;
+        // Change state to market for sale
+        eggState[_hash] = State.MarketForSale;
+        // Change owner to caller
+        eggOwner[_hash] = owner;
 
         emit eggTransfer(_hash, original, eggState[original]);
     }
